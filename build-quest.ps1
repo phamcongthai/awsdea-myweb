@@ -86,3 +86,4 @@ foreach ($source in $sources) {
 }
 $questions | Group-Object { $_.topic } | Select-Object Name,Count | Format-Table -AutoSize
 Write-Output 'Built AWS Data Quest.html with 260 questions. Original files preserved.'
+& (Join-Path $root 'build-exams.ps1')

@@ -1,0 +1,53 @@
+const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict'),crypto=require('node:crypto'),{spawn}=require('node:child_process');
+const root=__dirname,qa=path.join(root,'.qa');fs.mkdirSync(qa,{recursive:true});
+const results=[];const pass=s=>{results.push(s);console.log('PASS',s);};
+for(let n=1;n<=4;n++){
+ const bank=JSON.parse(fs.readFileSync(path.join(root,'exam-bank/test'+n+'.json'),'utf8'));assert.equal(bank.questions.length,65);
+ assert.equal(fs.readFileSync(path.join(root,'public/exams/test'+n+'.js'),'utf8'),'window.REALTEST_DATA = '+JSON.stringify(bank)+';');
+ for(const q of bank.questions)for(const html of [q.question,...q.answers,q.explanation])for(const match of html.matchAll(/src="(exams\/assets\/[^" ]+)"/g))assert.ok(fs.existsSync(path.join(root,'public',match[1])));
+ const rawDir=path.join(root,'realtest/Tests');if(fs.existsSync(rawDir)){
+  const file=fs.readdirSync(rawDir).find(f=>f.startsWith('00'+n)&&f.endsWith('.html'));
+  const original=JSON.parse(fs.readFileSync(path.join(rawDir,file),'utf8').match(/<script id="quiz-data-script" type="application\/json">([\s\S]*?)<\/script>/)[1]);
+  const extract=s=>s.replace(/data:image\/(png|jpeg|jpg|gif|webp);base64,([A-Za-z0-9+/=\r\n]+)/g,(_,type,b64)=>'exams/assets/'+crypto.createHash('sha256').update(Buffer.from(b64,'base64')).digest('hex')+'.'+(type==='jpeg'?'jpg':type));
+  original.assessments.forEach((q,i)=>{assert.equal(bank.questions[i].question,extract(q.prompt.question));assert.equal(bank.questions[i].explanation,extract(q.prompt.explanation));assert.deepEqual(bank.questions[i].answers,q.prompt.answers.map(extract));assert.deepEqual(bank.questions[i].correct,q.correct_response.map(c=>c.charCodeAt(0)-97));});
+ }
+}pass('Four banks preserve all 260 original questions, answers, keys and explanations; all images are packaged');
+const server=http.createServer((req,res)=>{try{const p=path.resolve(root,'public','.'+decodeURIComponent(new URL(req.url,'http://localhost').pathname));if(!p.startsWith(path.join(root,'public')+path.sep))throw Error();const file=fs.statSync(p).isDirectory()?path.join(p,'index.html'):p;const ext=path.extname(file);res.setHeader('Content-Type',({'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.png':'image/png','.jpg':'image/jpeg','.gif':'image/gif'})[ext]||'application/octet-stream');fs.createReadStream(file).pipe(res);}catch{res.statusCode=404;res.end();}});
+const delay=ms=>new Promise(r=>setTimeout(r,ms));let chrome,ws;
+(async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const base='http://127.0.0.1:'+server.address().port;try{
+ const profile=path.join(qa,'exam-profile-'+Date.now());chrome=spawn('C:/Program Files/Google/Chrome/Application/chrome.exe',['--headless=new','--disable-gpu','--no-first-run','--remote-debugging-port=0','--user-data-dir='+profile,'about:blank'],{windowsHide:true,stdio:'ignore'});
+ for(let n=0;!fs.existsSync(path.join(profile,'DevToolsActivePort'))&&n<100;n++)await delay(100);
+ const port=fs.readFileSync(path.join(profile,'DevToolsActivePort'),'utf8').split(/\r?\n/)[0],pages=await(await fetch('http://127.0.0.1:'+port+'/json')).json();ws=new WebSocket(pages.find(p=>p.type==='page').webSocketDebuggerUrl);await new Promise(r=>ws.onopen=r);
+ let id=0;const pending=new Map(),errors=[];ws.onmessage=e=>{const m=JSON.parse(e.data);if(m.id){const p=pending.get(m.id);pending.delete(m.id);m.error?p.reject(Error(JSON.stringify(m.error))):p.resolve(m.result);}if(m.method==='Runtime.exceptionThrown')errors.push(m.params.exceptionDetails);};
+ const send=(method,params={})=>new Promise((resolve,reject)=>{const n=++id;pending.set(n,{resolve,reject});ws.send(JSON.stringify({id:n,method,params}));});
+ const evaluate=async fn=>{const r=await send('Runtime.evaluate',{expression:typeof fn==='function'?`(${fn})()`:fn,returnByValue:true,awaitPromise:true});if(r.exceptionDetails)throw Error(JSON.stringify(r.exceptionDetails));return r.result.value;};
+ const waitFor=async expr=>{for(let n=0;n<150;n++){if(await evaluate(expr))return;await delay(50);}throw Error('Timeout '+expr);};
+ const test=async(name,fn)=>{assert.equal(await evaluate(fn),true,name);pass(name);};
+ const snap=async(name,w,h)=>{await send('Emulation.setDeviceMetricsOverride',{width:w,height:h,deviceScaleFactor:1,mobile:w<600});await delay(100);const s=await send('Page.captureScreenshot',{format:'png'});fs.writeFileSync(path.join(qa,name+'.png'),Buffer.from(s.data,'base64'));};
+ await send('Runtime.enable');await send('Page.enable');await send('Page.navigate',{url:base+'/index.html?qa=1'});await waitFor('Boolean(window.Quest)');
+ await evaluate(()=>Quest.reset()); const practice=await evaluate(()=>localStorage.getItem('aws-data-quest-test-v1'));
+ await evaluate(()=>document.querySelector('[data-page="exam"]').click());await waitFor('Boolean(window.Exam)');
+ await test('Practice navigation opens the separate exam hub with four tests',()=>location.pathname==='/realtest.html'&&document.querySelectorAll('[data-exam="prepare"]').length===4);
+ await snap('exam-hub-mobile',390,844);
+ await test('Start confirmation describes timing before any exam begins',()=>{document.querySelector('[data-test="1"]').click();return document.querySelector('dialog').open&&!Exam.state.active&&document.querySelector('dialog').textContent.includes('120');});
+ await evaluate(()=>document.querySelector('[data-exam="start"]').click());await waitFor('Boolean(window.Exam?.state.active)');
+ await test('Exam hides all answers and explanations until submission',()=>!document.querySelector('.explanation')&&!document.querySelector('.answer.correct')&&!document.querySelector('[data-action="check"]')&&!!document.querySelector('#exam-clock'));
+ await test('Selections, flags, navigation and clearing work',()=>{const a=Exam.state.active;document.querySelector('.answer').click();document.querySelector('[data-exam="flag"]').click();document.querySelector('[data-exam="jump"][data-index="1"]').click();document.querySelector('[data-exam="jump"][data-index="0"]').click();if(!a.flags[0]||a.answers[0].length!==1)return false;document.querySelector('[data-exam="clear"]').click();return a.answers[0].length===0;});
+ const saved=await evaluate(()=>JSON.stringify(Exam.state.active));await send('Page.reload');await waitFor('Boolean(window.Exam?.bank)');assert.equal(await evaluate(()=>JSON.stringify(Exam.state.active)),saved);pass('Reload restores exact answers, flags, shuffle order and original deadline');
+ await test('Multi-select never accepts too many choices and permits changing them',()=>{const a=Exam.state.active,i=Exam.bank.questions.findIndex(q=>q.correct.length>1);document.querySelector('.exam-cell[data-index="'+i+'"]').click();const q=Exam.bank.questions[i];for(const n of a.order[i])Exam.choose(n);if(a.answers[i].length!==q.correct.length)return false;Exam.choose(a.answers[i][0]);return a.answers[i].length===q.correct.length-1;});
+ await snap('exam-question-desktop',1300,900);await snap('exam-question-mobile',390,844);await snap('exam-question-narrow',320,780);
+ await test('320px exam layout has no horizontal overflow',()=>document.documentElement.scrollWidth<=innerWidth);
+ await test('Submission asks for confirmation and warns about unanswered questions',()=>{document.querySelector('[data-exam="confirm"]').click();const ok=document.querySelector('dialog').open&&document.querySelector('dialog').textContent.includes('chưa chọn đủ');document.querySelector('[data-exam="close"]').click();return ok&&!!Exam.state.active;});
+ await test('Partial multi-select is incorrect; duplicate submit does not create duplicate history',()=>{const a=Exam.state.active,q=Exam.bank.questions[0];a.answers=a.answers.map(()=>[]);a.answers[0]=q.correct.slice();const multi=Exam.bank.questions.findIndex((q,i)=>i>0&&q.correct.length>1);a.answers[multi]=Exam.bank.questions[multi].correct.slice(1);Exam.submit();Exam.submit();return !Exam.state.active&&Exam.state.history.length===1&&Exam.state.history[0].score===1;});
+ await test('Submitted review reveals original explanation and locks selections',()=>{document.querySelector('[data-exam="review"]').click();const before=JSON.stringify(Exam.state.history);return !!document.querySelector('.explanation-content')&&document.querySelectorAll('.answer.correct').length===Exam.bank.questions[0].correct.length&&[...document.querySelectorAll('.answer')].every(b=>b.disabled)&&before===JSON.stringify(Exam.state.history);});
+ await test('Every test grades a perfect exam and retains independent history',async()=>{for(let n=1;n<=4;n++){await Exam.start(n);for(let i=0;i<65;i++)Exam.state.active.answers[i]=Exam.bank.questions[i].correct.slice();Exam.submit();if(Exam.state.history.at(-1).score!==65)return false;}return Exam.state.history.length===5;});
+ await snap('exam-result-mobile',390,844);
+ await evaluate(async()=>{await Exam.start(2);const a=Exam.state.active;a.started=Date.now()-7201000;a.deadline=a.started+7200000;localStorage.setItem('aws-realtest-qa-v1',JSON.stringify(Exam.state));});
+ await send('Page.reload');await waitFor('Boolean(window.Exam?.state.history.some(h=>h.reason==="timeout"))');
+ await test('Expired saved exam auto-submits on reopen with no extra time',()=>!Exam.state.active&&Exam.state.history.at(-1).reason==='timeout'&&Exam.state.history.at(-1).ended===Exam.state.history.at(-1).deadline);
+ await test('Saved history reopens the correct test and original answer order',async()=>{const h=Exam.state.history.find(h=>h.test===3);await Exam.history(h.id);document.querySelector('[data-exam="review"]').click();return Exam.bank.id===3&&JSON.stringify([...document.querySelectorAll('.answer')].map(b=>Number(b.dataset.index)))===JSON.stringify(h.order[0]);});
+ assert.equal(await evaluate(()=>localStorage.getItem('aws-data-quest-test-v1')),practice);pass('Exam sessions and history never modify practice progress');
+ const asset=fs.readdirSync(path.join(root,'public/exams/assets'))[0];assert.equal((await fetch(base+'/exams/assets/'+asset)).status,200);pass('Packaged explanation images are served over HTTP');
+ assert.equal(errors.length,0,JSON.stringify(errors));pass('No uncaught browser errors');fs.writeFileSync(path.join(qa,'exam-verification.json'),JSON.stringify({passed:results.length,results},null,2));
+ await send('Browser.close');
+}finally{ws?.close();chrome?.kill();server.close();}})().catch(e=>{console.error(e);process.exitCode=1;});

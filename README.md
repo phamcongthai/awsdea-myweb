@@ -5,6 +5,11 @@ AWS Data Quest — học AWS Data Engineer qua 260 câu hỏi, chia theo chủ �
 - Lời giải tiếng Việt riêng cho 1.082 lựa chọn, bấm đáp án sau khi kiểm tra để xem.
 - Giao diện phù hợp máy tính và điện thoại, có hiệu ứng, combo và điểm kinh nghiệm.
 - Tự lưu tiến độ trong trình duyệt; hỗ trợ sao lưu và khôi phục bằng JSON.
+- Phòng thi riêng: 4 đề mới, mỗi đề 65 câu / 120 phút. Đánh dấu, quay lại sửa đáp án, tự nộp khi hết giờ, chấm và mở lời giải sau khi nộp.
+
+Phòng thi nằm tại `realtest.html`, có lối vào từ menu Data Quest. Bài thi đang làm và lịch sử lưu riêng trong trình duyệt, không ảnh hưởng điểm luyện tập. Đồng hồ không dừng khi đóng trang. Lời giải sau thi giữ nguyên từ đề nhập vào (tiếng Anh); ảnh được phục vụ cùng website.
+
+Dữ liệu kiểm tra đã chuẩn hóa ở `exam-bank/`; `build-exams.ps1` tạo trang thi và tài nguyên trong `public/exams/`. `import-realtests.cjs` chỉ cần khi nhập lại từ bốn file HTML trong `realtest/Tests`. Các trang web thô đã lưu cùng tài nguyên của nhà cung cấp trong `realtest/` không đưa lên repo.
 
 ## Deploy lên Vercel
 
