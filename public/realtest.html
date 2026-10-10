@@ -17,6 +17,11 @@
 @media(max-width:1100px){.game-hud{flex-wrap:wrap;gap:12px}.pal-dialog{min-width:160px}.game-level{margin-left:auto}.fun-controls{flex-direction:row}}
 @media(max-width:600px){.game-hud{padding:13px;gap:10px;margin-bottom:18px}.frog-pal{width:46px;height:46px;border-radius:14px}.frog-pal span{font-size:30px}.pal-name span{display:none}.pal-line{font-size:11px}.game-level{width:120px;margin-left:0}.fun-controls{margin-left:auto;flex-wrap:wrap;justify-content:flex-end;max-width:160px}.fun-controls button{font-size:9px;padding:5px 7px}.focus-meta .combo-badge{margin-top:5px}.pal-dialog{min-width:140px}.game-level small{font-size:7px}.loot-badge{font-size:10px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+body{isolation:isolate}#app,#exam-app{position:relative;z-index:1}#maple-garden{position:fixed;inset:0;overflow:hidden;pointer-events:none;z-index:2;contain:strict;mask-image:linear-gradient(to right,#000 0%,#000 10%,#0003 27%,#0002 73%,#000 92%);background:radial-gradient(ellipse at 98% 12%,#c3914710,transparent 45%),radial-gradient(ellipse at 4% 85%,#9bac7010,transparent 40%)}.maple-fall{position:absolute;top:-65px;left:var(--left);width:var(--size);height:var(--size);color:var(--leaf-color);opacity:0;animation:maple-fall var(--duration) var(--delay) linear infinite;will-change:transform}.maple-sway{display:block;width:100%;height:100%;animation:maple-sway var(--sway) var(--delay) ease-in-out infinite alternate}.maple-sway svg{display:block;width:100%;height:100%}.maple-paused *{animation-play-state:paused!important}
+@keyframes maple-fall{0%{transform:translate3d(0,-30px,0);opacity:0}8%,90%{opacity:var(--alpha)}100%{transform:translate3d(var(--drift),calc(100vh + 140px),0);opacity:0}}
+@keyframes maple-sway{from{transform:translateX(-12px) rotate(var(--turn)) rotateY(-25deg)}to{transform:translateX(12px) rotate(calc(var(--turn) + 65deg)) rotateY(25deg)}}
+@media(max-width:600px){.maple-fall:nth-child(n+11){display:none}.maple-fall{width:calc(var(--size)*.8);height:calc(var(--size)*.8)}}
+@media(prefers-reduced-motion:reduce){#maple-garden{display:none}}
 .answer-hint{display:block;color:var(--yellow);font-size:11px;margin-top:5px;font-weight:500}.answer[data-action=explain]:hover{border-color:var(--yellow)}
 dialog:has(.option-reader){max-width:740px;padding:0;max-height:calc(100dvh - 32px);overflow:hidden}
 .option-reader{display:flex;flex-direction:column;max-height:calc(100dvh - 34px)}.reader-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:24px 26px 12px}.reader-header h2{font-size:22px;margin:8px 0 0}.reader-header>.btn{flex-shrink:0}.reader-options{display:flex;gap:8px;padding:0 26px 18px;flex-wrap:wrap;border-bottom:1px solid var(--line)}.reader-tab{border:1px solid var(--line);border-radius:10px;background:#121e17;color:var(--muted);min-width:44px;min-height:42px;padding:8px 13px;font-weight:700}.reader-tab.is-correct{color:var(--mint)}.reader-tab[aria-current=true]{background:var(--lime);color:#172019;border-color:var(--lime);box-shadow:0 0 0 3px #d0f17919}.reader-scroll{overflow-y:auto;overscroll-behavior:contain;padding:22px 26px;min-height:0;overflow-wrap:anywhere}.reader-verdict{font-weight:700;font-size:13px}.reader-verdict.is-correct{color:var(--mint)}.reader-verdict.is-wrong{color:var(--bad)}.reader-answer{font-size:12px;line-height:1.75;color:var(--muted);padding:12px 15px;border-left:3px solid #617e47;background:#111c16;border-radius:0 10px 10px 0;margin:14px 0 18px}.reader-answer p{font-size:inherit;margin:0}.reader-answer img{max-width:100%;height:auto}.option-reader .option-explanation-text{color:var(--text);font-size:16px;line-height:1.9;margin:0}.reader-footer{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;border-top:1px solid var(--line);padding:14px 26px;color:var(--muted);font-size:10px;background:#152219}.reader-header,.reader-options,.reader-footer{flex-shrink:0}
@@ -27,6 +32,30 @@ dialog:has(.option-reader){max-width:740px;padding:0;max-height:calc(100dvh - 32
 @media(max-width:480px){.exam-home{padding:18px 14px 45px}.exam-hero{padding:24px}.exam-cards{grid-template-columns:1fr}.exam-top{flex-wrap:wrap}.exam-top .btn{padding:9px 13px;font-size:12px}.exam-grid{grid-template-columns:repeat(7,minmax(0,1fr))}.exam-move .btn{padding:10px;font-size:11px}.exam-home h1{font-size:28px}.exam-navigator{padding:16px}}
 </style></head>
 <body><div id="storage-warning" hidden></div><div id="exam-app"></div><dialog id="exam-modal" aria-labelledby="exam-modal-title"></dialog><script>'use strict';
+(() => {
+  if(document.getElementById('maple-garden'))return;
+  const reduced=matchMedia('(prefers-reduced-motion: reduce)');
+  const key=new URLSearchParams(location.search).has('qa')?'data-quest-fun-test':'data-quest-fun';
+  const layer=document.createElement('div');
+  layer.id='maple-garden';layer.setAttribute('aria-hidden','true');layer.inert=true;
+  const colors=['#d69a56','#bd704b','#d6ba73','#a9b87a','#ce895b'];
+  // Fixed particles and negative delays keep the autumn scene steady from the first frame.
+  for(let i=0;i<20;i++){
+    const leaf=document.createElement('span');leaf.className='maple-fall';
+    leaf.style.cssText=`--left:${[2,96,7,91,14,85,4,98,10,94,20,78,30,65,45,57,1,88,17,82][i]}%;--size:${20+i%5*5}px;--duration:${32+i%7*4}s;--delay:-${i*7.3+9}s;--drift:${i%2?'-':''}${24+i%4*14}px;--sway:${7+i%4}s;--turn:${i*43}deg;--leaf-color:${colors[i%colors.length]};--alpha:${.22+i%4*.055}`;
+    leaf.innerHTML='<span class="maple-sway"><svg viewBox="0 0 80 90" focusable="false"><path d="M40 3 48 22 56 17 54 36 65 27 66 38 78 36 66 52 71 58 47 63 44 67 43 83 38 85 39 66 34 63 10 58 15 52 3 36 15 38 16 27 27 36 25 17 33 22Z" fill="currentColor"/><path d="M41 74 40 24M40 57 21 45M41 56 60 45M40 44 32 31M41 44 49 31" fill="none" stroke="#49351f" stroke-opacity=".32" stroke-width="1.3" stroke-linecap="round"/></svg></span>';
+    layer.append(leaf);
+  }
+  document.body.prepend(layer);
+  function sync(){let enabled=true;try{enabled=JSON.parse(localStorage.getItem(key))?.effects!==false;}catch{}
+    layer.hidden=!enabled||reduced.matches||document.body.classList.contains('quiet-effects');
+    layer.classList.toggle('maple-paused',document.hidden);
+  }
+  new MutationObserver(sync).observe(document.body,{attributes:true,attributeFilter:['class']});
+  document.addEventListener('visibilitychange',sync);window.addEventListener('storage',sync);reduced.addEventListener('change',sync);sync();
+})();
+
+'use strict';
 (() => {
  const qa=new URLSearchParams(location.search).has('qa'),KEY=qa?'aws-realtest-qa-v1':'aws-realtest-v1';
  const $=id=>document.getElementById(id),esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));

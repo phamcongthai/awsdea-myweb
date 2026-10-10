@@ -76,6 +76,7 @@ $template = [IO.File]::ReadAllText((Join-Path $root 'quest-shell.html'))
 $css = [IO.File]::ReadAllText((Join-Path $root 'quest.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest.js'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-fun.js')) + "`n" + $js
+$js = [IO.File]::ReadAllText((Join-Path $root 'quest-leaves.js')) + "`n" + $js
 $html = $template.Replace('<!-- QUEST_STYLE -->', '<style>'+$css+'</style>').Replace('<!-- QUEST_DATA -->', '<script>window.QUEST_BANK = '+$bank.Replace('</','<\/')+';</script>').Replace('<!-- QUEST_APP -->', '<script>'+$js+'</script>')
 [IO.File]::WriteAllText((Join-Path $root 'AWS Data Quest.html'), $html, [Text.UTF8Encoding]::new($false))
 $publishDirectory = Join-Path $root 'public'

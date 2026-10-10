@@ -11,6 +11,7 @@ foreach($file in (Get-ChildItem -LiteralPath $bank -Filter 'test*.json')) {
 $template=[IO.File]::ReadAllText((Join-Path $root 'exam-shell.html'))
 $css=[IO.File]::ReadAllText((Join-Path $root 'quest.css'))+"`n"+[IO.File]::ReadAllText((Join-Path $root 'exam.css'))
 $js=[IO.File]::ReadAllText((Join-Path $root 'exam.js'))
+$js=[IO.File]::ReadAllText((Join-Path $root 'quest-leaves.js'))+"`n"+$js
 $html=$template.Replace('<!-- STYLE -->','<style>'+$css+'</style>').Replace('<!-- APP -->','<script>'+$js+'</script>')
 [IO.File]::WriteAllText((Join-Path $root 'public/realtest.html'),$html,[Text.UTF8Encoding]::new($false))
 Write-Output 'Built four separate exam banks and public/realtest.html'
