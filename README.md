@@ -45,3 +45,13 @@ Kết quả kiểm thử trong `.qa` chỉ lưu local, không đưa lên GitHub.
 ## Tiến độ học
 
 Tiến độ lưu theo trình duyệt và địa chỉ website, chưa đồng bộ giữa máy tính và điện thoại. Khi chuyển từ file HTML sang website hoặc sang thiết bị khác, dùng **Sao lưu** ở nơi cũ và **Khôi phục** tại nơi mới.
+
+## Ôn tập bắt buộc đầu ngày
+
+Ô ngày ở góc trên dùng ngày trên đồng hồ thiết bị, quy đổi sang `Asia/Ho_Chi_Minh`. Sang ngày mới, cả khu luyện tập và phòng thi bị khóa nếu có câu từng sai. Lượt ôn gồm tất cả câu đã ghi nhận sai trong luyện tập cùng câu sai/bỏ trống của các bài thi đã nộp. Không có câu sai thì mở khóa ngay.
+
+Phải hoàn thành toàn bộ lượt và đạt **trên 90%** để mở khóa trong ngày; đúng 90% chưa đạt. Nếu chưa đạt, làm lại toàn bộ nhóm câu với thứ tự mới. Đóng trang giữa lượt vẫn giữ tiến độ. Phiên luyện tập đang dở được giữ nguyên; đồng hồ của bài thi 120 phút vẫn chạy theo quy tắc phòng thi.
+
+Các câu từng sai không bị xóa khỏi bộ nhớ khi trả lời đúng lại. Câu sai phát sinh sau khi đã mở khóa được thêm cho ngày kế tiếp. Dữ liệu cũ được thu thập từ kết quả hiện có; những lần sai đã bị kết quả đúng mới ghi đè trước bản cập nhật không thể phục hồi đầy đủ. Thuộc tính `everWrong` mới đi cùng bản sao tiến độ luyện tập. Trạng thái mở khóa và lượt ôn đầu ngày lưu riêng trong localStorage, chưa nằm trong file sao lưu luyện tập.
+
+`build-daily.ps1` tạo khóa đáp án nhẹ và `public/daily-bank.js`; dữ liệu lời giải chỉ tải khi bắt đầu ôn đầu ngày. Kiểm tra chức năng bằng `node verify-daily.cjs` (Chrome trên Windows).

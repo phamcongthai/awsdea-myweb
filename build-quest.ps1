@@ -72,11 +72,14 @@ foreach ($file in (Get-ChildItem -LiteralPath $root -Filter '00*.html' | Sort-Ob
 if ($test -ne 4 -or $questions.Count -ne 260) {throw 'Expected 260 questions from 4 tests'}
 $bank = @{version=1; sources=$sources; questions=$questions} | ConvertTo-Json -Depth 20 -Compress
 [IO.File]::WriteAllText((Join-Path $root 'quest-data.js'), 'window.QUEST_BANK = '+$bank+';', [Text.UTF8Encoding]::new($false))
+& (Join-Path $root 'build-daily.ps1')
 $template = [IO.File]::ReadAllText((Join-Path $root 'quest-shell.html'))
 $css = [IO.File]::ReadAllText((Join-Path $root 'quest.css'))
+$css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'quest-daily.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest.js'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-fun.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-leaves.js')) + "`n" + $js
+$js = [IO.File]::ReadAllText((Join-Path $root 'daily-runtime.js')) + "`n" + $js
 $html = $template.Replace('<!-- QUEST_STYLE -->', '<style>'+$css+'</style>').Replace('<!-- QUEST_DATA -->', '<script>window.QUEST_BANK = '+$bank.Replace('</','<\/')+';</script>').Replace('<!-- QUEST_APP -->', '<script>'+$js+'</script>')
 [IO.File]::WriteAllText((Join-Path $root 'AWS Data Quest.html'), $html, [Text.UTF8Encoding]::new($false))
 $publishDirectory = Join-Path $root 'public'

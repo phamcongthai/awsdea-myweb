@@ -91,7 +91,7 @@
   function mastered(p) {return !!p && p.correct && p.certain && p.streak>=2;}
   function weakIds() {return BANK.questions.filter(q=>state.progress[q.id] && (!state.progress[q.id].correct || !state.progress[q.id].certain)).sort((a,b)=>TOPICS.findIndex(t=>t.id===a.topic)-TOPICS.findIndex(t=>t.id===b.topic) || a.group-b.group || state.progress[a.id].at-state.progress[b.id].at).map(q=>q.id);}
   const brand=()=>'<div class="brand"><span class="brand-mark">⌘</span><div>Data Quest<small>AWS · LEARNING ADVENTURE</small></div></div>';
-  function go(next) {if(state.active) return;if(next==='exam'){location.href=(location.protocol==='file:'&&decodeURIComponent(location.pathname).endsWith('/AWS Data Quest.html')?'public/realtest.html':'realtest.html')+(QA?'?qa=1':'');return;}page=next;finished=null;render();window.scrollTo(0,0);}
+  function go(next) {if(window.DailyGate && !window.DailyGate.allow())return;if(state.active) return;if(next==='exam'){location.href=(location.protocol==='file:'&&decodeURIComponent(location.pathname).endsWith('/AWS Data Quest.html')?'public/realtest.html':'realtest.html')+(QA?'?qa=1':'');return;}page=next;finished=null;render();window.scrollTo(0,0);}
   function metrics() {
     const progress=Object.values(state.progress);
     return {seen:progress.length,mastered:progress.filter(mastered).length,weak:weakIds().length,commitments:state.history.filter(h=>h.status==='complete').length};
@@ -129,6 +129,7 @@
   }
   let pending=null;
   function openCommit(topic,review=false) {
+    if(window.DailyGate && !window.DailyGate.allow())return;
     if(state.active) return;
     const t=TOPICS.find(t=>t.id===topic),ids=review?weakIds().slice(0,40):topicQuestions(topic).map(q=>q.id);
     if(!ids.length) return;
@@ -138,12 +139,14 @@
     $('modal').showModal();
   }
   function startSession(spec) {
+    if(window.DailyGate && !window.DailyGate.allow())return;
     if(state.active || !spec || !spec.ids.length) return;
     const q=byId.get(spec.ids[0]);
     state.active={...spec,ids:spec.ids.slice(),pos:0,order:shuffle(q.answers.map((_,i)=>i)),selected:[],checked:false,certain:true,reviewed:false,results:[],started:Date.now(),interruptions:0,breakUntil:0,returnNotice:false};
     finished=null;save();$('modal').close();render();window.scrollTo(0,0);
   }
   function select(index) {
+    if(window.DailyGate && !window.DailyGate.allow())return;
     const a=state.active;if(!a || a.checked || a.breakUntil) return;
     const q=byId.get(a.ids[a.pos]);
     if(!a.order.includes(index)) return;
@@ -155,17 +158,19 @@
     document.querySelector(`[data-action="select"][data-index="${index}"]`)?.focus({preventScroll:true});
   }
   function checkAnswer() {
+    if(window.DailyGate && !window.DailyGate.allow())return;
     const a=state.active;if(!a || a.checked || a.breakUntil) return;
     const q=byId.get(a.ids[a.pos]);if(a.selected.length!==q.correct.length) return;
     a.checked=true;
     const right=correct(q,a.selected),old=state.progress[q.id],now=Date.now();
     let streak=right && a.certain ? 1 : 0;
     if(right && a.certain && old?.correct && old.certain) streak=old.streak+(now-old.at>=86400000?1:0);
-    state.progress[q.id]={correct:right,certain:a.certain,seen:(old?.seen||0)+1,streak,at:now};
-    a.reviewed=true;save();render();
+    state.progress[q.id]={correct:right,certain:a.certain,seen:(old?.seen||0)+1,streak,at:now,everWrong:!right || old?.everWrong===true || old?.correct===false};
+    a.reviewed=true;save();window.DailyGate?.recordPractice(q.id,right);render();
     window.QuestFun?.celebrate(right?'right':'wrong');
   }
   function nextQuestion() {
+    if(window.DailyGate && !window.DailyGate.allow())return;
     const a=state.active;if(!a || !a.checked || a.breakUntil) return;
     const q=byId.get(a.ids[a.pos]);
     a.results.push({id:q.id,correct:correct(q,a.selected),certain:a.certain});
@@ -177,6 +182,7 @@
     save();render();window.scrollTo(0,0);
   }
   function finishSession(status) {
+    if(window.DailyGate && !window.DailyGate.allow())return;
     const a=state.active;if(!a) return;
     const summary={label:a.label,topic:a.topic,at:Date.now(),total:a.ids.length,done:a.results.length,correct:a.results.filter(r=>r.correct).length,uncertain:a.results.filter(r=>!r.certain).length,status,interruptions:a.interruptions};
     state.history.push(summary);state.active=null;finished=summary;save();$('modal').close();render();window.scrollTo(0,0);
