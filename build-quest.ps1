@@ -75,8 +75,10 @@ $bank = @{version=1; sources=$sources; questions=$questions} | ConvertTo-Json -D
 & (Join-Path $root 'build-daily.ps1')
 $template = [IO.File]::ReadAllText((Join-Path $root 'quest-shell.html'))
 $css = [IO.File]::ReadAllText((Join-Path $root 'quest.css'))
+$css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'theory.css'))
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'quest-daily.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest.js'))
+$js = [IO.File]::ReadAllText((Join-Path $root 'theory.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-fun.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-leaves.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'daily-runtime.js')) + "`n" + $js

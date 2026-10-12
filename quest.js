@@ -98,7 +98,7 @@
   }
   function sidebar() {
     const m=metrics();
-    return `<aside class="sidebar">${brand()}<div class="nav-label">HÀNH TRÌNH CỦA BẠN</div><nav>${[['map','◈','Bản đồ nhiệm vụ'],['review','↻','Ôn câu chưa chắc'],['history','⚑','Nhật ký cam kết'],['exam','🎯','Phòng thi · 4 đề mới'],['originals','▤','Bốn đề gốc']].map(([id,icon,label])=>`<button class="nav-item ${page===id?'active':''}" data-action="page" data-page="${id}" ${page===id?'aria-current="page"':''}><span>${icon}</span>${label}</button>`).join('')}</nav><div class="sidebar-bottom"><div class="side-card"><div class="eyebrow">Từng phiên, từng bước</div><strong>${m.commitments}</strong> <small>cam kết đã giữ</small><p>Không cần đúng tất cả.<br>Hãy hoàn thành điều đã hứa.</p></div><span class="sidebar-note">Tiến độ lưu trên trình duyệt này.<br>Câu hỏi & lời giải giữ nguyên từ 4 đề.</span><div class="row wrap spaced"><button class="btn small quiet" data-action="export">↓ Sao lưu</button><button class="btn small quiet" data-action="import">↑ Khôi phục</button></div></div></aside>`;
+    return `<aside class="sidebar">${brand()}<div class="nav-label">HÀNH TRÌNH CỦA BẠN</div><nav>${[['map','◈','Bản đồ nhiệm vụ'],['review','↻','Ôn câu chưa chắc'],['theory','📚','Lý thuyết nhanh'],['history','⚑','Nhật ký cam kết'],['exam','🎯','Phòng thi · 4 đề mới'],['originals','▤','Bốn đề gốc']].map(([id,icon,label])=>`<button class="nav-item ${page===id?'active':''}" data-action="page" data-page="${id}" ${page===id?'aria-current="page"':''}><span>${icon}</span>${label}</button>`).join('')}</nav><div class="sidebar-bottom"><div class="side-card"><div class="eyebrow">Từng phiên, từng bước</div><strong>${m.commitments}</strong> <small>cam kết đã giữ</small><p>Không cần đúng tất cả.<br>Hãy hoàn thành điều đã hứa.</p></div><span class="sidebar-note">Tiến độ lưu trên trình duyệt này.<br>Câu hỏi & lời giải giữ nguyên từ 4 đề.</span><div class="row wrap spaced"><button class="btn small quiet" data-action="export">↓ Sao lưu</button><button class="btn small quiet" data-action="import">↑ Khôi phục</button></div></div></aside>`;
   }
   function render() {
     renderScreen();
@@ -108,7 +108,7 @@
     if(breakTimer){clearInterval(breakTimer);breakTimer=null;}
     if(state.active){renderFocus();return;}
     if(finished){renderFinish();return;}
-    $('app').innerHTML=`<div class="shell">${sidebar()}<main class="main"><header class="topbar row between"><span class="breadcrumb">Không gian học tập <span class="muted">/</span> ${page==='map'?'Bản đồ nhiệm vụ':page==='review'?'Ôn tập':page==='history'?'Cam kết':'Đề gốc'}</span><div class="row"><span class="pill lime">● Tự học · Có cam kết</span><span class="avatar" aria-label="Người học">D</span></div></header>${page==='map'?mapView():page==='review'?reviewView():page==='history'?historyView():originalsView()}<footer class="footnote row between wrap"><span>260 câu gốc · 7 phiên theo chủ đề · Lưu tự động</span><div class="row"><button class="btn quiet small" data-action="export">↓ Xuất tiến độ</button><button class="btn quiet small" data-action="import">↑ Nhập tiến độ</button></div></footer></main></div>`;
+    $('app').innerHTML=`<div class="shell">${sidebar()}<main class="main"><header class="topbar row between"><span class="breadcrumb">Không gian học tập <span class="muted">/</span> ${page==='map'?'Bản đồ nhiệm vụ':page==='review'?'Ôn tập':page==='history'?'Cam kết':page==='theory'?'Lý thuyết nhanh':'Đề gốc'}</span><div class="row"><span class="pill lime">● Tự học · Có cam kết</span><span class="avatar" aria-label="Người học">D</span></div></header>${page==='map'?mapView():page==='review'?reviewView():page==='history'?historyView():page==='theory'?window.QuestTheory.view():originalsView()}<footer class="footnote row between wrap"><span>260 câu gốc · 7 phiên theo chủ đề · Lưu tự động</span><div class="row"><button class="btn quiet small" data-action="export">↓ Xuất tiến độ</button><button class="btn quiet small" data-action="import">↑ Nhập tiến độ</button></div></footer></main></div>`;
   }
   function mapView() {
     const m=metrics(),recommended=TOPICS.find(t=>topicQuestions(t.id).some(q=>!state.progress[q.id])) || TOPICS[0];
@@ -237,6 +237,7 @@
     }catch(error){toast(`Không thể nhập: ${error.message}.`);}finally{e.target.value='';}
   });
   document.addEventListener('click',e=>{
+    const theoryEl=e.target.closest('[data-theory]');if(theoryEl){window.QuestTheory.handle(theoryEl,render);return;}
     const el=e.target.closest('[data-action]');if(!el || el.disabled)return;
     const action=el.dataset.action;
     switch(action){
