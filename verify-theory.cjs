@@ -28,17 +28,17 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));let chrome,ws;
  await send('Runtime.enable');await send('Page.enable');
  await send('Page.navigate',{url:base+'/index.html?qa=1'});await waitFor('Boolean(window.Quest&&window.QuestTheory)');
  await evaluate(()=>{Quest.reset();document.querySelector('[data-page="theory"]').click();});
- await test('Theory navigation shows nine topic cards',()=>document.querySelectorAll('.theory-card').length===9&&document.querySelector('.breadcrumb').textContent.includes('Lý thuyết nhanh'));
+ await test('Theory navigation shows thirteen topic cards',()=>document.querySelectorAll('.theory-card').length===13&&document.querySelector('.breadcrumb').textContent.includes('Lý thuyết nhanh'));
  await snap('theory-home-desktop',1440,1000);
- const ids=['compute','storage','s3','redshift','aurora','rds','network','messaging','sagemaker'];
+ const ids=['compute','storage','s3','redshift','aurora','rds','network','messaging','sagemaker','dynamodb','deployment','cicd','architectures'];
  for(const id of ids){
   await evaluate(`document.querySelector('[data-theory="open"][data-id="${id}"]').click()`);
-  await test(id+' article includes diagram, recall and AWS sources',()=>!!document.querySelector('.theory-diagram')&&!!document.querySelector('.theory-recall details:not([open])')&&Array.from(document.querySelectorAll('.theory-sources a')).every(a=>a.href.startsWith('https://docs.aws.amazon.com/')));
+  await test(id+' article includes diagram, recall and AWS sources',()=>!!document.querySelector('.theory-diagram')&&!!document.querySelector('.theory-recall details:not([open])')&&Array.from(document.querySelectorAll('.theory-sources a')).every(a=>/^https:\/\/(docs\.)?aws\.amazon\.com\//.test(a.href)));
   await evaluate(()=>document.querySelector('.theory-recall summary').click());
   await test(id+' recall reveals answer',()=>document.querySelector('.theory-recall details').open);
   await snap('theory-'+id+'-mobile',320,780);
   await test(id+' fits narrow mobile',()=>document.documentElement.scrollWidth<=innerWidth);
-  if(['network','messaging','sagemaker'].includes(id)){
+  if(['network','messaging','sagemaker','dynamodb','deployment','cicd','architectures'].includes(id)){
    await test(id+' contents link to every section',()=>Array.from(document.querySelectorAll('.theory-toc a')).every(a=>document.getElementById(a.hash.slice(1))));
    await evaluate(()=>document.querySelector('.theory-toc a[href="#theory-compare"]').click());
    await snap('theory-'+id+'-comparison-mobile',320,780);
@@ -51,12 +51,16 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));let chrome,ws;
   await evaluate(()=>document.querySelector('[data-theory="back"]').click());
  }
  await send('Page.reload');await waitFor('Boolean(window.Quest)');await evaluate(()=>Quest.go('theory'));
- await test('Read markers survive refresh',()=>document.querySelector('.theory-intro .pill').textContent.includes('9/9'));
+ await test('Read markers survive refresh',()=>document.querySelector('.theory-intro .pill').textContent.includes('13/13'));
  await evaluate(()=>{document.querySelector('[data-id="s3"]').click();document.querySelector('[data-theory="read"]').click();});
- await test('Read marker can be removed',()=>JSON.parse(localStorage.getItem('data-quest-theory-test-v1')).length===8);
+ await test('Read marker can be removed',()=>JSON.parse(localStorage.getItem('data-quest-theory-test-v1')).length===12);
  await send('Network.enable');await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await evaluate(()=>{document.querySelector('[data-theory="back"]').click();document.querySelector('[data-id="aurora"]').click();});
  await test('Articles and diagrams work without network',()=>document.getElementById('theory-title').textContent==='Amazon Aurora'&&!!document.querySelector('.theory-diagram'));
+ for(const id of ['dynamodb','deployment','cicd','architectures']){
+  await evaluate(`document.querySelector('[data-theory="back"]').click();document.querySelector('[data-theory="open"][data-id="${id}"]').click();`);
+  await test(id+' complete article works offline',()=>document.querySelectorAll('.theory-section').length>=7&&document.querySelectorAll('.theory-recall details').length===5&&!!document.querySelector('.theory-comparison'));
+ }
  await send('Network.emulateNetworkConditions',{offline:false,latency:0,downloadThroughput:-1,uploadThroughput:-1});
  await evaluate(()=>{DailyGate.recordPractice('1-1',false);const s=JSON.parse(localStorage.getItem('data-quest-daily-test-v1'));s.day='2000-01-01';localStorage.setItem('data-quest-daily-test-v1',JSON.stringify(s));DailyGate.refresh();});
  await test('Daily review lock also protects theory',()=>DailyGate.isLocked&&document.getElementById('app').inert);

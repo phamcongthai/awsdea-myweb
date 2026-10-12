@@ -80,6 +80,7 @@ $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'quest-daily.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest.js'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'theory.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'theory-advanced.js')) + "`n" + $js
+$js = [IO.File]::ReadAllText((Join-Path $root 'theory-platform.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-fun.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-leaves.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'daily-runtime.js')) + "`n" + $js
