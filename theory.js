@@ -75,7 +75,7 @@
       ['Nhận diện tình huống',[
         ['Chọn theo mục tiêu','Chịu lỗi AZ: Multi-AZ. Báo cáo làm primary quá tải đọc: read replica và chấp nhận độ trễ dữ liệu. Xóa nhầm bảng: backup/PITR; standby cũng có thể nhận thao tác xóa.']]]],recall:['Có Multi-AZ rồi thì có bỏ backup được không?','Không. Dữ liệu xóa nhầm có thể được replicate sang standby. Backup/PITR giúp phục hồi trạng thái trước lỗi.'],sources:[['RDS overview','AmazonRDS/latest/UserGuide/Welcome.html'],['Multi-AZ','AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html'],['Read replicas','AmazonRDS/latest/UserGuide/USER_ReadRepl.html'],['Point-in-time restore','AmazonRDS/latest/UserGuide/USER_PIT.html'],['RDS Proxy','AmazonRDS/latest/UserGuide/rds-proxy.html']]}
   ];
-  lessons.push(...(window.QUEST_ADVANCED_THEORY||[]),...(window.QUEST_PLATFORM_THEORY||[]));
+  lessons.push(...(window.QUEST_ADVANCED_THEORY||[]),...(window.QUEST_PLATFORM_THEORY||[]),...(window.QUEST_BACKUP_THEORY||[]));
   const sourceUrl=url=>url.startsWith('https://')?url:docs+url;
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function sourcesFor(l,refs=[]){return refs.length?`<div class="theory-section-sources">Nguồn AWS: ${refs.map(i=>{const [name,url]=l.sources[i];return `<a href="${sourceUrl(url)}" target="_blank" rel="noopener noreferrer">${esc(name)} ↗</a>`;}).join(' · ')}</div>`:'';}
