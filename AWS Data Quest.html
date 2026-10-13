@@ -37,6 +37,7 @@ dialog:has(.option-reader){max-width:740px;padding:0;max-height:calc(100dvh - 32
 .theory-toc{padding:24px;margin:28px 0;background:#1c3023;border:1px solid #415838;border-radius:18px}.theory-toc strong{color:var(--lime);line-height:1.6}.theory-toc>div{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px;margin-top:16px}.theory-toc a{color:#cde0cc;line-height:1.6;padding:7px 0;text-decoration:none}.theory-toc a:hover{text-decoration:underline;color:var(--lime)}.theory-section,.theory-recall,#theory-compare{scroll-margin-top:85px}.theory-section-sources{font-size:12px;line-height:1.9;color:var(--muted);margin-top:14px}.theory-section-sources a{color:var(--mint)}.theory-comparison{margin:32px 0}.theory-table-wrap{overflow-x:auto;border:1px solid #415838;border-radius:16px}.theory-comparison table{border-collapse:collapse;width:100%;font-size:14px;table-layout:fixed}.theory-comparison th,.theory-comparison td{text-align:left;vertical-align:top;padding:16px 14px;border-bottom:1px solid #344c39;line-height:1.7;overflow-wrap:anywhere}.theory-comparison thead{background:#30432a;color:var(--lime)}.theory-comparison tbody th{color:var(--mint);font-weight:600}.theory-comparison tr:last-child>*{border-bottom:0}.theory-branches ul{list-style:none;padding:0;display:grid;gap:14px}.theory-branches li{border-left:3px solid var(--mint);background:#263c2a;border-radius:0 12px 12px 0;padding:18px;line-height:1.8;color:#d7edc3}.theory-check+.theory-check{border-top:1px solid #627449;margin-top:20px;padding-top:10px}.theory-toc a:focus-visible{outline:2px solid var(--lime);outline-offset:3px}@media(max-width:600px){.theory-toc>div{grid-template-columns:1fr}.theory-toc{padding:18px}.theory-comparison th,.theory-comparison td{padding:12px 8px;font-size:12px}.theory-check h2{font-size:19px}}
 .theory-branches li+li:before{content:none}
 .theory-comparison table{min-width:500px}@media(max-width:600px){.theory-comparison:after{content:'↔ Vuốt ngang trong bảng để xem đủ các cột';display:block;margin-top:8px;color:var(--muted);font-size:12px}}
+.theory-groups{display:grid;gap:14px;max-width:1050px}.theory-group{border:1px solid #415838;border-radius:20px;background:linear-gradient(120deg,#26392a,#18271f);overflow:hidden}.theory-group>summary{display:flex;align-items:center;gap:18px;padding:24px;cursor:pointer;list-style:none}.theory-group>summary::-webkit-details-marker{display:none}.theory-group>summary:focus-visible{outline:3px solid var(--lime);outline-offset:-4px}.theory-group-icon{font-size:30px;flex-shrink:0}.theory-group-copy{display:grid;gap:5px;flex:1;min-width:0}.theory-group-copy strong{font-size:21px;color:var(--text)}.theory-group-copy>span{color:var(--muted);line-height:1.6;font-size:13px}.theory-group-copy small{color:var(--mint);font-size:12px}.theory-group-chevron{color:var(--lime);font-size:24px}.theory-group[open] .theory-group-chevron{transform:rotate(180deg)}.theory-chapters{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:0 20px 20px}.theory-chapter{padding:19px;border-radius:14px;background:#14231b}.theory-chapter h2{font-size:18px;line-height:1.5;margin:8px 0}.theory-chapter p{font-size:12px;margin-bottom:14px}.theory-chapter small{font-size:10px}.theory-chapter .theory-card-foot{font-size:12px}.theory-related{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0}.theory-related .btn{white-space:normal;text-align:left;font-size:12px}.theory-related [aria-current=page]{border-color:var(--lime);color:var(--lime)}.theory-section dl>div>*{min-width:0}.theory-code{max-width:100%;overflow:auto;white-space:pre;padding:16px;border:1px solid #415838;border-radius:12px;background:#0d1812;font-size:12px;line-height:1.8;tab-size:4}.theory-code code{background:transparent;padding:0;color:#cfe3bc}.theory-code:focus-visible{outline:2px solid var(--lime)}@media(max-width:600px){.theory-group>summary{padding:18px;gap:12px}.theory-group-copy strong{font-size:18px}.theory-group-icon{font-size:25px}.theory-chapters{grid-template-columns:1fr;padding:0 12px 12px}.theory-code{font-size:11px}}
 
 .with-daily-date{padding-top:52px}#daily-date{position:fixed;z-index:62;top:9px;right:20px;display:flex;gap:9px;align-items:center;background:#1b2c21f5;border:1px solid #5a7147;color:var(--text);border-radius:12px;padding:6px 12px;box-shadow:0 4px 18px #0003;font-size:12px;font-weight:700;line-height:1.4}#daily-date small{display:block;font-size:9px;font-weight:400;color:var(--muted)}#daily-gate{position:fixed;inset:0;z-index:60;overflow:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at 85% 0,#35452d,#101915 65%);padding:72px 24px 40px}.daily-locked{overflow:hidden}.daily-shell{max-width:900px;margin:auto}.daily-heading{display:flex;justify-content:space-between;align-items:center;gap:12px}.daily-intro{max-width:680px;margin:35px auto;padding:35px;background:#1c2a20;border:1px solid #526a40;border-radius:24px;text-align:center}.daily-symbol{font-size:48px}.daily-intro h1{margin:12px 0 20px}.daily-intro p{margin:15px 0;line-height:1.9}.daily-intro .btn{margin:14px 0}.daily-intro small{display:block;color:var(--muted);font-size:11px}.daily-target{padding:13px;border:1px dashed #708750;border-radius:12px;background:#d0f1790a;color:var(--lime);font-weight:700}.daily-score{font-size:26px;color:var(--lime);font-weight:800}#daily-gate .question-text,#daily-gate .answer-copy{overflow-wrap:anywhere}#daily-gate img{max-width:100%;height:auto}#daily-gate pre{white-space:pre-wrap}#daily-gate .explanation-content{overflow:auto}#daily-gate .answer-actions{flex-wrap:wrap}#daily-gate .answer-actions>span{font-size:12px;color:var(--muted)}
 @media(max-width:600px){#daily-date{right:12px;top:7px}#daily-gate{padding:68px 14px 30px}.daily-intro{padding:24px 18px;margin-top:24px}.daily-intro h1{font-size:28px}.daily-heading .eyebrow{font-size:9px}.daily-shell .question-card{padding:18px 13px}.daily-score{font-size:22px}}
@@ -263,6 +264,134 @@ dialog:has(.option-reader){max-width:740px;padding:0;max-height:calc(100dvh - 32
   });
   reduced.addEventListener('change',()=>{applyPrefs();if(reduced.matches)document.getElementById('quest-confetti')?.replaceChildren();});
   window.QuestFun={decorate,celebrate};
+})();
+
+// Authored Vietnamese lesson; examples are educational, not executed by the website.
+(() => {
+ const code=text=>'<pre class="theory-code" tabindex="0" aria-label="Ví dụ Python"><code>'+text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')+'</code></pre>';
+ window.QUEST_GLUE_THEORY=[{
+  id:'glue-dynamodb',icon:'🔎',title:'AWS Glue & DynamoDB: Hai cách đọc dữ liệu và Predicate Pushdown',subtitle:'Lọc ở đâu, đọc bao nhiêu, trả RCU cho phần nào?',minutes:'12–16',updated:'13/10/2026',
+  memory:'KeyCondition chọn phạm vi đọc · FilterExpression loại sau khi đọc · Filter trong Glue không hoàn lại RCU.',
+  flow:['Cần toàn bảng hay vài khóa?','Chọn Scan / Query / Export phù hợp','Đọc đúng phạm vi → xử lý trong Glue'],
+  sections:[
+   ['1. Cùng trả 100 records, chi phí đọc có thể rất khác',[
+    ['Bài toán','Bảng Customers có một triệu items. Pipeline chỉ cần dữ liệu của khách C001. Nếu quét cả bảng rồi lọc ở Glue, DynamoDB vẫn phải đọc phạm vi quét. Nếu customer_id là partition key, Query có thể giới hạn phạm vi đọc vào khóa C001. Số items trả về cuối cùng không đủ để suy ra chi phí.'],
+    ['Phạm vi bài','Hai cách chính dưới đây là DynamicFrame ETL connector đọc trực tiếp và boto3 Query. Phần 7 bổ sung export connector để bạn không nhầm mọi connector đều Scan hoặc mọi bài toán “ít RCU” đều phải chọn Query. Ví dụ giả định GlueContext đã được khởi tạo và job role có quyền cần thiết.']],[0,1]],
+   ['2. Cách 1 — Glue DynamoDB ETL Connector',[
+    ['Đọc thành DynamicFrame',code(`dyf = glueContext.create_dynamic_frame.from_options(
+    connection_type="dynamodb",
+    connection_options={
+        "dynamodb.input.tableName": "Customers",
+        "dynamodb.throughput.read.percent": "0.5"
+    }
+)
+
+# Điều kiện này chạy trong Glue, sau bước đọc DynamoDB.
+selected = dyf.filter(
+    f=lambda row: row["customer_id"] == "C001"
+)`)],
+    ['Luồng cần nhớ','DynamoDB → Scan → Glue DynamicFrame → Filter. DynamicFrame ETL reader không hỗ trợ filter/predicate pushdown vào nguồn DynamoDB. Viết filter trong Glue không biến lần Scan thành Query.'],
+    ['0.5 không phải đọc nửa bảng','Tham số throughput điều tiết mức read throughput mà connector sử dụng theo cơ chế của nó. Nó không có nghĩa chỉ đọc 50% items, cũng không làm giảm phạm vi dữ liệu chỉ vì filter trả ít dòng.'],
+    ['Khi phù hợp','Xử lý hàng loạt hoặc phần lớn bảng, muốn dùng luồng tích hợp của Glue. Vẫn cần cân nhắc ảnh hưởng tải đọc của ứng dụng đang sử dụng bảng. Ví dụ này nói về DynamicFrame ETL reader; không suy rộng tùy chọn sang mọi connector hoặc phiên bản.']],[0,2]],
+   ['3. Cách 2 — boto3 Query theo khóa',[
+    ['KeyConditionExpression','Query yêu cầu giá trị bằng của partition key trên table/index được truy vấn. Nếu có sort key, có thể thêm điều kiện như khoảng giá trị hoặc begins_with. Không đưa một thuộc tính bất kỳ như city vào KeyConditionExpression nếu nó không phải key phù hợp.'],
+    ['Ví dụ một trang',code(`import boto3
+from boto3.dynamodb.conditions import Key
+
+table = boto3.resource("dynamodb").Table("Customers")
+response = table.query(
+    KeyConditionExpression=Key("customer_id").eq("C001"),
+    ReturnConsumedCapacity="TOTAL"
+)
+records = response["Items"]
+# Đây chỉ là một trang, chưa chắc là toàn bộ kết quả.`)],
+    ['Biết key mới chọn lọc được','Giả sử Customers dùng customer_id làm PK và record_id làm SK: C001 có thể có nhiều items. Nếu chỉ có PK, mỗi giá trị PK xác định tối đa một item; biết đầy đủ primary key của một item thì GetItem cũng là lựa chọn cần xét.'],
+    ['Nhiều khách hàng','Một Query dùng một giá trị partition key. Nhiều PK cần nhiều Query có kiểm soát, hoặc BatchGetItem khi đã biết đầy đủ khóa của từng item. Gọi boto3 trong driver không tự biến thành công việc Spark phân tán.']],[3,4,9]],
+   ['4. Phân trang và chuyển sang DynamicFrame',[
+    ['Không dừng chỉ vì Items rỗng','Query xử lý tối đa 1 MB mỗi lần trước filter. Có thể Items rỗng nhưng LastEvaluatedKey vẫn tồn tại. Chỉ kết thúc khi không còn khóa phân trang; đưa khóa đó vào ExclusiveStartKey ở request tiếp theo.'],
+    ['Mẫu cho tập dữ liệu nhỏ',code(`import boto3
+from boto3.dynamodb.conditions import Key
+from awsglue.dynamicframe import DynamicFrame
+from pyspark.sql.types import StructType, StructField, StringType
+
+table = boto3.resource("dynamodb").Table("Customers")
+params = {
+    "KeyConditionExpression": Key("customer_id").eq("C001"),
+    "ReturnConsumedCapacity": "TOTAL"
+}
+rows = []
+consumed = 0.0
+while True:
+    page = table.query(**params)
+    consumed += page.get("ConsumedCapacity", {}).get("CapacityUnits", 0)
+    for item in page.get("Items", []):
+        if len(rows) >= 5000:
+            raise RuntimeError("Tập dữ liệu vượt giới hạn ví dụ; cần xử lý theo lô")
+        rows.append((item["customer_id"], item["record_id"]))
+    last_key = page.get("LastEvaluatedKey")
+    if not last_key:
+        break
+    params["ExclusiveStartKey"] = last_key
+
+# Ví dụ giả định cả PK và SK là String; schema giúp xử lý cả kết quả rỗng.
+schema = StructType([
+    StructField("customer_id", StringType(), False),
+    StructField("record_id", StringType(), False)
+])
+df = glueContext.spark_session.createDataFrame(rows, schema)
+dyf = DynamicFrame.fromDF(df, glueContext, "selected_customers")
+print("Capacity units consumed:", consumed)`)],
+    ['Giới hạn cố ý của ví dụ','Mẫu chỉ chọn hai trường key dạng String và gom tối đa 5.000 items trong bộ nhớ driver. Đây không phải cách nạp hàng triệu records. Muốn giữ các cột khác phải khai báo schema/chuẩn hóa kiểu tương ứng, đặc biệt Decimal, binary, set và dữ liệu lồng nhau.'],
+    ['Khi đưa vào pipeline thật','Cần IAM cho table/index, network tới DynamoDB, cấu hình retry/backoff và giới hạn đồng thời khi nhiều key. Nếu một PK chứa quá nhiều dữ liệu, cân nhắc chia khoảng sort key hoặc xử lý theo lô; tăng số worker không tự giảm số lần đọc nguồn.']],[5,6,4]],
+   ['5. Predicate Pushdown là gì và boto3 đứng ở đâu?',[
+    ['Đẩy điều kiện về nguồn','Pushdown chuyển điều kiện từ engine xử lý xuống lớp đọc/nguồn có khả năng thực thi phù hợp. Mục tiêu là giảm lượng dữ liệu không cần đọc hoặc vận chuyển. Hiệu quả và phạm vi hỗ trợ phụ thuộc nguồn và connector.'],
+    ['Query không phải phép biến đổi tự động của Glue','Bạn chủ động gọi Query theo key để truy xuất có chọn lọc tại nguồn. Glue không tự nhìn DynamicFrame.filter() rồi chuyển nó thành boto3 Query. Hai cách có thể cùng hướng tới giảm dữ liệu, nhưng cơ chế khác nhau.'],
+    ['Lọc tại server chưa chắc tiết kiệm RCU','FilterExpression được xử lý ở DynamoDB nhưng sau bước đọc. Nó giảm items trả về, không giảm capacity đã dùng cho các items bị loại. Vì vậy đừng chỉ hỏi “filter chạy ở đâu”; hãy hỏi “điều kiện có thu hẹp phạm vi đọc không?”.'],
+    ['Projection cũng dễ nhầm','ProjectionExpression chỉ lấy một số attributes không mặc định giảm read capacity của item. Payload nhỏ hơn và chi phí đọc thấp hơn là hai mục tiêu khác nhau.']],[2,7,8]],
+   ['6. So sánh bằng một tình huống cụ thể',[
+    ['Giả định','Một triệu items trong bảng; C001 có 100 items; chỉ 5 items mang status=ACTIVE. Đây là số liệu minh họa, không phải benchmark hay công thức tính RCU.'],
+    ['Scan + filter status/customer','Phải quét phạm vi bảng rồi mới loại items; trả 5 items không có nghĩa chỉ tính tiền 5 items. Filter trong Glue còn diễn ra sau khi dữ liệu đã đến engine.'],
+    ['Query PK + FilterExpression status','KeyConditionExpression thu hẹp tới 100 items của C001; FilterExpression tiếp tục loại còn 5. Phần lọc status không hoàn lại capacity của 95 items đã đọc.'],
+    ['Thiết kế key/index theo truy vấn','Nếu thường xuyên cần truy cập theo tiêu chí khác, xem access pattern và index phù hợp, kèm chi phí ghi/lưu trữ. Không giả định Query được theo mọi cột như SQL. Tính capacity phải xét kích thước items và consistency; không suy ra tỷ lệ RCU chính xác chỉ từ số dòng.']],[3,7,8]],
+   ['7. Ngoại lệ quan trọng — DynamoDB export connector',[
+    ['Một đường đọc khác','DynamoDB export → S3 → Glue. Export to S3 hoạt động bất đồng bộ từ dữ liệu PITR và không tiêu thụ RCU của bảng. Phù hợp cân nhắc cho bulk analytics khi muốn tránh tạo tải đọc trực tiếp lên bảng.'],
+    ['Không miễn phí và không Query','Cần bật PITR và quyền export/S3 phù hợp; có chi phí export và S3. Export connector không cung cấp predicate pushdown vào DynamoDB. Lọc dữ liệu sau khi xuất không biến export thành truy vấn một vài key.'],
+    ['Chọn theo yêu cầu','Cần vài items/partition hiện tại với key đã biết: cân nhắc Query/GetItem. Cần phân tích lượng dữ liệu lớn và giảm ảnh hưởng read capacity của production: cân nhắc export, có chấp nhận thời gian chờ và dữ liệu tại mốc export hay không.']],[0,10]],
+   ['8. Cách suy luận trong đề DEA',[
+    ['Vài records, biết key','Nếu đề yêu cầu chọn lọc theo PK, hãy ưu tiên đường truy cập key phù hợp thay vì Scan rồi Filter. Với một item biết đầy đủ primary key, xét GetItem; với nhiều items cùng PK/điều kiện SK, xét Query.'],
+    ['Toàn bảng, không ảnh hưởng RCU','Đừng máy móc chọn Query. Xem export to S3 và xử lý trong Glue nếu yêu cầu cho phép dữ liệu tại mốc xuất và thời gian chờ.'],
+    ['Đề nhắc push_down_predicate','Phải xem nguồn cụ thể. Khả năng pruning/pushdown của S3/JDBC không tự áp dụng cho DynamoDB ETL reader. Đọc đúng connector, không chỉ thấy chữ Glue là suy ra hỗ trợ.'],
+    ['Một câu chốt','Đừng di chuyển cả kho dữ liệu chỉ để lấy vài món. Chọn đúng đường đọc trước, rồi mới tối ưu bước filter. Đây là nguyên tắc suy luận theo yêu cầu, không phải bảo đảm mọi câu đề có một đáp án cố định.']],[2,3,9,10]]
+  ],
+  comparisons:[{title:'Điều gì thực sự giảm phạm vi đọc?',headers:['Cơ chế','Phạm vi đọc / RCU','Khi dùng'],rows:[
+   ['Query + KeyConditionExpression','Có thể giảm so với Scan nhờ giới hạn key','Biết PK, có thể thêm điều kiện SK'],
+   ['Query + FilterExpression','Filter không giảm RCU của items đã đọc','Lọc bổ sung trong phạm vi Query'],
+   ['Scan + FilterExpression','Filter không giảm RCU của phạm vi Scan','Chấp nhận đọc rộng, cần lọc kết quả trả về'],
+   ['DynamicFrame.filter() sau Scan','Không giảm capacity bước đọc nguồn','Biến đổi dữ liệu trong Glue'],
+   ['ProjectionExpression','Giảm cột trả về, không mặc định giảm capacity đọc item','Giảm payload'],
+   ['Export to S3 → Glue','Không tiêu thụ RCU của bảng; có chi phí export/S3','Bulk analytics, chấp nhận quy trình export']]}],
+  diagrams:[{title:'Ba đường đi, ba điểm cần phân biệt',steps:['ETL connector: DynamoDB Scan → DynamicFrame → Filter trong Glue','boto3: Query theo PK/SK → phân trang → tập nhỏ → DataFrame → DynamicFrame','Export connector: dữ liệu PITR → export S3 → Glue đọc và xử lý'],note:'Hai đường đầu là trọng tâm bài. Export được thêm để tránh nhầm connector đọc trực tiếp với connector xuất dữ liệu.'}],
+  recall:['Filter trả 5 items: DynamoDB có chắc chỉ tính RCU cho 5 items không?','Không. Cần biết phạm vi đã đọc trước filter. KeyConditionExpression có thể thu hẹp phạm vi; FilterExpression không giảm capacity của các items đã đọc rồi bị loại.'],
+  checks:[
+   ['Đặt throughput.read.percent=0.5 có nghĩa chỉ quét nửa bảng?','Không. Đây là cấu hình throughput của reader, không phải tỷ lệ items được chọn.'],
+   ['Items rỗng nhưng LastEvaluatedKey có giá trị: dừng được chưa?','Chưa. Tiếp tục request với ExclusiveStartKey cho tới khi không còn khóa phân trang.'],
+   ['Có thể Query city=Hanoi nếu city không phải key/index phù hợp không?','Không đưa city vào KeyConditionExpression tùy ý. Cần thiết kế access pattern/index hoặc chấp nhận cách đọc khác.'],
+   ['Toàn bảng lớn, muốn tránh tiêu thụ RCU production: chỉ có Scan hay Query?','Còn export to S3, không tiêu thụ RCU của bảng. Cần PITR, quyền phù hợp, thời gian chờ và ngân sách export/S3.']
+  ],
+  sources:[
+   ['Glue DynamoDB connectors','glue/latest/dg/aws-glue-programming-etl-connect-dynamodb-home.html'],
+   ['DynamoDB Query API','amazondynamodb/latest/APIReference/API_Query.html'],
+   ['Glue pushdown theo nguồn','glue/latest/dg/aws-glue-programming-pushdown.html'],
+   ['Key condition expressions','amazondynamodb/latest/developerguide/Query.KeyConditionExpressions.html'],
+   ['boto3 Table.query','https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/dynamodb/table/query.html'],
+   ['Query pagination','amazondynamodb/latest/developerguide/Query.Pagination.html'],
+   ['DynamicFrame.fromDF','glue/latest/dg/aws-glue-api-crawler-pyspark-extensions-dynamic-frame.html'],
+   ['Query FilterExpression','amazondynamodb/latest/developerguide/Query.FilterExpression.html'],
+   ['Projection expressions','amazondynamodb/latest/developerguide/Expressions.ProjectionExpressions.html'],
+   ['DynamoDB GetItem','amazondynamodb/latest/APIReference/API_GetItem.html'],
+   ['Export to S3','amazondynamodb/latest/developerguide/S3DataExport.HowItWorks.html']
+  ]
+ }];
 })();
 
 // Vietnamese explanations and illustrative scenarios, with AWS references per section.
@@ -823,7 +952,15 @@ window.QUEST_ADVANCED_THEORY = [
       ['Nhận diện tình huống',[
         ['Chọn theo mục tiêu','Chịu lỗi AZ: Multi-AZ. Báo cáo làm primary quá tải đọc: read replica và chấp nhận độ trễ dữ liệu. Xóa nhầm bảng: backup/PITR; standby cũng có thể nhận thao tác xóa.']]]],recall:['Có Multi-AZ rồi thì có bỏ backup được không?','Không. Dữ liệu xóa nhầm có thể được replicate sang standby. Backup/PITR giúp phục hồi trạng thái trước lỗi.'],sources:[['RDS overview','AmazonRDS/latest/UserGuide/Welcome.html'],['Multi-AZ','AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html'],['Read replicas','AmazonRDS/latest/UserGuide/USER_ReadRepl.html'],['Point-in-time restore','AmazonRDS/latest/UserGuide/USER_PIT.html'],['RDS Proxy','AmazonRDS/latest/UserGuide/rds-proxy.html']]}
   ];
-  lessons.push(...(window.QUEST_ADVANCED_THEORY||[]),...(window.QUEST_PLATFORM_THEORY||[]),...(window.QUEST_BACKUP_THEORY||[]));
+  lessons.push(...(window.QUEST_ADVANCED_THEORY||[]),...(window.QUEST_PLATFORM_THEORY||[]),...(window.QUEST_BACKUP_THEORY||[]),...(window.QUEST_GLUE_THEORY||[]));
+  const groups=[
+    {id:'storage',icon:'🗄️',title:'Lưu trữ & backup',intro:'Lưu ở đâu, bảo vệ thế nào, khôi phục ra sao?',ids:['storage','s3','backup']},
+    {id:'databases',icon:'🧩',title:'Cơ sở dữ liệu',intro:'Từ giao dịch đến warehouse và truy cập theo key.',ids:['rds','aurora','redshift','dynamodb']},
+    {id:'pipelines',icon:'🔄',title:'ETL & kiến trúc dữ liệu',intro:'Đọc dữ liệu, truyền sự kiện và ghép thành pipeline.',ids:['glue-dynamodb','messaging','architectures','sagemaker']},
+    {id:'infrastructure',icon:'🌐',title:'Compute & Network',intro:'Nền tảng chạy ứng dụng và kết nối các dịch vụ.',ids:['compute','network']},
+    {id:'delivery',icon:'🚀',title:'Triển khai & CI/CD',intro:'Từ hạ tầng bằng code đến tự động phát hành.',ids:['deployment','cicd']}
+  ];
+  const groupFor=id=>groups.find(g=>g.ids.includes(id));
   const sourceUrl=url=>url.startsWith('https://')?url:docs+url;
   const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   function sourcesFor(l,refs=[]){return refs.length?`<div class="theory-section-sources">Nguồn AWS: ${refs.map(i=>{const [name,url]=l.sources[i];return `<a href="${sourceUrl(url)}" target="_blank" rel="noopener noreferrer">${esc(name)} ↗</a>`;}).join(' · ')}</div>`:'';}
@@ -831,13 +968,13 @@ window.QUEST_ADVANCED_THEORY = [
   function comparisons(l){return `<div id="theory-compare">${(l.comparisons||[]).map(t=>`<section class="theory-comparison"><h2>${esc(t.title)}</h2><div class="theory-table-wrap" role="region" aria-label="${esc(t.title)}" tabindex="0"><table><thead><tr>${t.headers.map(h=>`<th scope="col">${esc(h)}</th>`).join('')}</tr></thead><tbody>${t.rows.map(row=>`<tr>${row.map((c,i)=>i?`<td>${esc(c)}</td>`:`<th scope="row">${esc(c)}</th>`).join('')}</tr>`).join('')}</tbody></table></div></section>`).join('')}${(l.diagrams||[]).map(d=>`<figure class="theory-diagram theory-branches"><figcaption>${esc(d.title)}</figcaption><ul>${d.steps.map(s=>`<li>${esc(s)}</li>`).join('')}</ul><small>${esc(d.note)}</small></figure>`).join('')}</div>`;}
   function recall(l){return `<section class="theory-recall" id="theory-recall"><span class="eyebrow">🐸 THỬ NHỚ, ĐỪNG NHÌN VỘI</span>${[l.recall,...(l.checks||[])].map(([q,a],i)=>`<div class="theory-check"><h2>${l.checks?`${i+1}. `:''}${esc(q)}</h2><details><summary>Mình nghĩ xong rồi · Xem giải thích</summary><p>${esc(a)}</p></details></div>`).join('')}</section>`;}
   const key=new URLSearchParams(location.search).has('qa')?'data-quest-theory-test-v1':'data-quest-theory-v1';
-  let selected=null,read=[];
+  let selected=null,openGroup=null,read=[];
   try{const value=JSON.parse(localStorage.getItem(key)||'[]');if(Array.isArray(value))read=value.filter(id=>lessons.some(l=>l.id===id));}catch{}
   function view(){
     const l=lessons.find(x=>x.id===selected);
-    if(!l)return `<section class="theory-intro"><span class="eyebrow">📚 TRẠM NẠP KIẾN THỨC</span><h1>Lý thuyết nhanh</h1><p>Mỗi chủ đề một bức tranh. Đọc ý chính, nhìn sơ đồ, rồi tự nhẩm lại.</p><span class="pill lime">${read.length}/${lessons.length} chủ đề đã đọc</span></section><div class="theory-grid">${lessons.map((x,i)=>`<button class="theory-card" data-theory="open" data-id="${x.id}"><span class="theory-icon" aria-hidden="true">${x.icon}</span><small>CHỦ ĐỀ ${String(i+1).padStart(2,'0')} · ${x.minutes||'3–5'} PHÚT</small><h2>${x.title}</h2><p>${x.subtitle}</p><span class="theory-card-foot">${read.includes(x.id)?'✓ Đã đọc · Đọc lại':'Mở sổ tay'} →</span></button>`).join('')}</div><p class="footnote">Tóm tắt tiếng Việt từ nội dung bạn gửi và tài liệu AWS. Mỗi bài có nguồn chính thức ở cuối; sơ đồ minh họa được vẽ riêng, đọc được cả khi offline. Trạng thái đã đọc lưu riêng trên trình duyệt này.</p>`;
-    const index=lessons.indexOf(l),next=lessons[index+1];
-    return `<article class="theory-article"><button class="btn quiet small" data-theory="back">← Tất cả chủ đề</button><header class="theory-intro"><span class="eyebrow">${l.icon} SỔ TAY · ${String(index+1).padStart(2,'0')}</span><h1 tabindex="-1" id="theory-title">${l.title}</h1><p>${l.subtitle}</p></header><aside class="theory-memory"><small>🧠 MỘT CÂU ĐỂ NHỚ</small><p>${l.memory}</p></aside><figure class="theory-diagram"><figcaption>Bức tranh trong 10 giây</figcaption><ol>${l.flow.map(s=>`<li>${s}</li>`).join('')}</ol><small>Sơ đồ khái niệm · các nhánh / lựa chọn được ghi trong từng ô.</small></figure>${contents(l)}${l.sections.map(([title,rows,refs],i)=>`<section class="theory-section" id="theory-section-${i}"><h2>${title}</h2><dl>${rows.map(([name,body])=>`<div><dt>${name}</dt><dd>${body}</dd></div>`).join('')}</dl>${sourcesFor(l,refs)}</section>`).join('')}${comparisons(l)}${recall(l)}<section class="theory-sources"><h2>Đọc thêm từ AWS</h2><p>Tổng hợp / đối chiếu ngày 12/10/2026. Các giới hạn và tính năng có thể thay đổi theo engine, phiên bản và Region.</p><div class="row wrap">${l.sources.map(([name,url])=>`<a href="${sourceUrl(url)}" target="_blank" rel="noopener noreferrer">${esc(name)} ↗</a>`).join('')}</div></section><div class="theory-bottom row between wrap"><button class="btn ${read.includes(l.id)?'':'primary'}" data-theory="read" data-id="${l.id}" aria-pressed="${read.includes(l.id)}">${read.includes(l.id)?'✓ Đã đọc · Bỏ đánh dấu':'✓ Đánh dấu đã đọc'}</button>${next?`<button class="btn" data-theory="open" data-id="${next.id}">Tiếp: ${next.title} →</button>`:'<button class="btn" data-theory="back">Về sổ tay →</button>'}<span id="theory-status" role="status"></span></div></article>`;
+    if(!l)return `<section class="theory-intro"><span class="eyebrow">📚 TRẠM NẠP KIẾN THỨC</span><h1>Lý thuyết nhanh</h1><p>${groups.length} nhóm kiến thức. Mở một nhóm, chọn chương cần nhớ lại.</p><span class="pill lime">${read.length}/${lessons.length} chương đã đọc</span></section><div class="theory-groups">${groups.map(g=>`<details class="theory-group" data-group="${g.id}" ${openGroup===g.id?'open':''}><summary><span class="theory-group-icon" aria-hidden="true">${g.icon}</span><span class="theory-group-copy"><strong>${g.title}</strong><span>${g.intro}</span><small>${g.ids.filter(id=>read.includes(id)).length}/${g.ids.length} chương đã đọc</small></span><span class="theory-group-chevron" aria-hidden="true">⌄</span></summary><div class="theory-chapters">${g.ids.map((id,i)=>{const x=lessons.find(l=>l.id===id);return `<button class="theory-card theory-chapter" data-theory="open" data-id="${x.id}"><small>CHƯƠNG ${i+1} · ${x.minutes||'3–5'} PHÚT${x.id==='glue-dynamodb'?' · MỚI':''}</small><h2>${x.title}</h2><p>${x.subtitle}</p><span class="theory-card-foot">${read.includes(x.id)?'✓ Đã đọc · Đọc lại':'Đọc chương'} →</span></button>`;}).join('')}</div></details>`).join('')}</div><p class="footnote">Các bài liên quan đã gom thành chương trong cùng nhóm. Mỗi chương có nguồn AWS, sơ đồ và phần tự nhẩm; đọc được cả khi offline. Dấu đã đọc cũ vẫn được giữ trên trình duyệt này.</p>`;
+    const index=lessons.indexOf(l),group=groupFor(l.id),chapter=group.ids.indexOf(l.id),next=lessons.find(x=>x.id===group.ids[chapter+1]);
+    return `<article class="theory-article"><button class="btn quiet small" data-theory="back">← Các nhóm kiến thức</button><header class="theory-intro"><span class="eyebrow">${l.icon} ${esc(group.title)} · CHƯƠNG ${chapter+1}/${group.ids.length}</span><h1 tabindex="-1" id="theory-title">${l.title}</h1><p>${l.subtitle}</p></header><nav class="theory-related" aria-label="Các chương cùng nhóm">${group.ids.map(id=>{const x=lessons.find(l=>l.id===id);return `<button class="btn small quiet" data-theory="open" data-id="${id}" ${id===l.id?'aria-current="page"':' '}>${esc(x.title)}</button>`;}).join('')}</nav><aside class="theory-memory"><small>🧠 MỘT CÂU ĐỂ NHỚ</small><p>${l.memory}</p></aside><figure class="theory-diagram"><figcaption>Bức tranh trong 10 giây</figcaption><ol>${l.flow.map(s=>`<li>${s}</li>`).join('')}</ol><small>Sơ đồ khái niệm · các nhánh / lựa chọn được ghi trong từng ô.</small></figure>${contents(l)}${l.sections.map(([title,rows,refs],i)=>`<section class="theory-section" id="theory-section-${i}"><h2>${title}</h2><dl>${rows.map(([name,body])=>`<div><dt>${name}</dt><dd>${body}</dd></div>`).join('')}</dl>${sourcesFor(l,refs)}</section>`).join('')}${comparisons(l)}${recall(l)}<section class="theory-sources"><h2>Đọc thêm từ AWS</h2><p>Tổng hợp / đối chiếu ngày ${l.updated||'12/10/2026'}. Các giới hạn và tính năng có thể thay đổi theo engine, phiên bản và Region.</p><div class="row wrap">${l.sources.map(([name,url])=>`<a href="${sourceUrl(url)}" target="_blank" rel="noopener noreferrer">${esc(name)} ↗</a>`).join('')}</div></section><div class="theory-bottom row between wrap"><button class="btn ${read.includes(l.id)?'':'primary'}" data-theory="read" data-id="${l.id}" aria-pressed="${read.includes(l.id)}">${read.includes(l.id)?'✓ Đã đọc · Bỏ đánh dấu':'✓ Đánh dấu đã đọc'}</button>${next?`<button class="btn" data-theory="open" data-id="${next.id}">Tiếp: ${next.title} →</button>`:'<button class="btn" data-theory="back">Về sổ tay →</button>'}<span id="theory-status" role="status"></span></div></article>`;
   }
   function handle(el,render){
     if(window.DailyGate&&!window.DailyGate.allow())return;
@@ -849,7 +986,7 @@ window.QUEST_ADVANCED_THEORY = [
       el.setAttribute('aria-pressed',String(read.includes(id)));el.classList.toggle('primary',!read.includes(id));el.textContent=read.includes(id)?'✓ Đã đọc · Bỏ đánh dấu':'✓ Đánh dấu đã đọc';
       document.getElementById('theory-status').textContent=saved?'Đã lưu.':'Không lưu được trên trình duyệt này.';return;
     }
-    selected=action==='open'&&lessons.some(l=>l.id===el.dataset.id)?el.dataset.id:null;render();window.scrollTo(0,0);document.getElementById('theory-title')?.focus({preventScroll:true});
+    selected=action==='open'&&lessons.some(l=>l.id===el.dataset.id)?el.dataset.id:null;if(selected)openGroup=groupFor(selected).id;render();window.scrollTo(0,0);document.getElementById('theory-title')?.focus({preventScroll:true});
   }
   window.QuestTheory={view,handle};
 })();

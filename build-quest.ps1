@@ -82,6 +82,7 @@ $js = [IO.File]::ReadAllText((Join-Path $root 'theory.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'theory-advanced.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'theory-platform.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'theory-backup.js')) + "`n" + $js
+$js = [IO.File]::ReadAllText((Join-Path $root 'theory-glue-dynamodb.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-fun.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-leaves.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'daily-runtime.js')) + "`n" + $js

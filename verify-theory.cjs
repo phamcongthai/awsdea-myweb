@@ -28,17 +28,21 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));let chrome,ws;
  await send('Runtime.enable');await send('Page.enable');
  await send('Page.navigate',{url:base+'/index.html?qa=1'});await waitFor('Boolean(window.Quest&&window.QuestTheory)');
  await evaluate(()=>{Quest.reset();document.querySelector('[data-page="theory"]').click();});
- await test('Theory navigation shows fourteen topic cards',()=>document.querySelectorAll('.theory-card').length===14&&document.querySelector('.breadcrumb').textContent.includes('Lý thuyết nhanh'));
+ await test('Theory navigation shows five groups containing fifteen chapters',()=>document.querySelectorAll('.theory-card').length===15&&document.querySelectorAll('.theory-group').length===5&&document.querySelector('.breadcrumb').textContent.includes('Lý thuyết nhanh'));
+ await test('Groups start collapsed and every chapter appears exactly once',()=>{const ids=[...document.querySelectorAll('.theory-chapter')].map(b=>b.dataset.id);return !document.querySelector('.theory-group[open]')&&ids.length===15&&new Set(ids).size===15;});
+ await test('Group summaries expand and collapse without navigating',()=>{const g=document.querySelector('.theory-group');g.querySelector('summary').click();const visible=g.open&&g.querySelector('.theory-chapter').getBoundingClientRect().height>0;g.querySelector('summary').click();return visible&&!g.open;});
+ await snap('theory-groups-mobile',390,844);
+ await test('Collapsed groups fit mobile',()=>document.documentElement.scrollWidth<=innerWidth);
  await snap('theory-home-desktop',1440,1000);
- const ids=['compute','storage','s3','redshift','aurora','rds','network','messaging','sagemaker','dynamodb','deployment','cicd','architectures','backup'];
+ const ids=['compute','storage','s3','redshift','aurora','rds','network','messaging','sagemaker','dynamodb','deployment','cicd','architectures','backup','glue-dynamodb'];
  for(const id of ids){
-  await evaluate(`document.querySelector('[data-theory="open"][data-id="${id}"]').click()`);
-  await test(id+' article includes diagram, recall and AWS sources',()=>!!document.querySelector('.theory-diagram')&&!!document.querySelector('.theory-recall details:not([open])')&&Array.from(document.querySelectorAll('.theory-sources a')).every(a=>/^https:\/\/(docs\.)?aws\.amazon\.com\//.test(a.href)));
+  await evaluate(`{const button=document.querySelector('[data-theory="open"][data-id="${id}"]');const group=button.closest('details');if(!group.open)group.querySelector('summary').click();button.click();}`);
+  await test(id+' article includes diagram, recall and AWS sources',()=>!!document.querySelector('.theory-diagram')&&!!document.querySelector('.theory-recall details:not([open])')&&Array.from(document.querySelectorAll('.theory-sources a')).every(a=>/^https:\/\/(?:(docs\.)?aws\.amazon\.com|boto3\.amazonaws\.com)\//.test(a.href)));
   await evaluate(()=>document.querySelector('.theory-recall summary').click());
   await test(id+' recall reveals answer',()=>document.querySelector('.theory-recall details').open);
   await snap('theory-'+id+'-mobile',320,780);
   await test(id+' fits narrow mobile',()=>document.documentElement.scrollWidth<=innerWidth);
-  if(['network','messaging','sagemaker','dynamodb','deployment','cicd','architectures','backup'].includes(id)){
+  if(['network','messaging','sagemaker','dynamodb','deployment','cicd','architectures','backup','glue-dynamodb'].includes(id)){
    await test(id+' contents link to every section',()=>Array.from(document.querySelectorAll('.theory-toc a')).every(a=>document.getElementById(a.hash.slice(1))));
    await evaluate(()=>document.querySelector('.theory-toc a[href="#theory-compare"]').click());
    await snap('theory-'+id+'-comparison-mobile',320,780);
@@ -50,14 +54,20 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));let chrome,ws;
   await evaluate(()=>document.querySelector('[data-theory="read"]').click());
   await evaluate(()=>document.querySelector('[data-theory="back"]').click());
  }
+ await test('Returning to groups keeps the current group expanded',()=>document.querySelector('.theory-group[data-group="pipelines"]').open);
+ await evaluate(()=>document.querySelector('[data-id="glue-dynamodb"]').click());
+ await test('New article has readable code and chapter navigation',()=>document.querySelectorAll('.theory-code').length===3&&document.querySelector('.theory-related [aria-current="page"]').dataset.id==='glue-dynamodb'&&document.querySelector('.theory-bottom [data-theory="open"]').dataset.id==='messaging');
+ await evaluate(()=>document.querySelector('.theory-code').scrollIntoView());
+ await snap('theory-glue-code-mobile',320,780);
+ await test('Code scrolls inside its block without widening mobile page',()=>document.documentElement.scrollWidth<=innerWidth&&[...document.querySelectorAll('.theory-code')].every(p=>p.clientWidth<=innerWidth));
  await send('Page.reload');await waitFor('Boolean(window.Quest)');await evaluate(()=>Quest.go('theory'));
- await test('Read markers survive refresh',()=>document.querySelector('.theory-intro .pill').textContent.includes('14/14'));
+ await test('Read markers survive refresh',()=>document.querySelector('.theory-intro .pill').textContent.includes('15/15'));
  await evaluate(()=>{document.querySelector('[data-id="s3"]').click();document.querySelector('[data-theory="read"]').click();});
- await test('Read marker can be removed',()=>JSON.parse(localStorage.getItem('data-quest-theory-test-v1')).length===13);
+ await test('Read marker can be removed',()=>JSON.parse(localStorage.getItem('data-quest-theory-test-v1')).length===14);
  await send('Network.enable');await send('Network.emulateNetworkConditions',{offline:true,latency:0,downloadThroughput:0,uploadThroughput:0});
  await evaluate(()=>{document.querySelector('[data-theory="back"]').click();document.querySelector('[data-id="aurora"]').click();});
  await test('Articles and diagrams work without network',()=>document.getElementById('theory-title').textContent==='Amazon Aurora'&&!!document.querySelector('.theory-diagram'));
- for(const id of ['dynamodb','deployment','cicd','architectures','backup']){
+ for(const id of ['dynamodb','deployment','cicd','architectures','backup','glue-dynamodb']){
   await evaluate(`document.querySelector('[data-theory="back"]').click();document.querySelector('[data-theory="open"][data-id="${id}"]').click();`);
   await test(id+' complete article works offline',()=>document.querySelectorAll('.theory-section').length>=7&&document.querySelectorAll('.theory-recall details').length>=5&&!!document.querySelector('.theory-comparison'));
  }

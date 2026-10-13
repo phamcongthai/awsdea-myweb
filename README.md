@@ -3,7 +3,7 @@
 AWS Data Quest — học AWS Data Engineer qua 260 câu hỏi, chia theo chủ đề và phiên cam kết khoảng 40 câu.
 
 - Lời giải tiếng Việt riêng cho 1.082 lựa chọn, bấm đáp án sau khi kiểm tra để xem.
-- Menu **Lý thuyết nhanh**: 14 chủ đề gồm Compute & Containers, EBS/EFS & mạng, S3, Redshift, Aurora, RDS, Network chuyên sâu, SNS/SQS/EventBridge, SageMaker, DynamoDB, triển khai AWS, CI/CD, kiến trúc dữ liệu cho DEA và Backup/Vault/khôi phục dữ liệu. Bài Backup gồm 15 phần, phân biệt AWS Backup vault với mô hình Data Vault, so sánh S3/RDS/Aurora/Redshift và có 8 câu tự kiểm tra. Các bài chuyên sâu có mục lục, bảng so sánh, sơ đồ offline, tình huống thực tế và câu tự nhẩm; tài liệu và bài viết AWS được dẫn theo phần và cuối bài.
+- Menu **Lý thuyết nhanh**: 15 chương gom trong 5 nhóm mở/thu gọn: Lưu trữ & backup; Cơ sở dữ liệu; ETL & kiến trúc dữ liệu; Compute & Network; Triển khai & CI/CD. Giữ dấu đã đọc cũ và điều hướng giữa các chương cùng nhóm. Bài Glue & DynamoDB so sánh ETL connector, Query và export, có mẫu Python phân trang/chuyển DynamicFrame, bảng RCU và câu tự nhẩm. Các bài có nguồn AWS, sơ đồ offline và mục lục cho nội dung chuyên sâu.
 - Nút đánh dấu đã đọc lưu riêng trong trình duyệt (`data-quest-theory-v1`), không cộng điểm luyện tập và chưa nằm trong bản sao JSON. Sổ tay tuân theo khóa ôn đầu ngày, mở từ menu khi không có phiên đang làm.
 - Giao diện phù hợp máy tính và điện thoại, có hiệu ứng, combo và điểm kinh nghiệm.
 - Tự lưu tiến độ trong trình duyệt; hỗ trợ sao lưu và khôi phục bằng JSON.
