@@ -169,6 +169,11 @@
     a.reviewed=true;save();window.DailyGate?.recordPractice(q.id,right);render();
     window.QuestFun?.celebrate(right?'right':'wrong');
   }
+  function scrollToQuestion() {
+    const card=document.querySelector('.focus-shell .question-card');
+    const offset=(document.getElementById('daily-date')?.getBoundingClientRect().bottom||0)+12;
+    window.scrollTo({top:matchMedia('(max-width:780px)').matches&&card?Math.max(0,scrollY+card.getBoundingClientRect().top-offset):0,behavior:'instant'});
+  }
   function nextQuestion() {
     if(window.DailyGate && !window.DailyGate.allow())return;
     const a=state.active;if(!a || !a.checked || a.breakUntil) return;
@@ -179,7 +184,7 @@
     a.pos++;a.selected=[];a.checked=false;a.certain=true;a.reviewed=false;
     a.order=shuffle(byId.get(a.ids[a.pos]).answers.map((_,i)=>i));
     if(boundary) a.breakUntil=Date.now()+60000;
-    save();render();window.scrollTo(0,0);
+    save();render();scrollToQuestion();
   }
   function finishSession(status) {
     if(window.DailyGate && !window.DailyGate.allow())return;
@@ -251,7 +256,7 @@
       case 'certainty':if(state.active && !state.active.checked){state.active.certain=el.dataset.value==='true';save();render();}break;
       case 'check':checkAnswer();break;
       case 'next':nextQuestion();break;
-      case 'continue':if(state.active){state.active.breakUntil=0;state.active.returnNotice=false;save();render();window.scrollTo(0,0);}break;
+      case 'continue':if(state.active){state.active.breakUntil=0;state.active.returnNotice=false;save();render();scrollToQuestion();}break;
       case 'return':if(state.active){state.active.returnNotice=false;save();render();}break;
       case 'quit':quit();break;
       case 'end':finishSession('early');break;
