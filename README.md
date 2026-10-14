@@ -6,6 +6,7 @@ AWS Data Quest — học AWS Data Engineer qua 260 câu hỏi, chia theo chủ �
 - Menu **Lý thuyết nhanh**: 16 chương gom trong 5 nhóm mở/thu gọn: Lưu trữ & backup; Cơ sở dữ liệu; ETL & kiến trúc dữ liệu; Compute & Network; Triển khai & CI/CD. Giữ dấu đã đọc cũ và điều hướng giữa các chương cùng nhóm. Bài Glue & DynamoDB so sánh ETL connector, Query và export, có mẫu Python phân trang/chuyển DynamicFrame, bảng RCU và câu tự nhẩm. Bài Athena & pushdown giải thích luồng metadata/data, pruning theo partition/cột/khối, ví dụ min/max và phân tích lựa chọn Parquet/ORC. Các bài có nguồn chính thức AWS/Trino/Apache, sơ đồ offline và mục lục cho nội dung chuyên sâu.
 - Nút đánh dấu đã đọc lưu riêng trong trình duyệt (`data-quest-theory-v1`), không cộng điểm luyện tập và chưa nằm trong bản sao JSON. Sổ tay tuân theo khóa ôn đầu ngày, mở từ menu khi không có phiên đang làm.
 - Giao diện phù hợp máy tính và điện thoại, có hiệu ứng, combo và điểm kinh nghiệm.
+- Ôn đầu ngày hiển thị tỷ lệ đúng trên câu đã chấm và số sai cho phép. Nếu không còn khả năng đạt trên 90%, tự khởi động lại toàn bộ lượt ngay, đảo lại câu hỏi và từng bộ đáp án; lượt mới được lưu để tiếp tục sau khi tải lại trang.
 - Tự lưu tiến độ trong trình duyệt; hỗ trợ sao lưu và khôi phục bằng JSON.
 - Phòng thi riêng: 4 đề mới, mỗi đề 65 câu / 120 phút. Đánh dấu, quay lại sửa đáp án, tự nộp khi hết giờ, chấm và mở lời giải sau khi nộp.
 
