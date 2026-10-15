@@ -6,3 +6,6 @@
 #music-panel[hidden]{display:none}#music-panel p{margin:10px 0;line-height:1.6}#music-panel .music-hint{font-size:11px;color:#c0b5cf}#music-panel label{display:block;margin:12px 0}
 #music-panel input[type=range]{width:60%;vertical-align:middle;accent-color:#c8a7ef;margin:8px 4px}#music-panel output{white-space:nowrap}
 body{padding-bottom:68px}#daily-gate{padding-bottom:88px}
+#music-panel select{width:100%;background:#30283e;color:#eee7ff;border:1px solid #8975a5;border-radius:8px;padding:10px 6px;font:inherit}
+#music-panel .music-transport{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:11px}
+#music-panel .music-current{font-weight:700;color:#e2c695}#music-panel a{color:#d8bdff}#music-panel small{font-size:10px;line-height:1.6}#music-panel summary{cursor:pointer}

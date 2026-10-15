@@ -1,0 +1,29 @@
+Classical playlist — recording credits
+
+MP3 transcodes downloaded from Wikimedia Commons. Recordings unchanged.
+Each recording retains the license listed below; these licenses do not apply to the app code.
+
+fur-elise.mp3 — Ludwig van Beethoven: Für Elise, WoO 59
+Performance: V Gao (Gaodifan). Public domain / CC0.
+https://commons.wikimedia.org/wiki/File:FurElise.ogg
+https://creativecommons.org/publicdomain/zero/1.0/
+
+moonlight.mp3 — Ludwig van Beethoven: Piano Sonata No. 14, Op. 27 No. 2, I. Adagio sostenuto
+Performance: Juan Felipe Arjona. CC BY 2.5.
+https://commons.wikimedia.org/wiki/File:Moonlight.ogg
+https://creativecommons.org/licenses/by/2.5/
+
+clair-de-lune.mp3 — Claude Debussy: Clair de lune, Suite bergamasque
+Performance: Laurens Goedhart (2011). CC BY 3.0.
+https://commons.wikimedia.org/wiki/File:Clair_de_lune_(Claude_Debussy)_Suite_bergamasque.ogg
+https://creativecommons.org/licenses/by/3.0/
+
+nocturne.mp3 — Frédéric Chopin: Nocturne in E-flat major, Op. 9 No. 2
+Performance: Martha Goldstein. The Al Goldstein collection / Pandora Music, ibiblio.org. CC BY-SA 2.0.
+https://commons.wikimedia.org/wiki/File:Frederic_Chopin_-_Nocturne_Eb_major_Opus_9,_number_2.ogg
+https://creativecommons.org/licenses/by-sa/2.0/
+
+canon.mp3 — Johann Pachelbel: Canon in D, piano transcription
+Performance: Lee Galloway, from "Soothing the Soul". CC BY-SA 3.0.
+https://commons.wikimedia.org/wiki/File:Pachelbel%27s_Canon.ogg
+https://creativecommons.org/licenses/by-sa/3.0/

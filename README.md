@@ -2,7 +2,7 @@
 
 AWS Data Quest — học AWS Data Engineer qua 260 câu hỏi, chia theo chủ đề và phiên cam kết khoảng 40 câu.
 
-- Nhạc nền **Dark Fantasy — Khu rừng cổ tích** tổng hợp ngay trong web, không cần mạng: mặc định bật mỗi lần mở trang, âm lượng mới 65% (ghi nhớ mức bạn chỉnh). Trình duyệt có thể yêu cầu chạm trang để phát. Nút bật/tắt luôn ở góc dưới, kể cả ôn đầu ngày; tắt nhạc giữ im lặng đến khi bật lại hoặc mở lại trang.
+- Playlist **Nhạc cổ điển** gồm Für Elise, Moonlight Sonata (chương I), Clair de lune, Nocturne Op. 9 No. 2 và Canon in D (piano). Bản thu MP3 nằm trong `public/music`, kèm nguồn và giấy phép ở `CREDITS.txt`. Có chọn bài, trước/sau, tự chuyển và lặp danh sách; ghi nhớ bài và âm lượng. Mặc định bật mỗi lần mở trang (65% nếu chưa chỉnh), phát sau lần chạm đầu tiên nếu trình duyệt chặn autoplay. Nút tắt luôn ở góc, kể cả ôn đầu ngày. Mở HTML trực tiếp cần giữ thư mục `public/music` bên cạnh.
 
 - Lời giải tiếng Việt riêng cho 1.082 lựa chọn, bấm đáp án sau khi kiểm tra để xem.
 - Menu **Lý thuyết nhanh**: 16 chương gom trong 5 nhóm mở/thu gọn: Lưu trữ & backup; Cơ sở dữ liệu; ETL & kiến trúc dữ liệu; Compute & Network; Triển khai & CI/CD. Giữ dấu đã đọc cũ và điều hướng giữa các chương cùng nhóm. Bài Glue & DynamoDB so sánh ETL connector, Query và export, có mẫu Python phân trang/chuyển DynamicFrame, bảng RCU và câu tự nhẩm. Bài Athena & pushdown giải thích luồng metadata/data, pruning theo partition/cột/khối, ví dụ min/max và phân tích lựa chọn Parquet/ORC. Các bài có nguồn chính thức AWS/Trino/Apache, sơ đồ offline và mục lục cho nội dung chuyên sâu.
