@@ -2,6 +2,8 @@
 
 AWS Data Quest — học AWS Data Engineer qua 260 câu hỏi, chia theo chủ đề và phiên cam kết khoảng 40 câu.
 
+- Nút **🎵 Nhạc Minecraft** ở góc dưới: nghe Minecraft Volume Alpha từ trình phát Bandcamp chính thức của C418, thu gọn vẫn phát và chuyển câu không tải lại nhạc. Cần mạng và nhấn Play; âm lượng online dùng âm lượng thiết bị. Có tùy chọn file nhạc trên máy, lặp lại và lưu âm lượng riêng; file không tải lên và cần chọn lại khi tải lại trang. Chuyển giữa trang luyện và phòng thi cần mở nhạc lại.
+
 - Lời giải tiếng Việt riêng cho 1.082 lựa chọn, bấm đáp án sau khi kiểm tra để xem.
 - Menu **Lý thuyết nhanh**: 16 chương gom trong 5 nhóm mở/thu gọn: Lưu trữ & backup; Cơ sở dữ liệu; ETL & kiến trúc dữ liệu; Compute & Network; Triển khai & CI/CD. Giữ dấu đã đọc cũ và điều hướng giữa các chương cùng nhóm. Bài Glue & DynamoDB so sánh ETL connector, Query và export, có mẫu Python phân trang/chuyển DynamicFrame, bảng RCU và câu tự nhẩm. Bài Athena & pushdown giải thích luồng metadata/data, pruning theo partition/cột/khối, ví dụ min/max và phân tích lựa chọn Parquet/ORC. Các bài có nguồn chính thức AWS/Trino/Apache, sơ đồ offline và mục lục cho nội dung chuyên sâu.
 - Nút đánh dấu đã đọc lưu riêng trong trình duyệt (`data-quest-theory-v1`), không cộng điểm luyện tập và chưa nằm trong bản sao JSON. Sổ tay tuân theo khóa ôn đầu ngày, mở từ menu khi không có phiên đang làm.

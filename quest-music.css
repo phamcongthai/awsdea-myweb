@@ -1,0 +1,14 @@
+#quest-music{position:fixed;bottom:max(12px,env(safe-area-inset-bottom));left:14px;z-index:63;font-size:12px;color:#e5efdc;max-width:calc(100vw - 28px)}
+#quest-music button,#quest-music summary{cursor:pointer}
+#quest-music .music-toggle{border:1px solid #607549;border-radius:22px;background:#1b2c21;color:#d9f59a;padding:10px 15px;box-shadow:0 3px 16px #0004;font:inherit}
+#music-panel{position:absolute;bottom:48px;left:0;width:330px;max-width:calc(100vw - 28px);max-height:calc(100dvh - 130px);overflow:auto;border:1px solid #607549;border-radius:16px;background:#18251d;padding:16px;box-sizing:border-box;box-shadow:0 12px 40px #0008}
+#music-panel[hidden]{display:none}
+#music-panel .music-heading{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#music-panel .music-stop{border:1px solid #607549;color:#e5efdc;border-radius:8px;background:transparent;padding:5px 8px;font:inherit}
+#music-panel p{margin:10px 0;line-height:1.6}#music-panel a{color:#d9f59a}
+#music-panel iframe{display:block;width:100%;height:120px;border:0;margin:10px 0}
+#music-panel .music-hint,#music-panel small{font-size:11px;color:#afc2ad;line-height:1.6}
+#music-panel .music-local{border-top:1px solid #40513d;margin-top:14px;padding-top:12px}
+#music-panel label{display:block;margin:12px 0}#music-panel input[type=file]{display:block;max-width:100%;margin-top:8px;font:inherit}
+#music-panel audio{width:100%;height:40px}#music-panel input[type=range]{width:65%;vertical-align:middle;accent-color:#c9ee76;margin:8px}#music-panel output{white-space:nowrap}
+body{padding-bottom:60px}
