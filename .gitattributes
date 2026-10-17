@@ -1,0 +1,4 @@
+# Generated bundles preserve third-party code-generator template strings/licenses.
+public/architect/data-app.js -whitespace
+public/architect/data-app.js.LEGAL.txt -whitespace
+public/architect/data-LICENSES.txt -whitespace

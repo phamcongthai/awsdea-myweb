@@ -1,5 +1,66 @@
 # awsdea-myweb
 
+## World 3 — Data Engineering / NovaMart
+
+Vào **Architect Quest → Data Engineering**, hoặc `/data.html`. Tám lab đều có cấu hình ban đầu cần sửa, engine chạy trên dữ liệu, output artifacts, trace, XP một lần và 3 câu tiếng Anh với giải thích tiếng Việt. Bật **Luyện tự do** để truy cập cả 8 ngay từ đầu.
+
+| Lab | Chức năng đã triển khai |
+| --- | --- |
+| S3 Versioning & Recovery | Enabled/Suspended/null versions, ghi đè, delete marker, restore, retention, policy deny, kiểm tra nội dung báo cáo |
+| S3 Event-Driven Pipeline | Prefix/suffix, invocation/execution permissions, validation CSV, processed/quarantine, duplicate events, idempotency, logs; đường nối EventBridge/SQS tùy chọn |
+| Athena Data Lake | Crawler tạo schema metadata; SQL JOIN/GROUP BY/SUM/AVG/COUNT/WHERE/ORDER/LIMIT tính từ nguồn, result location/managed results |
+| Athena Optimization | Chuyển representation CSV/Parquet, partition/column pruning, file overhead, grid partition và baseline cùng kết quả |
+| Glue ETL Workflow | Crawler-success workflow/trigger; join/filter/cast/project/derive/aggregate qua SQL, dedup, Parquet output, source bookmark, file mới/đổi, reset, append/upsert và lỗi sau write |
+| Step Functions Orchestration | State editor, Task/Choice/Parallel/Map/Wait/Pass/Fail/Succeed, Retry/Catch, JSONPath subset, fault injection và trace input/output |
+| Redshift Warehouse Loading | COPY CSV/virtual Parquet, schema/mapping/NULL/DECIMAL/date, load atomic, SQL, UNLOAD và thử overflow |
+| Redshift Query Optimization | Hash distribution, EVEN/KEY/ALL/AUTO, skew, collocation/redistribution, slice lanes, modeled work, statistics/sort state |
+
+React Flow hỗ trợ kéo/pan/pinch, thêm bằng chạm và nối bằng chạm hai cổng; inventory/configuration là bottom sheet trên điện thoại. Dataset Explorer hiển thị nguồn và output, sửa/upload CSV. Ôn tích lũy ghi đúng/sai, dịch vụ yếu và số lần sai lặp lại. Tiến độ dùng chung `architect-quest-v1` với Bedrock/Networking và không xóa progress cũ. Khóa ôn đầu ngày vẫn áp dụng.
+
+### Cài đặt, chạy và build
+
+Yêu cầu Node.js 22+; không cần AWS credentials, tài khoản cloud hay backend.
+
+```powershell
+npm ci
+npm run dev
+# http://127.0.0.1:4173/data.html
+npm run build:data
+powershell -NoProfile -ExecutionPolicy Bypass -File ./build-architect.ps1
+```
+
+Commit source, lockfile và các bundle trong `public`. Vercel tiếp tục phục vụ `public` đã build sẵn; không thay cấu hình hosting. Tải đầy đủ qua HTTPS/localhost một lần để service worker cache cả ba thế giới. Nhạc và ảnh đề cũ không thuộc cache lab.
+
+### Kiểm thử
+
+```powershell
+npm run test:data
+npm run test:data:browser
+node test-architect-bedrock.mjs
+node test-architect-network.mjs
+node test-architect-missions.mjs
+node verify-architect.cjs
+```
+
+Vitest runner xử lý ký tự `#` trong đường dẫn Windows bằng junction tạm ổn định, không đổi tên repo. Playwright dùng Chrome tại đường dẫn Windows trong `playwright.config.mjs`; đặt `CHROME_PATH` nếu browser nằm nơi khác. Browser suite kiểm tra 390px touch-only completion, thêm/nối node bằng chạm, 360px/nằm ngang/tablet, sửa dữ liệu, persistence, offline và tám lab. Screenshots/artifacts nằm trong `.qa/`.
+
+Đợt kiểm tra triển khai: 85 test Vitest, 6 kịch bản Playwright và 180 kiểm tra hồi quy Architect Quest (35 Bedrock + 48 Networking + 37 integration + 60 browser). Kiểm tra browser dùng Chrome headless mô phỏng touch/viewport; chưa kiểm tra trên thiết bị iOS/Android vật lý.
+
+### Kiến trúc và mở rộng
+
+- `src/data-app.jsx`, `src/data.css`: React UI, React Flow, map, inspector, trace playback, datasets và quiz. Animation chỉ đọc trace đã tính.
+- `public/architect/data-common.mjs`: typed JSDoc contracts, dataset seed 42, CSV, context, IAM và trace.
+- `data-storage.mjs`, `data-analytics.mjs`, `data-states.mjs`, `data-redshift.mjs`: các engine độc lập UI. `data-engine.mjs` dispatch và chuẩn hóa kết quả/lỗi.
+- `data-sql.mjs`: SELECT subset qua AlaSQL trong database riêng mỗi lần; giới hạn nguồn/hàm/Cartesian product. `data-missions.mjs`: service definitions, ports, broken starts và business verification. `data-questions.mjs`: 24 câu tự biên soạn.
+- `build-data.mjs`: esbuild bundle local React/React Flow/AlaSQL, giữ giấy phép. `build-architect.ps1`: shared assets và content-hashed offline manifest.
+- Thêm service: khai báo definition/default config/operations/permissions, thêm cặp port hợp lệ, implement runtime handler và lỗi cụ thể, cập nhật tests/icon provenance. Không thêm kết nối chỉ để trang trí.
+- Thêm mission: khai báo metadata, fixture đúng và khởi đầu lỗi, business checks dựa trên output thực, câu hỏi, unit + browser coverage. Kiểm chứng cả cấu hình sai và nhiều thiết kế đúng.
+- Khi cập nhật hành vi AWS: đối chiếu nguồn chính thức ở `public/architect/data-references.md`, sửa engine/test trước, cập nhật giới hạn trong `data-guide.html`, build lại bundle và offline manifest.
+
+### Giả định và giới hạn
+
+Dữ liệu mẫu nhỏ (240 orders), lưu localStorage; chưa có đồng bộ thiết bị hoặc IndexedDB. SQL là subset, không phải Trino/Redshift đầy đủ. Parquet là representation theo cột trong bộ nhớ, không phải binary codec. Scan/work dùng mô hình công khai, không phải AWS billing/latency. IAM đơn giản hóa action/resource/deny; Lambda resource policy dùng cấu hình minh họa. ASL hỗ trợ subset, parallel/map dùng thực thi xác định và trace branch, không chạy cloud concurrency. Standard/Express chưa mô phỏng đầy đủ quota/delivery. Glue Workflow/Trigger hỗ trợ crawler-success condition; scheduling cron, CTAS SQL, Distributed Map và mọi query-plan strategy AWS chưa được triển khai. Redshift DECIMAL giới hạn precision ≤15 và dùng Number; không dùng làm công cụ tài chính chính xác. Xem [hướng dẫn đầy đủ](public/architect/data-guide.html) và [nguồn AWS](public/architect/data-references.md).
+
 ## AWS Architect Quest
 
 Mở **Architect Quest** trong menu Data Quest, hoặc truy cập `/architect.html`. Lab gồm 7 nhiệm vụ Bedrock và 9 nhiệm vụ Networking, chạy hoàn toàn trong trình duyệt, không cần tài khoản AWS/API key và không phát sinh phí AWS.

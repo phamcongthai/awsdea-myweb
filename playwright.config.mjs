@@ -1,0 +1,2 @@
+import {defineConfig} from '@playwright/test';
+export default defineConfig({testDir:'tests/browser',timeout:45000,workers:1,use:{baseURL:'http://127.0.0.1:4173',headless:true,launchOptions:{executablePath:process.env.CHROME_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe'}},webServer:{command:'"'+process.execPath+'" serve-architect.cjs',url:'http://127.0.0.1:4173/data.html',reuseExistingServer:true},outputDir:'.qa/playwright',reporter:'list'});

@@ -1,0 +1,7 @@
+import {context,fail,copy,initialRuntime} from './data-common.mjs';
+import {storage,events} from './data-storage.mjs';
+import {crawl,athena,convert,etl,glueWorkflow} from './data-analytics.mjs';
+import {stateMachine} from './data-states.mjs';
+import {load,warehouseQuery,distribution} from './data-redshift.mjs';
+export function runData(graph,request,previous){const c=context(graph,previous);try{for(const n of graph.nodes)if(n.type==="s3")c.privateBucket(n);if(graph.nodes.length>60||graph.edges.length>140)fail('Sim.GraphLimit','Quá nhiều thành phần.');let output;const r=request,op=r.operation;if(r.lab==='d1')output=storage(c,r);else if(r.lab==='d2')output=events(c,r);else if(op==='crawl')output=crawl(c);else if(op==='convert')output=convert(c);else if(r.lab==='d3'||r.lab==='d4')output=athena(c,r);else if(r.lab==='d5')output=op==='workflow'?glueWorkflow(c,r):etl(c,r);else if(r.lab==='d6')output=stateMachine(c,r);else if(r.lab==='d7')output=op==='copy'?load(c,r):warehouseQuery(c,r);else if(r.lab==='d8')output=distribution(c,r);else fail('Sim.UnknownLab','Lab không được hỗ trợ.');return {status:c.findings.length?'partial':'success',output,trace:c.trace,runtime:c.rt,findings:c.findings,cost:output.cost||{estimated:true}};}catch(e){c.emit(e.node||null,e.code||'Sim.InvalidConfiguration',{message:e.message},'error');return {status:'failure',output:{message:e.message},trace:c.trace,runtime:c.rt,error:{code:e.code||'Sim.InvalidConfiguration',message:e.message,node:e.node,hint:e.hint},findings:c.findings};}}
+export {initialRuntime};

@@ -43,7 +43,7 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));let chrome,ws;
  await evaluate(()=>document.querySelector('[data-do=quiz]').click());await test(id+' three question explanations available',()=>{document.querySelector('[data-answer="0:0"]').click();return document.querySelectorAll('.aq-quiz').length===3&&document.querySelector('.aq-quiz p').textContent.length>30;});
  }
  await evaluate(()=>ArchitectQA.open('b1',true));await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});
- const tap=async selector=>{const r=await evaluate(`(()=>{const r=document.querySelector(${JSON.stringify(selector)}).getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);await send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:r.x,y:r.y}]});await send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});};
+ const tap=async selector=>{const r=await evaluate(`(()=>{const el=document.querySelector(${JSON.stringify(selector)});el.scrollIntoView({block:"center"});const r=el.getBoundingClientRect();return {x:r.x+r.width/2,y:r.y+r.height/2}})()`);await send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{x:r.x,y:r.y}]});await send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});};
  await evaluate(()=>window.scrollTo(0,0));await tap('[data-do=palette]');await tap('[data-add=model]');await evaluate(()=>document.querySelector('[data-do=fit]').click());
  await tap('[data-port=out][data-id=app]');await tap('[data-port=in][data-id=model]');await tap('[data-port=out][data-id=role]');await tap('[data-port=in][data-id=model]');
  await test('Real mobile touch inserts node and connects two ports',()=>ArchitectQA.session.graph.edges.length===2);
