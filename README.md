@@ -1,5 +1,35 @@
 # awsdea-myweb
 
+## AWS Architect Quest
+
+Mở **Architect Quest** trong menu Data Quest, hoặc truy cập `/architect.html`. Lab gồm 7 nhiệm vụ Bedrock và 9 nhiệm vụ Networking, chạy hoàn toàn trong trình duyệt, không cần tài khoản AWS/API key và không phát sinh phí AWS.
+
+- Kéo dịch vụ vào canvas (điện thoại: chạm để thêm), nối cổng ra → cổng vào, chọn node để sửa cấu hình. Có pan/zoom/pinch, undo/redo và bảng cấu hình trên điện thoại.
+- Chạy thử để xem trace; kiểm chứng chạy các tình huống nghiệp vụ trước khi cấp XP và mở màn tiếp. Pause/Step điều khiển phát trace tính từ engine.
+- Bedrock: RAG, chunk/index, stale data và sync, metadata/hybrid retrieval, agent gọi Lambda/DynamoDB, quyền và guardrail. Networking: IPv4, route, SG/NACL, NAT, endpoints, DNS, CloudFront/S3/OAC, ALB/NLB và WAF.
+- 48 câu củng cố có giải thích tiếng Việt. Tự lưu lab riêng trong localStorage; có xuất/nhập JSON. Khóa ôn đầu ngày của web vẫn áp dụng.
+- Icon SVG AWS chính thức lưu local, nguồn trong `public/architect/icons/SOURCE.txt`. Sau lần tải qua HTTPS/localhost hoàn tất, lab có thể tải lại và chơi offline. Nhạc nền và ảnh của ngân hàng ôn tập cũ không nằm trong cache lab.
+
+Chạy local bằng Node.js:
+
+```powershell
+node ./serve-architect.cjs
+# Mở http://127.0.0.1:4173/architect.html
+```
+
+Không mở lab trực tiếp bằng `file://` vì dùng ES modules. Triển khai Vercel như hướng dẫn bên dưới; không thêm backend hay dependencies. Sau sửa lab, chạy `./build-architect.ps1` để cập nhật phiên bản cache offline. `build-quest.ps1` cũng gọi bước này.
+
+Kiểm tra engine và giao diện (bài kiểm tra trình duyệt dùng Chrome trên Windows):
+
+```powershell
+node ./test-architect-bedrock.mjs
+node ./test-architect-network.mjs
+node ./test-architect-missions.mjs
+node ./verify-architect.cjs
+```
+
+Phạm vi thực tế: đây là mô phỏng giáo dục xác định, không phải AWS/LLM thật. RAG dùng thuật toán từ khóa/từ đồng nghĩa; IAM và networking chỉ triển khai các quy tắc trong bài. Route target khai báo trong cấu hình route, DNS target trong records; không nối dây thay cho các trường này. Hiện chưa có SQS/CloudWatch runtime, editor rule dạng bảng đầy đủ, hoặc mô phỏng toàn bộ giao thức mạng. Xem `public/architect/README.html` để biết giới hạn và tài liệu AWS đối chiếu. Giao diện dùng ES modules/CSS thuần để tích hợp repo tĩnh và hoạt động offline.
+
 AWS Data Quest — học AWS Data Engineer qua 260 câu hỏi, chia theo chủ đề và phiên cam kết khoảng 40 câu.
 
 - Playlist **Nhạc cổ điển** gồm Für Elise, Moonlight Sonata (chương I), Clair de lune, Nocturne Op. 9 No. 2 và Canon in D (piano). Bản thu MP3 nằm trong `public/music`, kèm nguồn và giấy phép ở `CREDITS.txt`. Có chọn bài, trước/sau, tự chuyển và lặp danh sách; ghi nhớ bài và âm lượng. Mặc định bật mỗi lần mở trang (65% nếu chưa chỉnh), phát sau lần chạm đầu tiên nếu trình duyệt chặn autoplay. Nút tắt luôn ở góc, kể cả ôn đầu ngày. Mở HTML trực tiếp cần giữ thư mục `public/music` bên cạnh.

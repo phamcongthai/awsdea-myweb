@@ -1,0 +1,22 @@
+$ErrorActionPreference='Stop'
+$root=$PSScriptRoot
+$target=Join-Path $root 'public/architect'
+[IO.Directory]::CreateDirectory($target)|Out-Null
+$css=[IO.File]::ReadAllText((Join-Path $root 'quest.css'))+"`n"+[IO.File]::ReadAllText((Join-Path $root 'quest-daily.css'))+"`n"+[IO.File]::ReadAllText((Join-Path $root 'quest-music.css'))
+$css=[regex]::Replace($css,'@import\s+url\([^;]+;','')
+[IO.File]::WriteAllText((Join-Path $target 'shared.css'),$css,[Text.UTF8Encoding]::new($false))
+Copy-Item -LiteralPath (Join-Path $root 'daily-runtime.js') -Destination (Join-Path $target 'daily.js') -Force
+Copy-Item -LiteralPath (Join-Path $root 'quest-music.js') -Destination (Join-Path $target 'music.js') -Force
+$files=@('architect.html','daily-bank.js')+@(Get-ChildItem $target -File -Recurse | ForEach-Object {'architect/'+$_.FullName.Substring($target.Length+1).Replace('\','/')})
+$hash=[Security.Cryptography.SHA256]::Create()
+$text=($files|ForEach-Object {$_+':'+(Get-FileHash -Algorithm SHA256 -LiteralPath (Join-Path $root ('public/'+$_))).Hash}) -join '|'
+$version=[BitConverter]::ToString($hash.ComputeHash([Text.Encoding]::UTF8.GetBytes($text))).Replace('-','').Substring(0,12)
+$cacheList=$files|ConvertTo-Json -Compress
+$sw=@"
+const CACHE='architect-$version',FILES=$cacheList;
+self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES))));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith('architect-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{const u=new URL(e.request.url);if(e.request.method!=='GET'||u.origin!==self.location.origin)return;const p=u.pathname.replace(/^\//,'');if(!FILES.includes(p))return;e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(p,copy));}return r;}).catch(()=>caches.match(p)));});
+"@
+[IO.File]::WriteAllText((Join-Path $root 'public/architect-sw.js'),$sw,[Text.UTF8Encoding]::new($false))
+Write-Output 'Built Architect Quest shared assets and offline cache.'
