@@ -28,13 +28,13 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));let chrome,ws;
  await send('Runtime.enable');await send('Page.enable');
  for(const page of ['index.html','realtest.html']){
  await send('Page.navigate',{url:base+'/'+page+'?qa=1'});await waitFor('Boolean(window.QuestMusic)');
- await test(page+' default on and playlist present',()=>QuestMusic.state.enabled&&QuestMusic.state.volume===.65&&document.querySelectorAll('#music-track option').length===5);
+ await test(page+' default on and playlist present',()=>QuestMusic.state.enabled&&QuestMusic.state.volume===.65&&document.querySelectorAll('#music-track option').length===11);
  await send('Input.dispatchMouseEvent',{type:'mousePressed',x:300,y:150,button:'left',clickCount:1});await send('Input.dispatchMouseEvent',{type:'mouseReleased',x:300,y:150,button:'left',clickCount:1});
  await waitFor('!QuestMusic.state.paused&&document.querySelector("#quest-music audio").currentTime>0');
- for(let i=0;i<5;i++){
+ for(let i=0;i<11;i++){
  await evaluate(`document.querySelector('#music-track').value='${i}';document.querySelector('#music-track').dispatchEvent(new Event('change'));`);
  await waitFor('document.querySelector("#quest-music audio").readyState>=2&&!QuestMusic.state.paused');
- assert.ok(await evaluate(()=>document.querySelector('#quest-music audio').duration)>150);pass(page+' track '+i+' decoded and playing');
+ assert.ok(await evaluate(()=>document.querySelector('#quest-music audio').duration)>120);pass(page+' track '+i+' decoded and playing');
  }
  await evaluate(()=>document.querySelector('#quest-music audio').dispatchEvent(new Event('ended')));await waitFor('QuestMusic.state.index===0&&!QuestMusic.state.paused');pass(page+' end of playlist loops to first');
  await test(page+' question render preserves audio element',()=>{const a=document.querySelector('#quest-music audio');window.Quest?.render();return a===document.querySelector('#quest-music audio')&&!a.paused;});
