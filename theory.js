@@ -76,8 +76,34 @@
         ['Chọn theo mục tiêu','Chịu lỗi AZ: Multi-AZ. Báo cáo làm primary quá tải đọc: read replica và chấp nhận độ trễ dữ liệu. Xóa nhầm bảng: backup/PITR; standby cũng có thể nhận thao tác xóa.']]]],recall:['Có Multi-AZ rồi thì có bỏ backup được không?','Không. Dữ liệu xóa nhầm có thể được replicate sang standby. Backup/PITR giúp phục hồi trạng thái trước lỗi.'],sources:[['RDS overview','AmazonRDS/latest/UserGuide/Welcome.html'],['Multi-AZ','AmazonRDS/latest/UserGuide/Concepts.MultiAZ.html'],['Read replicas','AmazonRDS/latest/UserGuide/USER_ReadRepl.html'],['Point-in-time restore','AmazonRDS/latest/UserGuide/USER_PIT.html'],['RDS Proxy','AmazonRDS/latest/UserGuide/rds-proxy.html']]}
   ];
   lessons.push(...(window.QUEST_ADVANCED_THEORY||[]),...(window.QUEST_PLATFORM_THEORY||[]),...(window.QUEST_BACKUP_THEORY||[]),...(window.QUEST_GLUE_THEORY||[]),...(window.QUEST_ATHENA_THEORY||[]));
+  lessons.push({
+    id:'lake-formation-access',icon:'🔐',title:'Lake Formation: Khóa cột, đừng mở cửa S3',subtitle:'SELECT, GetDataAccess và đường truy cập có thể bỏ qua bộ lọc',minutes:'3–4',updated:'18/10/2026',
+    memory:'IAM cho gọi API · Lake Formation giới hạn dữ liệu · Catalog mô tả bảng · S3 giữ file.',
+    flow:['Role chạy truy vấn','Athena / Spectrum + quyền Lake Formation','S3 location đã đăng ký'],
+    sections:[
+      ['1. Ẩn salary trong bảng chưa đủ',[
+        ['Một ví dụ dễ nhớ','File trên S3 chứa id, name và salary. Bạn chỉ cấp SELECT trên id, name trong Lake Formation. Khi truy vấn qua Athena hoặc Redshift Spectrum được tích hợp đúng, người dùng chỉ được đọc hai cột đó; truy vấn cột salary bị từ chối.'],
+        ['Đường vòng qua S3','Nếu cùng người dùng có quyền đọc trực tiếp object bằng S3 API, họ có thể tải file bằng boto3 và xem cả salary. Bộ lọc Lake Formation không tự chạy trên một lệnh s3:GetObject thông thường. Quyền đọc object không phải quyền đọc từng cột.']],[0,1]],
+      ['2. Cấu hình theo nguyên tắc ít quyền nhất',[
+        ['Dữ liệu nguồn','Đăng ký S3 location với Lake Formation, cấp SELECT cho đúng principal trên các cột cần thiết; dùng data filters nếu cần giới hạn hàng. Dịch vụ và cấu hình truy vấn phải hỗ trợ, thực thi kiểu lọc đang dùng.'],
+        ['Tránh quyền đọc trực tiếp ngoài ý muốn','Không cấp s3:GetObject trực tiếp trên dữ liệu nguồn cần bảo vệ cho role truy vấn. Kiểm tra cả bucket policy và các quyền rộng có sẵn; bỏ một Allow trong IAM chưa chắc đã loại hết đường truy cập. Quyền SELECT rộng khác hoặc chế độ hybrid chưa opt-in cũng cần được rà soát.'],
+        ['Ai đọc S3 phía sau?','IAM role dùng khi đăng ký location cung cấp quyền truy cập S3 cho Lake Formation. Lake Formation cấp thông tin xác thực tạm thời để engine tích hợp lấy dữ liệu theo luồng được quản trị; engine thực thi giới hạn hàng/cột. Không phải file S3 được sửa để xóa các cột bị cấm.']],[1,2]],
+      ['3. Đã có SELECT, còn cần GetDataAccess không?',[
+        ['Có, với Athena','Principal chạy truy vấn Athena trên dữ liệu được Lake Formation quản lý vẫn cần IAM permission lakeformation:GetDataAccess. SELECT trả lời “được đọc dữ liệu nào”; GetDataAccess cho phép dùng API lấy quyền truy cập dữ liệu. Chỉ có một trong hai là chưa đủ.'],
+        ['Các quyền còn lại','Vẫn cần quyền API Athena, Glue Data Catalog phù hợp và quyền S3 cho nơi lưu kết quả truy vấn; có thể cần quyền KMS nếu dùng mã hóa. Phân biệt bucket kết quả với dữ liệu nguồn: hạn chế đọc trực tiếp nguồn không có nghĩa xóa mọi quyền S3 của người dùng. Bảo vệ cả kết quả vì chúng chứa dữ liệu đã truy vấn.']],[3]],
+      ['4. Mẹo nhớ cho DEA-C01',[
+        ['Bốn vai trò','IAM/S3: ai được gọi API và truy cập object? Lake Formation: principal được đọc bảng, cột, hàng nào? Glue Data Catalog: bảng nằm ở đâu và schema ra sao? Athena/Spectrum: thực thi truy vấn theo quyền tích hợp.'],
+        ['Dấu hiệu trong đề','Cần hạn chế salary hoặc chỉ cho xem dữ liệu một vùng: nghĩ đến quyền cột/data filters của Lake Formation và engine hỗ trợ. Chỉ cấp GetObject rồi kỳ vọng file tự che dữ liệu là sai. Lake Formation bổ sung quản trị dữ liệu, không thay thế IAM.']],[0,3]]
+    ],
+    comparisons:[{title:'Cùng một file, khác đường đọc',headers:['Đường truy cập','Quyền liên quan','Kết quả'],rows:[
+      ['Athena tích hợp Lake Formation','SELECT(id, name) + IAM/API phù hợp','Đọc id, name; không được đọc salary'],
+      ['Redshift Spectrum tích hợp Lake Formation','SELECT(id, name) + cấu hình/quyền phù hợp','Đọc id, name; không được đọc salary'],
+      ['EC2 + boto3 gọi S3 trực tiếp','Quyền GetObject hiệu lực; quyền KMS nếu cần','Có thể tải toàn bộ file, bao gồm salary']]}],
+    recall:['Athena có SELECT(id, name), nhưng thiếu lakeformation:GetDataAccess. Đã đủ để đọc dữ liệu chưa?','Chưa. Cần cả quyền dữ liệu trong Lake Formation và quyền IAM GetDataAccess, cùng các quyền API, nơi lưu kết quả và mã hóa cần thiết. Ngược lại, GetDataAccess không tự cấp SELECT.'],
+    sources:[['Athena và Lake Formation','athena/latest/ug/security-athena-lake-formation.html'],['Quyền trên dữ liệu S3 bên dưới','lake-formation/latest/dg/access-control-underlying-data.html'],['Storage access management','lake-formation/latest/dg/storage-permissions.html'],['Quyền IAM cần cho Athena','athena/latest/ug/lf-athena-user-permissions.html']]
+  });
   const groups=[
-    {id:'storage',icon:'🗄️',title:'Lưu trữ & backup',intro:'Lưu ở đâu, bảo vệ thế nào, khôi phục ra sao?',ids:['storage','s3','backup']},
+    {id:'storage',icon:'🗄️',title:'Lưu trữ & backup',intro:'Lưu ở đâu, bảo vệ thế nào, khôi phục ra sao?',ids:['storage','s3','backup','lake-formation-access']},
     {id:'databases',icon:'🧩',title:'Cơ sở dữ liệu',intro:'Từ giao dịch đến warehouse và truy cập theo key.',ids:['rds','aurora','redshift','dynamodb']},
     {id:'pipelines',icon:'🔄',title:'ETL & kiến trúc dữ liệu',intro:'Đọc dữ liệu, truyền sự kiện và ghép thành pipeline.',ids:['athena-pushdown','glue-dynamodb','messaging','architectures','sagemaker']},
     {id:'infrastructure',icon:'🌐',title:'Compute & Network',intro:'Nền tảng chạy ứng dụng và kết nối các dịch vụ.',ids:['compute','network']},
