@@ -80,7 +80,7 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));let chrome,ws;
  await evaluate(()=>{const s=JSON.parse(localStorage.getItem('data-quest-daily-test-v1'));s.wrong=[];localStorage.setItem('data-quest-daily-test-v1',JSON.stringify(s));});
  await send('Page.reload');await waitFor('Boolean(window.Exam&&window.DailyGate)');
  await evaluate(async()=>{await Exam.start(5,'review');const q=Exam.bank.questions[0];for(const n of q.correct.slice(0,-1))Exam.choose(n);Exam.choose(q.answers.findIndex((_,i)=>!q.correct.includes(i)));document.querySelector('[data-exam="check"]').click();document.querySelector('[data-exam="clear"]').click();for(const n of q.correct)Exam.choose(n);document.querySelector('[data-exam="check"]').click();});
- await test('Dojo Review archives a wrong check even after correcting it, without relocking today',()=>DailyGate.state.wrong.includes('e:5:1')&&!DailyGate.isLocked&&Exam.state.active.everWrong[0]);
+ await test('Dojo Review locks a wrong check and archives it without relocking today',()=>DailyGate.state.wrong.includes('e:5:1')&&!DailyGate.isLocked&&Exam.state.active.everWrong[0]&&!!document.querySelector('.answer.wrong')&&[...document.querySelectorAll('.answer')].every(b=>b.disabled));
  await setDate('2026-10-13T17:00:00Z');await send('Page.reload');await waitFor('Boolean(window.Exam?.bank&&window.DailyGate?.isLocked)');
  await test('Next midnight requires unsubmitted Dojo Review mistake and preserves active progress',()=>DailyGate.state.day==='2026-10-14'&&DailyGate.state.pool.includes('e:5:1')&&Exam.state.active.test===5&&document.querySelector('#exam-app').inert);
  await evaluate(()=>DailyGate.start());

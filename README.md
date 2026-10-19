@@ -101,7 +101,7 @@ AWS Data Quest — học AWS Data Engineer qua 260 câu hỏi, chia theo chủ �
 - Giao diện phù hợp máy tính và điện thoại, có hiệu ứng, combo và điểm kinh nghiệm.
 - Ôn đầu ngày hiển thị tỷ lệ đúng trên câu đã chấm và số sai cho phép. Nếu không còn khả năng đạt trên 90%, tự khởi động lại toàn bộ lượt ngay, đảo lại câu hỏi và từng bộ đáp án; lượt mới được lưu để tiếp tục sau khi tải lại trang. Sau reset có nút xem câu vừa sai, giữ nguyên lựa chọn và thứ tự đáp án của lượt trước để đối chiếu.
 - Tự lưu tiến độ trong trình duyệt; hỗ trợ sao lưu và khôi phục bằng JSON.
-- Phòng thi có 5 đề, mỗi đề 65 câu: đề 1–4 trùng ngân hàng ôn tập; đề 5 từ Tutorials Dojo. Thi thử đề 1–4 có 120 phút, đề 5 có 130 phút theo nguồn. Review không tính giờ, kiểm tra đáp án và mở lời giải từng câu. Câu từng sai khi kiểm tra Review được lưu ngay vào ôn đầu ngày, kể cả sau đó sửa đúng hoặc chưa nộp bài.
+- Phòng thi có 5 đề, mỗi đề 65 câu: đề 1–4 trùng ngân hàng ôn tập; đề 5 từ Tutorials Dojo. Thi thử đề 1–4 có 120 phút, đề 5 có 130 phút theo nguồn. Review không tính giờ, kiểm tra đáp án và mở lời giải từng câu. Sau khi bấm kiểm tra Review, các lựa chọn và nút bỏ lựa chọn được khóa, kể cả khi quay lại câu hoặc tải lại trang. Câu sai được lưu ngay vào ôn đầu ngày dù chưa nộp bài.
 
 Phòng thi nằm tại `realtest.html`, có lối vào từ menu Data Quest. Bài thi đang làm và lịch sử lưu riêng trong trình duyệt, không ảnh hưởng điểm luyện tập. Chế độ thi thử không dừng đồng hồ khi đóng trang; Review có thể thoát và tiếp tục không giới hạn thời gian. Lời giải sau thi giữ nguyên từ đề nhập vào (tiếng Anh); ảnh được phục vụ cùng website.
 
