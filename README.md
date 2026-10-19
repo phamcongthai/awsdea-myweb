@@ -155,3 +155,9 @@ Các câu từng sai không bị xóa khỏi bộ nhớ khi trả lời đúng l
 Kiểm tra ánh xạ đáp án ôn đầu ngày: `verify-daily-mapping.cjs` đối chiếu 520 câu với ngân hàng nguồn và kiểm tra thao tác chọn/chấm/mở lời giải trên trình duyệt với hai thứ tự đảo cho mỗi câu. Đây là kiểm tra tính toàn vẹn và chấm điểm, không phải thẩm định kiến thức AWS của bộ đề.
 
 Nhập lại đề 5 từ trang Tutorials Dojo đã lưu: `node import-dojo.mjs`. File HTML và tài nguyên gốc trong `DOJOS/` không đưa lên repo; dữ liệu đề và hình cần thiết được đóng gói trong `exam-bank/`. Sau khi nhập, chạy `build-quest.ps1` để cập nhật phòng thi và ngân hàng ôn đầu ngày.
+
+Flashcard nằm trong menu **Flashcard · Nhớ nhanh**: 64 thẻ tiếng Việt được biên soạn riêng, chia 8 chủ đề và có liên kết tài liệu AWS ở mặt sau. Có tìm kiếm, yêu thích, lọc thẻ mới/đến hạn/chưa nhớ, đảo thứ tự và phiên 20/40/toàn bộ thẻ phù hợp. Tự đánh giá đã nhớ đặt hẹn sau 1/3/7/14/30 ngày theo streak; chưa nhớ đặt hẹn sau 10 phút. Lịch này là quy tắc ôn đơn giản, không phải dự báo trí nhớ hay điểm thi. Flashcard được đóng gói trong HTML, dùng được khi đã tải trang; nguồn AWS cần mạng.
+
+Tiến độ flashcard lưu riêng ở `data-quest-flashcards-v1` trên trình duyệt; các nút xuất/nhập tiến độ luyện tập hiện có không bao gồm dữ liệu flashcard. Kiểm tra bằng `node verify-flashcards.mjs`.
+
+Phòng thi lưu riêng bài dở của từng đề. **Lưu & thoát** rồi chọn đề khác; **Tiếp tục đề này** phục hồi câu đang làm, đáp án, thứ tự đảo và đánh dấu. Bài thi có giờ giữ nguyên deadline khi chuyển đề; Review vẫn không giới hạn thời gian. Các câu sai trong Review đang tạm lưu vẫn vào ôn đầu ngày. Kiểm tra chuyển đề bằng `node verify-exam-switch.mjs`.

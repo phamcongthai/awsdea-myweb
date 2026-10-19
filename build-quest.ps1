@@ -76,9 +76,12 @@ $bank = @{version=1; sources=$sources; questions=$questions} | ConvertTo-Json -D
 $template = [IO.File]::ReadAllText((Join-Path $root 'quest-shell.html'))
 $css = [IO.File]::ReadAllText((Join-Path $root 'quest.css'))
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'theory.css'))
+$css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'flashcards.css'))
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'quest-daily.css'))
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'quest-music.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest.js'))
+$js = [IO.File]::ReadAllText((Join-Path $root 'flashcards.js')) + "`n" + $js
+$js = [IO.File]::ReadAllText((Join-Path $root 'flashcards-data.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'theory.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'theory-advanced.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'theory-platform.js')) + "`n" + $js

@@ -30,7 +30,7 @@ window.DAILY_KEYS = {"p:2-58":{"count":5,"correct":[3,4]},"e:2:32":{"count":4,"c
   function add(id){if(keys[id]&&!state.wrong.includes(id))state.wrong.push(id);}
   function collect(){
     try{const p=JSON.parse(localStorage.getItem(PRACTICE));if(p){for(const [id,v] of Object.entries(p.progress||{}))if(v.correct===false||v.everWrong===true)add('p:'+id);for(const v of p.active?.results||[])if(v.correct===false)add('p:'+v.id);}}catch{}
-    try{const e=JSON.parse(localStorage.getItem(EXAMS));for(const h of [...(e?.history||[]),...(e?.active?[e.active]:[])]){if(!Number.isInteger(h.test)||!Array.isArray(h.answers))continue;h.answers.forEach((a,i)=>{const id=`e:${h.test}:${i+1}`;if(keys[id]&&(h.everWrong?.[i]===true||((h!==e.active||h.checked?.[i]===true)&&Array.isArray(a)&&!same(a,keys[id].correct))))add(id);});}}catch{}
+    try{const e=JSON.parse(localStorage.getItem(EXAMS));const runs=[...(e?.history||[]).map(run=>({run,submitted:true})),...[e?.active,...Object.values(e?.parked||{})].filter(Boolean).map(run=>({run,submitted:false}))];for(const {run:h,submitted} of runs){if(!Number.isInteger(h.test)||!Array.isArray(h.answers))continue;h.answers.forEach((a,i)=>{const id=`e:${h.test}:${i+1}`;if(keys[id]&&(h.everWrong?.[i]===true||((submitted||h.checked?.[i]===true)&&Array.isArray(a)&&!same(a,keys[id].correct))))add(id);});}}catch{}
   }
   function rollover(){const day=today();if(state.day===day)return false;state.day=day;state.pool=state.wrong.slice().sort();state.unlocked=state.pool.length===0;state.round=null;state.result=null;report=false;save();return true;}
   const locked=()=>!state.unlocked;
