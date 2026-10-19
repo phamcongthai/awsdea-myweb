@@ -395,7 +395,7 @@ window.DAILY_KEYS = {"p:2-58":{"count":5,"correct":[3,4]},"e:2:32":{"count":4,"c
     if(!prefs.effects)document.getElementById('quest-confetti')?.replaceChildren();
   });
   reduced.addEventListener('change',()=>{applyPrefs();if(reduced.matches)document.getElementById('quest-confetti')?.replaceChildren();});
-  window.QuestFun={decorate,celebrate};
+  window.QuestFun={decorate,celebrate,playSound:tone,applyPrefs};
 })();
 
 // Vietnamese teaching examples; diagrams describe responsibilities, not a fixed execution order.

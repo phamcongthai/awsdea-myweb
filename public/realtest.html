@@ -264,6 +264,121 @@ window.DAILY_KEYS = {"p:2-58":{"count":5,"correct":[3,4]},"e:2:32":{"count":4,"c
 
 'use strict';
 (() => {
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+  const qa = new URLSearchParams(location.search).has('qa');
+  const key = qa ? 'data-quest-fun-test' : 'data-quest-fun';
+  let prefs = {effects:true,sound:true};
+  try {const saved=JSON.parse(localStorage.getItem(key));if(saved){prefs.effects=saved.effects!==false;prefs.sound=saved.sound!==false;}} catch (_) {}
+  let audio, burstTimer, lastCelebration=0;
+  let soundRequest=0;
+  const voices=new Set();
+  const icons=['🚀','🧪','🎒','🔎','🏰','🛡️','🛰️'];
+  const wins=['Kiến thức đã vào kho. Stonks! 📈','Đúng bài luôn, chef! 🧑‍🍳','Não vừa được buff 🧠✨','Ấy, trình đang lên đó 😎','Câu này nằm trong lòng bàn tay 🤌'];
+  const misses=['Plot twist thôi. Đọc lời giải rồi comeback 🐸','Não đang tải thêm dữ liệu… 🧠📥','Sai một câu, mở khóa một bài học 🔓','Không mất mạng. Chỉ thêm kinh nghiệm 🍄'];
+  const greetings=['🐸 Ếch Data đã vào party. Đi nhặt kiến thức thôi!','Một câu nữa thôi. Phiên bản tương lai đang cảm ơn bạn 🫶','Học tới đâu, gom kiến thức tới đó. Không cần speedrun 🌱'];
+  function streak(state) {
+    const a=state.active;if(!a)return 0;
+    const records=a.results.map(r=>r.correct);
+    if(a.checked){const q=window.QUEST_BANK.questions.find(q=>q.id===a.ids[a.pos]);records.push(a.selected.length===q.correct.length&&a.selected.every(i=>q.correct.includes(i)));}
+    let n=0;for(let i=records.length-1;i>=0&&records[i];i--)n++;return n;
+  }
+  function line(state,finished) {
+    if(finished)return finished.status==='complete'?'🏆 Nhiệm vụ hoàn tất. Bạn vừa thắng boss trì hoãn!':'Camp ở đây nhé. Hành trình vẫn còn chờ 🌿';
+    const a=state.active;if(!a)return greetings[0];
+    if(a.breakUntil)return '☕ Checkpoint! Uống miếng nước, sạc lại mana.';
+    if(a.returnNotice)return '🫡 Party đủ người rồi. Ếch giữ chỗ cho bạn nãy giờ!';
+    if(a.checked){const n=streak(state);return n>=3?`🔥 COMBO ×${n} · ${n>=5?'Não đang vào chế độ ultra instinct!':'Đang vào guồng rồi đó!'}`:n?wins[a.pos%wins.length]:misses[a.pos%misses.length];}
+    return a.pos===a.ids.length-1?'🏁 Câu cuối rồi! Boss trì hoãn còn 1 HP.':greetings[a.pos%greetings.length];
+  }
+  function applyPrefs() {
+    document.body.classList.toggle('quiet-effects',!prefs.effects||reduced.matches);
+    document.querySelectorAll('[data-fun="effects"]').forEach(b=>{b.textContent=prefs.effects?'✨ Hiệu ứng':'🌿 Êm dịu';b.setAttribute('aria-pressed',String(prefs.effects));});
+    document.querySelectorAll('[data-fun="sound"]').forEach(b=>{b.textContent=prefs.sound?'🔊 Âm thanh: Bật':'🔇 Âm thanh: Tắt';b.setAttribute('aria-pressed',String(prefs.sound));b.title=prefs.sound?'Tắt âm báo trả lời đúng / sai':'Bật âm báo trả lời đúng / sai';});
+  }
+  function decorate(state,finished) {
+    const total=Object.keys(state.progress).length*10+state.history.filter(h=>h.status==='complete').length*50;
+    const level=Math.floor(total/200)+1,combo=streak(state);
+    const host=document.querySelector('.focus-meta')||document.querySelector('.finish-card')||document.querySelector('.topbar');
+    if(!host)return;
+    const hud=document.createElement('section');hud.className='game-hud';hud.setAttribute('aria-label','Bạn đồng hành và kinh nghiệm học tập');
+    hud.innerHTML=`<button class="frog-pal" data-fun="pet" aria-label="Chạm Ếch Data để nhận lời động viên" title="Ếch Data · Chạm để high five"><span aria-hidden="true">🐸</span><i aria-hidden="true">✦</i></button><div class="pal-dialog"><div class="pal-name">ẾCH DATA <span>đồng đội của bạn</span></div><p class="pal-line" role="status"></p></div><div class="game-level"><div><strong>LV.${level}</strong><span>${total} XP</span></div><div class="xp-track" role="progressbar" aria-label="Kinh nghiệm tới cấp tiếp theo" aria-valuenow="${total%200}" aria-valuemin="0" aria-valuemax="200"><i style="width:${total%200/2}%"></i></div><small>+10 / câu mới · +50 / trọn phiên</small></div><div class="fun-controls"><button data-fun="effects" type="button"></button><button data-fun="sound" type="button"></button></div>`;
+    hud.querySelector('.pal-line').textContent=line(state,finished);
+    if(host.matches('.topbar'))host.after(hud);else host.before(hud);
+    if(combo>=3){const badge=document.createElement('span');badge.className='combo-badge';badge.textContent=`🔥 COMBO ×${combo}`;document.querySelector('.focus-meta .row')?.append(badge);}
+    document.querySelectorAll('.session-icon').forEach((el,i)=>{el.textContent=icons[i];el.classList.add('quest-emoji');});
+    const hero=document.querySelector('.hero-art');
+    if(hero){const sticker=document.createElement('span');sticker.className='meme-sticker';sticker.textContent='🧠 +10 INT mỗi ngày';hero.append(sticker);}
+    const checkpoint=document.querySelector('.finish-card .finish-icon');if(checkpoint)checkpoint.textContent=finished?(finished.status==='complete'?'🏆':'🏕️'):'🧋';
+    if(finished?.status==='complete'){
+      const badge=document.createElement('div');badge.className='loot-badge';badge.textContent='🎁 +50 XP · Huy hiệu: Giữ lời với bản thân';document.querySelector('.finish-card h1')?.after(badge);
+    }
+    applyPrefs();
+  }
+  function stopSound() {
+    soundRequest++;
+    for(const osc of voices){try{osc.stop();}catch(_){} }
+    voices.clear();
+  }
+  async function tone(kind) {
+    if(!prefs.sound)return;
+    stopSound();
+    const request=soundRequest;
+    try {
+      if(!audio||audio.state==='closed')audio=new (window.AudioContext||window.webkitAudioContext)();
+      if(audio.state!=='running')await audio.resume();
+      if(!prefs.sound||request!==soundRequest)return;
+      // Bright rising chimes for success; a soft descending pair for a mistake.
+      const notes=kind==='wrong'?[294,220]:kind==='finish'?[523,659,784,1047]:[659,988,1319];
+      const step=kind==='wrong'?.15:.095,tail=kind==='wrong'?.26:.36;
+      notes.forEach((freq,i)=>{
+        const osc=audio.createOscillator(),gain=audio.createGain(),t=audio.currentTime+.015+i*step;
+        osc.type=kind==='wrong'?'triangle':'sine';osc.frequency.setValueAtTime(freq,t);
+        if(kind==='wrong')osc.frequency.exponentialRampToValueAtTime(freq*.9,t+tail);
+        gain.gain.setValueAtTime(0,t);gain.gain.linearRampToValueAtTime(kind==='wrong'?.055:.075,t+.012);gain.gain.exponentialRampToValueAtTime(.0001,t+tail);
+        osc.connect(gain);gain.connect(audio.destination);voices.add(osc);
+        osc.onended=()=>{voices.delete(osc);osc.disconnect();gain.disconnect();};
+        osc.start(t);osc.stop(t+tail+.02);
+      });
+    }catch(_){}
+  }
+  function celebrate(kind) {
+    tone(kind);
+    const now=performance.now();
+    if(now-lastCelebration<300 && kind!=='finish')return;
+    lastCelebration=now;
+    if(!prefs.effects||reduced.matches)return;
+    let layer=document.getElementById('quest-confetti');
+    if(!layer){layer=document.createElement('div');layer.id='quest-confetti';layer.setAttribute('aria-hidden','true');document.body.append(layer);}
+    layer.replaceChildren();clearTimeout(burstTimer);
+    const count=kind==='finish'?42:kind==='wrong'?7:20;
+    const symbols=kind==='wrong'?['🌱','🧩','💡']:kind==='finish'?['🎉','🏆','⭐','✨','🎊']:['⭐','✨','🍀','⚡'];
+    for(let i=0;i<count;i++){
+      const particle=document.createElement('span');particle.className='confetti-piece';particle.textContent=symbols[i%symbols.length];
+      particle.style.cssText=`left:${5+Math.random()*90}%;--drift:${Math.round(Math.random()*180-90)}px;--spin:${Math.round(Math.random()*400-200)}deg;animation-delay:${Math.random()*.3}s;animation-duration:${1.2+Math.random()*.8}s;font-size:${14+Math.random()*13}px`;
+      layer.append(particle);
+    }
+    const target=document.querySelector('.frog-pal');target?.classList.add('pal-cheer');
+    const card=document.querySelector('.question-card');if(kind!=='wrong')card?.classList.add('quest-win');
+    burstTimer=setTimeout(()=>{layer.replaceChildren();target?.classList.remove('pal-cheer');card?.classList.remove('quest-win');},2400);
+  }
+  document.addEventListener('click',e=>{
+    const button=e.target.closest('[data-fun]');if(!button)return;
+    if(button.dataset.fun==='pet'){
+      const lines=['High five! 🐸🤚 Giờ mình xử câu tiếp nào.','Ếch không biết đáp án. Nhưng ếch tin bạn tìm ra 🫡','Me: mở Facebook? · Ếch: thêm một câu đã 👀','Một ít kiến thức, một ít dopamine. Hợp lý 🤌'];
+      document.querySelector('.pal-line').textContent=lines[Math.floor(Math.random()*lines.length)];celebrate('right');return;
+    }
+    if(button.dataset.fun==='effects')prefs.effects=!prefs.effects;
+    if(button.dataset.fun==='sound'){prefs.sound=!prefs.sound;if(prefs.sound)tone('right');else stopSound();}
+    try{localStorage.setItem(key,JSON.stringify(prefs));}catch(_){}
+    applyPrefs();
+    if(!prefs.effects)document.getElementById('quest-confetti')?.replaceChildren();
+  });
+  reduced.addEventListener('change',()=>{applyPrefs();if(reduced.matches)document.getElementById('quest-confetti')?.replaceChildren();});
+  window.QuestFun={decorate,celebrate,playSound:tone,applyPrefs};
+})();
+
+'use strict';
+(() => {
  const qa=new URLSearchParams(location.search).has('qa'),KEY=qa?'aws-realtest-qa-v1':'aws-realtest-v1';
  const $=id=>document.getElementById(id),esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
  let state={version:1,active:null,history:[]},bank=null,view='hub',review=null,filter='all',busy=false;
@@ -296,13 +411,13 @@ window.DAILY_KEYS = {"p:2-58":{"count":5,"correct":[3,4]},"e:2:32":{"count":4,"c
  }
  function reviewAccuracy(a){const checked=bank.questions.map((q,i)=>({checked:a.checked?.[i]===true,right:right(q,a.answers[i])})).filter(r=>r.checked),total=checked.length,score=checked.filter(r=>r.right).length;return `<section class="review-accuracy" id="review-accuracy" role="status" aria-live="polite" aria-label="Tỷ lệ đúng Review"><strong>${total?(score/total*100).toLocaleString('vi-VN',{maximumFractionDigits:1})+'% đúng':'—'}</strong><div><span>Đã kiểm tra ${total}/65 · Đúng ${score} · Sai ${total-score}</span><small>${total?'Tỷ lệ tính trên các câu đã kiểm tra.':'Chưa kiểm tra câu nào.'}</small></div></section>`;}
  function renderQuestion(){const a=view==='review'?review:state.active;if(!a||!bank)return;const done=view==='review',revealed=done||untimed(a)&&!!a.checked?.[a.pos],q=bank.questions[a.pos],selected=a.answers[a.pos],complete=a.answers.filter((s,i)=>s.length===bank.questions[i].correct.length).length;const shown=bank.questions.map((q,i)=>i).filter(i=>filter==='all'||filter==='flagged'&&a.flags[i]||filter==='empty'&&a.answers[i].length!==bank.questions[i].correct.length||filter==='wrong'&&!right(bank.questions[i],a.answers[i]));
- app.innerHTML=`<main class="exam-room"><header class="exam-top">${done?`<button class="btn quiet" data-exam="result">← Kết quả</button>`:`<a class="brand" href="index.html"><span class="brand-mark">⌘</span><div>Data Quest<small>ĐỀ KIỂM TRA ${a.test}</small></div></a>`}<div class="row wrap">${done?'<span class="pill lime">ĐÃ NỘP · XEM LẠI</span>':`${untimed(a)?'<span class="pill lime">Review · Không tính giờ</span>':'<span class="exam-clock" id="exam-clock" role="timer" aria-label="Thời gian còn lại"></span>'}<button class="btn quiet" data-exam="hub">Lưu & thoát</button><button class="btn primary" data-exam="confirm">Nộp bài</button>`}</div></header><div class="exam-layout"><section><div class="row between wrap spaced"><span class="eyebrow">ĐỀ ${a.test} · CÂU ${a.pos+1}/65</span><small>${complete}/65 câu đã chọn đủ</small></div>${!done&&untimed(a)?reviewAccuracy(a):''}<article class="question-card spaced"><div class="row between wrap"><span class="pill">Chọn ${q.correct.length} đáp án</span><button class="btn small quiet" data-exam="flag" ${done?'disabled':''}>${a.flags[a.pos]?'⚑ Đã đánh dấu':'⚐ Đánh dấu xem lại'}</button></div><div class="question-text">${content(q.question)}</div><div class="answer-list">${a.order[a.pos].map((n,i)=>`<button class="answer ${revealed?(q.correct.includes(n)?'correct':selected.includes(n)?'wrong':''):selected.includes(n)?'selected':''}" data-exam="answer" data-index="${n}" aria-pressed="${selected.includes(n)}" ${revealed?'disabled':''}><span class="answer-letter">${String.fromCharCode(65+i)}</span><span class="answer-copy">${content(q.answers[n])}${revealed?`<span class="answer-status">${q.correct.includes(n)?'✓ Đáp án đúng':''}${selected.includes(n)?' · Bạn đã chọn':''}</span>`:''}</span></button>`).join('')}</div>${!done&&untimed(a)?`<div class="spaced"><button class="btn primary" data-exam="check" ${revealed||selected.length!==q.correct.length?'disabled':''}>${revealed?'✓ Đã kiểm tra':'✓ Kiểm tra đáp án'}</button><p class="footnote">Chọn đủ ${q.correct.length} đáp án để kiểm tra. Đáp án được khóa sau khi kiểm tra.</p></div>`:''}<div class="exam-move"><button class="btn" data-exam="jump" data-index="${a.pos-1}" ${a.pos===0?'disabled':''}>← Câu trước</button><button class="btn quiet small" data-exam="clear" ${revealed||!selected.length?'disabled':''}>Bỏ lựa chọn</button><button class="btn primary" data-exam="${a.pos===64?(done?'result':'confirm'):'jump'}" data-index="${a.pos+1}">${a.pos===64?(done?'Kết quả':'Nộp bài'):'Câu tiếp →'}</button></div>${revealed?`<details class="explanation" ${!done?'open':''}><summary>Giải thích gốc · ${right(q,selected)?'Trả lời đúng':selected.length?'Chưa đúng':'Bỏ trống'}</summary><div class="explanation-content">${content(q.explanation)}</div></details>`:`<p class="footnote">${untimed(a)?'Bấm Kiểm tra đáp án để xem đúng/sai và lời giải tại câu này.':'Có thể bỏ qua và quay lại. Đáp án chỉ hiện sau khi nộp bài.'}</p>`}</article></section><aside class="exam-navigator"><h3>Bản đồ câu hỏi</h3><div class="exam-filters">${[['all','Tất cả'],['flagged','Đánh dấu'],['empty','Chưa đủ'],...(done?[['wrong','Sai / bỏ trống']]:[])].map(([id,label])=>`<button class="btn small quiet" data-exam="filter" data-filter="${id}" aria-pressed="${filter===id}">${label}</button>`).join('')}</div><div class="exam-grid">${shown.map(i=>`<button class="exam-cell ${i===a.pos?'current':''} ${done?(right(bank.questions[i],a.answers[i])?'passed':'failed'):a.answers[i].length===bank.questions[i].correct.length?'answered':''} ${a.flags[i]?'flagged':''}" data-exam="jump" data-index="${i}" aria-label="Câu ${i+1}${a.flags[i]?', đánh dấu':''}" ${i===a.pos?'aria-current="step"':''}>${i+1}${a.flags[i]?'<sup>⚑</sup>':''}</button>`).join('')}</div>${shown.length?'':'<p class="muted">Không có câu trong nhóm này.</p>'}<p class="footnote">${done?'Xanh: đúng · Đỏ: sai / bỏ trống':'Xanh: đã chọn đủ · ⚑: xem lại'}<br>Viền sáng: câu hiện tại</p></aside></div></main>`;if(!done)clock();}
+ app.innerHTML=`<main class="exam-room"><header class="exam-top">${done?`<button class="btn quiet" data-exam="result">← Kết quả</button>`:`<a class="brand" href="index.html"><span class="brand-mark">⌘</span><div>Data Quest<small>ĐỀ KIỂM TRA ${a.test}</small></div></a>`}<div class="row wrap">${done?'<span class="pill lime">ĐÃ NỘP · XEM LẠI</span>':`${untimed(a)?'<span class="pill lime">Review · Không tính giờ</span><button class="btn small quiet" type="button" data-fun="sound" aria-label="Bật hoặc tắt âm báo trả lời"></button>':'<span class="exam-clock" id="exam-clock" role="timer" aria-label="Thời gian còn lại"></span>'}<button class="btn quiet" data-exam="hub">Lưu & thoát</button><button class="btn primary" data-exam="confirm">Nộp bài</button>`}</div></header><div class="exam-layout"><section><div class="row between wrap spaced"><span class="eyebrow">ĐỀ ${a.test} · CÂU ${a.pos+1}/65</span><small>${complete}/65 câu đã chọn đủ</small></div>${!done&&untimed(a)?reviewAccuracy(a):''}<article class="question-card spaced"><div class="row between wrap"><span class="pill">Chọn ${q.correct.length} đáp án</span><button class="btn small quiet" data-exam="flag" ${done?'disabled':''}>${a.flags[a.pos]?'⚑ Đã đánh dấu':'⚐ Đánh dấu xem lại'}</button></div><div class="question-text">${content(q.question)}</div><div class="answer-list">${a.order[a.pos].map((n,i)=>`<button class="answer ${revealed?(q.correct.includes(n)?'correct':selected.includes(n)?'wrong':''):selected.includes(n)?'selected':''}" data-exam="answer" data-index="${n}" aria-pressed="${selected.includes(n)}" ${revealed?'disabled':''}><span class="answer-letter">${String.fromCharCode(65+i)}</span><span class="answer-copy">${content(q.answers[n])}${revealed?`<span class="answer-status">${q.correct.includes(n)?'✓ Đáp án đúng':''}${selected.includes(n)?' · Bạn đã chọn':''}</span>`:''}</span></button>`).join('')}</div>${!done&&untimed(a)?`<div class="spaced"><button class="btn primary" data-exam="check" ${revealed||selected.length!==q.correct.length?'disabled':''}>${revealed?'✓ Đã kiểm tra':'✓ Kiểm tra đáp án'}</button><p class="footnote">Chọn đủ ${q.correct.length} đáp án để kiểm tra. Đáp án được khóa sau khi kiểm tra.</p></div>`:''}<div class="exam-move"><button class="btn" data-exam="jump" data-index="${a.pos-1}" ${a.pos===0?'disabled':''}>← Câu trước</button><button class="btn quiet small" data-exam="clear" ${revealed||!selected.length?'disabled':''}>Bỏ lựa chọn</button><button class="btn primary" data-exam="${a.pos===64?(done?'result':'confirm'):'jump'}" data-index="${a.pos+1}">${a.pos===64?(done?'Kết quả':'Nộp bài'):'Câu tiếp →'}</button></div>${revealed?`<details class="explanation" ${!done?'open':''}><summary>Giải thích gốc · ${right(q,selected)?'Trả lời đúng':selected.length?'Chưa đúng':'Bỏ trống'}</summary><div class="explanation-content">${content(q.explanation)}</div></details>`:`<p class="footnote">${untimed(a)?'Bấm Kiểm tra đáp án để xem đúng/sai và lời giải tại câu này.':'Có thể bỏ qua và quay lại. Đáp án chỉ hiện sau khi nộp bài.'}</p>`}</article></section><aside class="exam-navigator"><h3>Bản đồ câu hỏi</h3><div class="exam-filters">${[['all','Tất cả'],['flagged','Đánh dấu'],['empty','Chưa đủ'],...(done?[['wrong','Sai / bỏ trống']]:[])].map(([id,label])=>`<button class="btn small quiet" data-exam="filter" data-filter="${id}" aria-pressed="${filter===id}">${label}</button>`).join('')}</div><div class="exam-grid">${shown.map(i=>`<button class="exam-cell ${i===a.pos?'current':''} ${done?(right(bank.questions[i],a.answers[i])?'passed':'failed'):a.answers[i].length===bank.questions[i].correct.length?'answered':''} ${a.flags[i]?'flagged':''}" data-exam="jump" data-index="${i}" aria-label="Câu ${i+1}${a.flags[i]?', đánh dấu':''}" ${i===a.pos?'aria-current="step"':''}>${i+1}${a.flags[i]?'<sup>⚑</sup>':''}</button>`).join('')}</div>${shown.length?'':'<p class="muted">Không có câu trong nhóm này.</p>'}<p class="footnote">${done?'Xanh: đúng · Đỏ: sai / bỏ trống':'Xanh: đã chọn đủ · ⚑: xem lại'}<br>Viền sáng: câu hiện tại</p></aside></div></main>`;if(!done)clock();window.QuestFun?.applyPrefs();}
  function choose(n){if(window.DailyGate && !window.DailyGate.allow())return;const a=state.active;if(view!=='test'||!a||expire()||untimed(a)&&a.checked?.[a.pos])return;const q=bank.questions[a.pos];if(!a.order[a.pos].includes(n))return;const selected=a.answers[a.pos];if(selected.includes(n))selected.splice(selected.indexOf(n),1);else if(q.correct.length===1)a.answers[a.pos]=[n];else if(selected.length<q.correct.length)selected.push(n);if(a.checked)a.checked[a.pos]=false;save();renderQuestion();}
  function confirm(){if(!state.active||expire())return;const a=state.active,missing=a.answers.filter((s,i)=>s.length!==bank.questions[i].correct.length).length;modal.innerHTML=`<h2 id="exam-modal-title">Nộp bài kiểm tra?</h2><p>${missing?`Còn ${missing} câu chưa chọn đủ đáp án.`:'Bạn đã chọn đủ đáp án cho 65 câu.'} Có ${a.flags.filter(Boolean).length} câu được đánh dấu.</p><p>Sau khi nộp, bạn sẽ xem được điểm và lời giải nhưng không thể sửa bài này.</p><div class="modal-actions"><button class="btn quiet" data-exam="close">Quay lại kiểm tra</button><button class="btn primary" data-exam="submit">Nộp bài →</button></div>`;modal.showModal();}
  function submit(reason='manual'){const a=state.active;if(!a||bank?.id!==a.test)return;const timed=!untimed(a)&&Date.now()>=a.deadline;const h={...a,ended:timed?a.deadline:Date.now(),reason:timed?'timeout':reason,score:bank.questions.filter((q,i)=>right(q,a.answers[i])).length};state.history.push(h);state.active=null;save();window.DailyGate?.recordExam(bank,h);modal.close();review=h;result();}
  function result(){if(!review||!bank)return;view='result';const a=review;const sections=[...new Set(bank.questions.map(q=>q.section))];app.innerHTML=`<main class="exam-home">${header()}<section class="finish-card"><span class="eyebrow">${a.reason==='timeout'?'HẾT GIỜ · BÀI ĐÃ TỰ NỘP':'BÀI THI ĐÃ ĐƯỢC LƯU'}</span><h1>Đề ${a.test}: ${a.score}/65 đúng</h1><div class="exam-score">${Math.round(a.score/65*100)}<small>%</small></div><p>${untimed(a)?modeLabel(a):`Thi thử · ${Math.ceil((a.ended-a.started)/60000)} phút`} · ${a.answers.filter(s=>!s.length).length} câu bỏ trống</p><p>Đây là tỷ lệ đúng của bộ đề, không phải điểm chứng chỉ AWS.</p><div class="row wrap spaced"><button class="btn primary" data-exam="review">Xem lại bài & lời giải →</button><button class="btn quiet" data-exam="hub">Về phòng thi</button></div></section><h2>Kết quả theo nhóm kiến thức</h2>${sections.map(s=>{const indexes=bank.questions.map((q,i)=>q.section===s?i:-1).filter(i=>i>=0),n=indexes.filter(i=>right(bank.questions[i],a.answers[i])).length;return `<div class="list-row row between wrap"><h3>${esc(s)}</h3><span class="pill lime">${n}/${indexes.length} đúng</span></div>`;}).join('')}</main>`;window.scrollTo(0,0);}
  async function history(id){const h=state.history.find(h=>h.id===id);if(!h)return;await load(h.test);review=JSON.parse(JSON.stringify(h));result();}
- document.addEventListener('click',async e=>{const el=e.target.closest('[data-exam]');if(!el||el.disabled||busy)return;try{const action=el.dataset.exam;if(action==='close'){modal.close();return;}if(state.active&&view==='test'&&expire())return;switch(action){case'prepare':prepare(Number(el.dataset.test));break;case'start':await start(Number(el.dataset.test),el.dataset.mode);break;case'resume':await resume(el.dataset.test?Number(el.dataset.test):undefined);break;case'answer':choose(Number(el.dataset.index));break;case'check':{const a=state.active;if(view!=='test'||!untimed(a)||(window.DailyGate&&!window.DailyGate.allow()))break;if(a.checked?.[a.pos]||a.answers[a.pos].length!==bank.questions[a.pos].correct.length)break;a.checked??=Array(65).fill(false);a.checked[a.pos]=true;const correct=right(bank.questions[a.pos],a.answers[a.pos]);if(!correct){a.everWrong??=Array(65).fill(false);a.everWrong[a.pos]=true;}save();window.DailyGate?.recordExamAnswer(bank.id,a.pos+1,correct);renderQuestion();break;}case'jump':{const a=view==='review'?review:state.active,n=Number(el.dataset.index);if(a&&n>=0&&n<65){a.pos=n;if(view==='test')save();renderQuestion();scrollToQuestion();}break;}case'flag':if(state.active&&view==='test'){state.active.flags[state.active.pos]=!state.active.flags[state.active.pos];save();renderQuestion();}break;case'clear':if(state.active&&view==='test'&&!(untimed(state.active)&&state.active.checked?.[state.active.pos])){state.active.answers[state.active.pos]=[];if(state.active.checked)state.active.checked[state.active.pos]=false;save();renderQuestion();}break;case'filter':filter=el.dataset.filter;renderQuestion();break;case'confirm':confirm();break;case'submit':submit();break;case'history':await history(el.dataset.id);break;case'review':view='review';filter='all';review.pos=0;renderQuestion();break;case'result':result();break;case'hub':hub();break;}}catch(err){hub();warning(err.message||'Không mở được bài thi. Vui lòng thử lại.');}});
+ document.addEventListener('click',async e=>{const el=e.target.closest('[data-exam]');if(!el||el.disabled||busy)return;try{const action=el.dataset.exam;if(action==='close'){modal.close();return;}if(state.active&&view==='test'&&expire())return;switch(action){case'prepare':prepare(Number(el.dataset.test));break;case'start':await start(Number(el.dataset.test),el.dataset.mode);break;case'resume':await resume(el.dataset.test?Number(el.dataset.test):undefined);break;case'answer':choose(Number(el.dataset.index));break;case'check':{const a=state.active;if(view!=='test'||!untimed(a)||(window.DailyGate&&!window.DailyGate.allow()))break;if(a.checked?.[a.pos]||a.answers[a.pos].length!==bank.questions[a.pos].correct.length)break;a.checked??=Array(65).fill(false);a.checked[a.pos]=true;const correct=right(bank.questions[a.pos],a.answers[a.pos]);if(!correct){a.everWrong??=Array(65).fill(false);a.everWrong[a.pos]=true;}save();window.DailyGate?.recordExamAnswer(bank.id,a.pos+1,correct);renderQuestion();if(correct)window.QuestFun?.playSound('right');break;}case'jump':{const a=view==='review'?review:state.active,n=Number(el.dataset.index);if(a&&n>=0&&n<65){a.pos=n;if(view==='test')save();renderQuestion();scrollToQuestion();}break;}case'flag':if(state.active&&view==='test'){state.active.flags[state.active.pos]=!state.active.flags[state.active.pos];save();renderQuestion();}break;case'clear':if(state.active&&view==='test'&&!(untimed(state.active)&&state.active.checked?.[state.active.pos])){state.active.answers[state.active.pos]=[];if(state.active.checked)state.active.checked[state.active.pos]=false;save();renderQuestion();}break;case'filter':filter=el.dataset.filter;renderQuestion();break;case'confirm':confirm();break;case'submit':submit();break;case'history':await history(el.dataset.id);break;case'review':view='review';filter='all';review.pos=0;renderQuestion();break;case'result':result();break;case'hub':hub();break;}}catch(err){hub();warning(err.message||'Không mở được bài thi. Vui lòng thử lại.');}});
  window.addEventListener('storage',e=>{if(e.key!==KEY||!e.newValue)return;try{const s=JSON.parse(e.newValue);if(validState(s)){state=s;modal.close();hub();if(state.active)resume().catch(e=>warning(e.message));}}catch{}});
  document.addEventListener('visibilitychange',()=>{if(!document.hidden)clock();});
  setInterval(clock,1000);hub();if(state.active)resume().catch(e=>{hub();warning(e.message);});

@@ -13,6 +13,7 @@ $css=[IO.File]::ReadAllText((Join-Path $root 'quest.css'))+"`n"+[IO.File]::ReadA
 $css+="`n"+[IO.File]::ReadAllText((Join-Path $root 'quest-daily.css'))
 $css+="`n"+[IO.File]::ReadAllText((Join-Path $root 'quest-music.css'))
 $js=[IO.File]::ReadAllText((Join-Path $root 'exam.js'))
+$js=[IO.File]::ReadAllText((Join-Path $root 'quest-fun.js'))+"`n"+$js
 $js=[IO.File]::ReadAllText((Join-Path $root 'quest-leaves.js'))+"`n"+$js
 $js=[IO.File]::ReadAllText((Join-Path $root 'daily-runtime.js'))+"`n"+$js
 $js=[IO.File]::ReadAllText((Join-Path $root 'quest-music.js'))+"`n"+$js

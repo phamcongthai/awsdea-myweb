@@ -110,5 +110,5 @@
     if(!prefs.effects)document.getElementById('quest-confetti')?.replaceChildren();
   });
   reduced.addEventListener('change',()=>{applyPrefs();if(reduced.matches)document.getElementById('quest-confetti')?.replaceChildren();});
-  window.QuestFun={decorate,celebrate};
+  window.QuestFun={decorate,celebrate,playSound:tone,applyPrefs};
 })();
