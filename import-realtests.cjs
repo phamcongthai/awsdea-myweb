@@ -18,5 +18,6 @@ files.forEach((file,i)=>{
  manifest.push({id:test.id,title:test.title,minutes:test.minutes,count:questions.length});
  console.log('Imported',file,questions.length,'questions');
 });
+for(const file of fs.readdirSync(out).filter(f=>/^test[5-9]\d*\.json$/.test(f))){const t=JSON.parse(fs.readFileSync(path.join(out,file),'utf8'));manifest.push({id:t.id,title:t.title,minutes:t.minutes,count:t.questions.length});}
 fs.writeFileSync(path.join(out,'manifest.json'),JSON.stringify(manifest));
 console.log('Unique images:',fs.readdirSync(path.join(out,'assets')).length);

@@ -11,3 +11,5 @@ aws-data-quest-backup*.json
 Thumbs.db
 .DS_Store
 realtest/
+
+DOJOS/

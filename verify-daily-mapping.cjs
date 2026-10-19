@@ -1,11 +1,11 @@
 const fs=require('node:fs'),path=require('node:path'),http=require('node:http'),assert=require('node:assert/strict'),crypto=require('node:crypto'),{spawn}=require('node:child_process');
 const root=__dirname,qa=path.join(root,'.qa');fs.mkdirSync(qa,{recursive:true});
 const results=[];const pass=s=>{results.push(s);console.log('PASS',s);};
-for(let n=1;n<=4;n++){
+for(let n=1;n<=5;n++){
  const bank=JSON.parse(fs.readFileSync(path.join(root,'exam-bank/test'+n+'.json'),'utf8'));assert.equal(bank.questions.length,65);
  assert.equal(fs.readFileSync(path.join(root,'public/exams/test'+n+'.js'),'utf8'),'window.REALTEST_DATA = '+JSON.stringify(bank)+';');
  for(const q of bank.questions)for(const html of [q.question,...q.answers,q.explanation])for(const match of html.matchAll(/src="(exams\/assets\/[^" ]+)"/g))assert.ok(fs.existsSync(path.join(root,'public',match[1])));
- const rawDir=path.join(root,'realtest/Tests');if(fs.existsSync(rawDir)){
+ const rawDir=path.join(root,'realtest/Tests');if(n<=4&&fs.existsSync(rawDir)){
   const file=fs.readdirSync(rawDir).find(f=>f.startsWith('00'+n)&&f.endsWith('.html'));
   const original=JSON.parse(fs.readFileSync(path.join(rawDir,file),'utf8').match(/<script id="quiz-data-script" type="application\/json">([\s\S]*?)<\/script>/)[1]);
   const extract=s=>s.replace(/data:image\/(png|jpeg|jpg|gif|webp);base64,([A-Za-z0-9+/=\r\n]+)/g,(_,type,b64)=>'exams/assets/'+crypto.createHash('sha256').update(Buffer.from(b64,'base64')).digest('hex')+'.'+(type==='jpeg'?'jpg':type));
@@ -31,11 +31,11 @@ const delay=ms=>new Promise(r=>setTimeout(r,ms));let chrome,ws;
  vm.runInNewContext(fs.readFileSync(path.join(root,'public/daily-bank.js'),'utf8'),context);
  const expected={};
  for(const q of context.window.QUEST_BANK.questions)expected['p:'+q.id]={question:q.question,answers:q.answers,correct:q.correct,vi:q.explanationsVi};
- for(let n=1;n<=4;n++){const b=JSON.parse(fs.readFileSync(path.join(root,'exam-bank/test'+n+'.json'),'utf8'));for(const q of b.questions)expected[`e:${n}:${q.id}`]={question:q.question,answers:q.answers,correct:q.correct,explanation:q.explanation};}
+ for(let n=1;n<=5;n++){const b=JSON.parse(fs.readFileSync(path.join(root,'exam-bank/test'+n+'.json'),'utf8'));for(const q of b.questions)expected[`e:${n}:${q.id}`]={question:q.question,answers:q.answers,correct:q.correct,explanation:q.explanation};}
  const runtime=fs.readFileSync(path.join(root,'daily-runtime.js'),'utf8');
  const keys=JSON.parse(runtime.slice('window.DAILY_KEYS = '.length,runtime.indexOf(';')));
  for(const [id,q] of Object.entries(expected)){const actual=context.window.DAILY_REVIEW_BANK[id];assert.equal(actual.question,q.question,id);assert.equal(JSON.stringify(actual.answers),JSON.stringify(q.answers),id);assert.equal(JSON.stringify(actual.correct),JSON.stringify(q.correct),id);assert.equal(JSON.stringify(keys[id].correct),JSON.stringify(q.correct),id);assert.equal(keys[id].count,q.answers.length,id);if(q.vi)assert.equal(JSON.stringify(actual.vi),JSON.stringify(q.vi),id);else assert.equal(actual.explanation,q.explanation,id);}
- assert.equal(Object.keys(expected).length,520);pass('All 520 daily questions, answer content, correct keys and explanations match their source banks');
+ assert.equal(Object.keys(expected).length,585);pass('All 585 daily questions, answer content, correct keys and explanations match their source banks');
  await send('Page.navigate',{url:base+'/index.html?qa=1'});await waitFor('Boolean(window.DailyGate&&window.Quest)');
  await evaluate(`window.QAexpected=${JSON.stringify(expected)}`);
  await evaluate(async()=>{const ids=Object.keys(QAexpected);localStorage.setItem('data-quest-daily-test-v1',JSON.stringify({version:1,wrong:ids,day:DailyGate.today(),pool:ids,unlocked:false,round:null,result:null,history:[]}));DailyGate.refresh();await DailyGate.start();});

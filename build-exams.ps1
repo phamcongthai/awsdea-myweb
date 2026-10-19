@@ -18,4 +18,4 @@ $js=[IO.File]::ReadAllText((Join-Path $root 'daily-runtime.js'))+"`n"+$js
 $js=[IO.File]::ReadAllText((Join-Path $root 'quest-music.js'))+"`n"+$js
 $html=$template.Replace('<!-- STYLE -->','<style>'+$css+'</style>').Replace('<!-- APP -->','<script>'+$js+'</script>')
 [IO.File]::WriteAllText((Join-Path $root 'public/realtest.html'),$html,[Text.UTF8Encoding]::new($false))
-Write-Output 'Built four separate exam banks and public/realtest.html'
+Write-Output 'Built exam banks and public/realtest.html'
