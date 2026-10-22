@@ -1,0 +1,8 @@
+// Curated LOG revision pack. Preserve canonical practice IDs and source answer keys.
+const fs=require('fs'),vm=require('vm');const ctx={window:{}};vm.runInNewContext(fs.readFileSync('quest-data.js','utf8'),ctx);
+const groups=[['1-22','3-15','3-36','3-46','4-60','1-45','e5:24','e5:25'],['1-12','1-41','1-31','3-26','4-59','e5:21'],['1-3','1-61','1-55','2-52','2-35','2-50','4-54','e5:46'],['2-31','2-27','4-21','4-20'],['e5:23','e5:27','e5:50']];
+const groupsInfo=[['Audit & CloudTrail','Ai gọi API nào, data events và điều tra audit.'],['CloudWatch Logs','Thu log, che PII, subscription và gom nhiều tài khoản.'],['Metrics, cảnh báo & điều tra lỗi','Alarm, thông báo, Glue/Spark và RDS monitoring.'],['Audit database','Phân biệt log RDS, Redshift và API quản trị.'],['Truy vấn & lưu trữ log','Athena, Firehose và vòng đời log trên S3.']];
+const practice=ctx.window.QUEST_BANK.questions,bank=JSON.parse(fs.readFileSync('exam-bank/test5.json','utf8')),vi=JSON.parse(fs.readFileSync('log-explanations-vi.json','utf8'));
+const extra=[],refs=groups.flatMap((ids,group)=>ids.map(id=>{if(id.startsWith('e5:')){const n=Number(id.slice(3)),q=bank.questions.find(q=>q.id===n);if(!q||vi[n]?.length!==q.answers.length)throw Error('Missing '+id);extra.push({...q,id,topic:'log',group,explanationsVi:vi[n]});}else if(!practice.some(q=>q.id===id))throw Error(id);return {id,group};}));
+if(new Set(refs.map(r=>r.id)).size!==29)throw Error('Expected 29 unique LOG questions');
+fs.writeFileSync('quest-log-data.js','window.QUEST_LOG = '+JSON.stringify({version:1,groups:groupsInfo,refs,extra})+';');console.log('Built LOG: 29 questions, 5 groups, 7 Dojo questions with Vietnamese explanations.');

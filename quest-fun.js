@@ -15,7 +15,7 @@
   function streak(state) {
     const a=state.active;if(!a)return 0;
     const records=a.results.map(r=>r.correct);
-    if(a.checked){const q=window.QUEST_BANK.questions.find(q=>q.id===a.ids[a.pos]);records.push(a.selected.length===q.correct.length&&a.selected.every(i=>q.correct.includes(i)));}
+    if(a.checked){const q=[...window.QUEST_BANK.questions,...(window.QUEST_LOG?.extra||[])].find(q=>q.id===a.ids[a.pos]);if(q)records.push(a.selected.length===q.correct.length&&a.selected.every(i=>q.correct.includes(i)));}
     let n=0;for(let i=records.length-1;i>=0&&records[i];i--)n++;return n;
   }
   function line(state,finished) {

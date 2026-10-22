@@ -1,5 +1,13 @@
 # awsdea-myweb
 
+## LOG · Ôn chuyên đề
+
+Mở **LOG · Ôn chuyên đề** trong menu hoặc thẻ **LOG** trên bản đồ nhiệm vụ. Bộ ôn gồm 29 câu chọn lọc từ cả 5 đề: 22 câu dùng chung ID/tiến độ với bộ luyện tập và 7 câu Dojo, chia 5 nhóm (CloudTrail/audit; CloudWatch Logs; metrics/cảnh báo/điều tra lỗi; audit database; truy vấn/lưu trữ log). Không gom các câu chỉ nhắc log như dữ liệu đầu vào nếu kiến thức chính không liên quan logging/observability.
+
+Các lựa chọn/đáp án gốc giữ nguyên; giải thích từng đáp án bằng tiếng Việt. Câu Dojo có diễn đạt nhập nhằng được ghi chú rõ ở lời giải, không âm thầm đổi đáp án trong bộ đề. Câu Dojo sai trong LOG dùng cùng ID ôn đầu ngày `e:5:n` với phòng thi. Note dùng chung theo nội dung câu, bài dở và kết quả lưu theo tài khoản như các phiên khác. Không cần đổi SQL; bảy câu bổ sung không được cộng thêm vào chỉ số/rank của 260 câu gốc.
+
+`node build-log.cjs` dựng lại `quest-log-data.js` khi nguồn thay đổi; danh sách chọn lọc nằm trong script và lời giải mới ở `log-explanations-vi.json`. Chạy `build-quest.ps1` sau đó để xuất HTML. `node scripts/test-log.mjs` kiểm tra toàn bộ 29 câu, chấm điểm, lời giải, tiếp tục sau reload, tiến độ chung và ôn sai đầu ngày. Tham khảo ghi chú dịch vụ: [CloudWatch cross-account](https://aws.amazon.com/about-aws/whats-new/2022/11/amazon-cloudwatch-cross-account-observability-multiple-aws-accounts/), [Firehose format conversion](https://docs.aws.amazon.com/firehose/latest/dev/record-format-conversion.html), [Athena CloudWatch connector](https://docs.aws.amazon.com/athena/latest/ug/connectors-cloudwatch.html).
+
 ## Tài khoản và đồng bộ DB
 
 Production bắt buộc đăng nhập email + mật khẩu và tải tiến độ từ Supabase. Tiến độ luyện tập, câu sai đầu ngày, ghi chú, flashcard, bài thi dở/lịch sử/huy hiệu và lab lưu theo tài khoản trên DB; không lưu tiến độ mới trong localStorage. Trình duyệt chỉ giữ phiên đăng nhập và bộ đệm RAM trong lúc gửi. Có nhập dữ liệu cũ lên DB, báo trạng thái lưu, xử lý xung đột giữa thiết bị và chặn học khi chưa tải/ghi được. Xem [cấu hình Supabase](SUPABASE-SETUP.md) và [SQL tạo bảng/phân quyền](supabase/schema.sql). Các mô tả lưu local/offline trong phần lịch sử bên dưới thuộc phiên bản cũ hoặc chế độ QA độc lập.

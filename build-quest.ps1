@@ -81,6 +81,7 @@ $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'flashcards.css'))
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'quest-daily.css'))
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'quest-music.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest.js'))
+$js = [IO.File]::ReadAllText((Join-Path $root 'quest-log-data.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'flashcards.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'flashcards-data.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'theory.js')) + "`n" + $js

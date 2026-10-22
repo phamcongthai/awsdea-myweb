@@ -1,0 +1,44 @@
+{
+ "21":[
+  "Athena là công cụ truy vấn; tự triển khai nơi gom và lưu log vẫn cần cấu hình thêm. Phương án này không mô tả giải pháp gom log có sẵn.",
+  "Tự xây data lake cho từng tài khoản làm tăng phần triển khai, quản trị và chuẩn hóa dữ liệu; không phù hợp yêu cầu ít vận hành.",
+  "Đáp án gốc chọn CloudTrail Lake để gom và truy vấn sự kiện audit từ nhiều tài khoản. Lưu ý: câu hỏi nói CloudWatch Logs khá rộng; với log ứng dụng trong CloudWatch, cần xét cross-account observability/Logs Insights, không mặc định CloudTrail Lake thu mọi log ứng dụng.",
+  "Lake Formation quản trị quyền trên data lake; không tự thu nhận và truy vấn tập trung log từ các tài khoản."
+ ],
+ "23":[
+  "Đáp án gốc chọn Standard-IA sau giai đoạn truy cập thường xuyên, rồi Deep Archive khi log hiếm được đọc và xóa sau 7 năm. Lifecycle tính mốc chuyển lớp theo tuổi object: 2 tháng thường xuyên cộng 10 tháng thỉnh thoảng là khoảng 12 tháng tuổi. Cách ghi 'after 10 months' trong đáp án chưa rõ, cần đọc theo vòng đời mà đề mô tả.",
+  "One Zone-IA chỉ lưu trong một Availability Zone, nên không phải lựa chọn thích hợp khi đề nhấn mạnh khả năng sẵn sàng và giữ log lâu dài.",
+  "Glacier Flexible Retrieval phù hợp khi cần lấy dữ liệu nhanh hơn Deep Archive. Với giai đoạn lưu dài và hiếm truy cập của đề, đáp án gốc ưu tiên Deep Archive để giảm chi phí lưu.",
+  "One Zone-IA không phải tầng lưu trữ archive tối ưu cho log hiếm đọc nhiều năm; còn giảm khả năng chịu mất cả một Availability Zone."
+ ],
+ "24":[
+  "S3 Event Notifications là thông báo sự kiện, không phải nhật ký audit đầy đủ mọi API. Tự viết Lambda để dựng audit trail còn tăng vận hành.",
+  "Đúng: thao tác ghi lên object thuộc CloudTrail data events. Chọn write-only, giới hạn tài nguyên bucket nguồn và cấu hình trail ghi log sang bucket đích.",
+  "Ghép S3 notification, Lambda và Firehose tạo thêm thành phần mà vẫn không thay thế đầy đủ audit bằng CloudTrail data events.",
+  "Management events ghi thao tác quản trị tài nguyên. Các thao tác ghi object như PutObject cần data events, nên chọn management events sẽ bỏ sót yêu cầu chính."
+ ],
+ "25":[
+  "Redshift Event Notifications chủ yếu báo sự kiện cụm; không tự cung cấp kết quả nạp của từng bảng theo cách đề yêu cầu.",
+  "Alarm trên số liệu cụm không đủ chứng minh một lần load của bảng đã thành công. Cần chọn đúng sự kiện và thông tin kết quả nạp.",
+  "Phương án này chưa mô tả rõ cơ chế định tuyến sự kiện đến Lambda; đáp án gốc nêu đầy đủ EventBridge ở phương án còn lại.",
+  "Đáp án gốc là CloudTrail → EventBridge → Lambda → DynamoDB để xử lý sự kiện API và ghi trạng thái. Cần phân biệt: một API call được ghi nhận không tự chứng minh COPY SQL đã hoàn tất. Trong triển khai thật, phải kiểm tra kết quả thực thi phù hợp, ví dụ sự kiện/kết quả Redshift Data API hoặc lịch sử load."
+ ],
+ "27":[
+  "EMR/Hive có thể xử lý dữ liệu nhưng phải quản trị cụm và lịch chạy, không nhẹ bằng một pipeline Firehose được quản lý.",
+  "Kinesis Data Streams cộng EC2/KCL đòi hỏi quản trị consumer, mở rộng và chuyển định dạng; tăng vận hành so với Firehose.",
+  "MWAA là dịch vụ điều phối workflow, không tự biến log trong S3 thành Parquet chỉ bằng việc chuyển file vào bucket.",
+  "Đề chọn Firehose vì có thể gom và giao log gần thời gian thực với ít quản trị. Cách ghi Lambda chuyển thẳng sang Parquet là giản lược: cấu hình thường dùng Lambda chuẩn hóa thành JSON, rồi bật Firehose format conversion theo schema Glue để tạo Parquet trước khi ghi S3."
+ ],
+ "46":[
+  "Tìm chuỗi DPU trong log không cho bức tranh định lượng đầy đủ về CPU, bộ nhớ, worker và mức sử dụng tài nguyên của các lượt chạy.",
+  "Sơ đồ ETL cho biết các bước biến đổi; nó không thay thế số liệu đo từ những lượt job thực sự đã chạy.",
+  "Job bookmark theo dõi dữ liệu nguồn đã xử lý cho lần chạy tiếp theo, không đo mức tiêu thụ DPU để chọn dung lượng job.",
+  "Đúng: xem Job run monitoring và profiled metrics từ các lượt chạy trước. Dùng số liệu tài nguyên thực tế để xác định job thiếu hay đang cấp dư DPU."
+ ],
+ "50":[
+  "Tự sao chép mọi nguồn sang S3 bằng Lambda tạo pipeline, lưu bản sao và vận hành bổ sung cho một truy vấn chỉ chạy một lần.",
+  "Spectrum tập trung truy vấn dữ liệu ngoài Redshift trên S3; không phải cách nối trực tiếp toàn bộ RDS, DynamoDB và CloudWatch Logs trong đề.",
+  "Đúng: Athena Federated Query dùng connector phù hợp để truy vấn các nguồn ngoài S3, bao gồm CloudWatch Logs, rồi kết hợp kết quả bằng SQL. Vẫn cần cấu hình connector và quyền truy cập từng nguồn.",
+  "EMR/Hadoop và một luồng phân tích Logs Insights riêng làm giải pháp phức tạp hơn so với truy vấn liên kết cho nhu cầu một lần."
+ ]
+}

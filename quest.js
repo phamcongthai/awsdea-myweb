@@ -12,7 +12,10 @@
     {id:'security',name:'Bảo mật & quản trị',icon:'◇',color:'#b9d7a4',bg:'#334532',desc:'IAM, mã hóa, dữ liệu nhạy cảm và governance.',groups:[['Quản trị & phân quyền dữ liệu',/lake formation|datazone|domain unit|sagemaker assets|data exchange|lf.tags/i],['Bảo vệ dữ liệu nhạy cảm',/pii|mask|redact|data protection/i],['Danh tính, khóa & bí mật',/secrets manager|\bkms\b|encrypt|customer.managed|iam role|iam polic/i],['Mạng & kiểm soát truy cập',/./]]},
     {id:'ops',name:'Điều phối & giám sát',icon:'◎',color:'#f2b599',bg:'#4c392d',desc:'Workflow, sự kiện, logging và xử lý sự cố.',groups:[['Workflow & điều phối',/step functions|map state|glue workflow|airflow/i],['Theo dõi & kiểm toán',/cloudtrail|audit|config|cloudwatch|opensearch/i],['Tự động hóa & sự kiện',/eventbridge|notification|sns|sam template/i],['Xử lý lỗi & vận hành',/./]]}
   ];
-  const byId = new Map(BANK.questions.map(q => [q.id,q]));
+  const LOG=window.QUEST_LOG,logGroups=new Map(LOG.refs.map(r=>[r.id,r.group]));
+  TOPICS.push({id:'log',name:'LOG',icon:'📜',color:'#f4d587',bg:'#4b4127',desc:'Chủ đề đặc biệt: CloudWatch, CloudTrail, audit, metrics và pipeline log từ cả 5 đề.',groups:LOG.groups.map(g=>[g[0],/.*/])});
+  const byId = new Map([...BANK.questions,...LOG.extra].map(q => [q.id,q]));
+  const logQuestion=id=>({...byId.get(id),topic:'log',group:logGroups.get(id)});
   const $ = id => document.getElementById(id);
   const escape = v => String(v).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const plain = html => new DOMParser().parseFromString(html,'text/html').body.textContent || '';
@@ -41,12 +44,13 @@
     q.group=topic.groups.findIndex(g=>g[1].test(text));
   });
   function topicQuestions(id) {
+    if(id==='log')return LOG.refs.map(r=>logQuestion(r.id));
     return BANK.questions.filter(q=>q.topic===id).sort((a,b)=>a.group-b.group || a.test-b.test || a.number-b.number);
   }
-  function chunks(ids) {
+  function chunks(ids,special=false) {
     const parts=[];
     ids.forEach(id=>{
-      const q=byId.get(id),last=parts[parts.length-1];
+      const q=special?logQuestion(id):byId.get(id),last=parts[parts.length-1];
       if(!last || last.topic!==q.topic || last.group!==q.group || last.ids.length>=10) parts.push({topic:q.topic,group:q.group,ids:[id]});
       else last.ids.push(id);
     });
@@ -89,16 +93,16 @@
   }
   function correct(q,selected) {return selected.length===q.correct.length && selected.every(i=>q.correct.includes(i));}
   function mastered(p) {return !!p && p.correct && p.certain && p.streak>=2;}
-  function weakIds() {return BANK.questions.filter(q=>state.progress[q.id] && (!state.progress[q.id].correct || !state.progress[q.id].certain)).sort((a,b)=>TOPICS.findIndex(t=>t.id===a.topic)-TOPICS.findIndex(t=>t.id===b.topic) || a.group-b.group || state.progress[a.id].at-state.progress[b.id].at).map(q=>q.id);}
+  function weakIds() {return [...BANK.questions,...LOG.extra].filter(q=>state.progress[q.id] && (!state.progress[q.id].correct || !state.progress[q.id].certain)).sort((a,b)=>TOPICS.findIndex(t=>t.id===a.topic)-TOPICS.findIndex(t=>t.id===b.topic) || a.group-b.group || state.progress[a.id].at-state.progress[b.id].at).map(q=>q.id);}
   const brand=()=>'<div class="brand"><span class="brand-mark">⌘</span><div>Data Quest<small>AWS · LEARNING ADVENTURE</small></div></div>';
   function go(next) {if(window.DailyGate && !window.DailyGate.allow())return;if(state.active) return;if(next==='lab'){location.href=(location.protocol==='file:'?'public/architect.html':'architect.html')+(QA?'?qa=1':'');return;}if(next==='exam'){location.href=(location.protocol==='file:'&&decodeURIComponent(location.pathname).endsWith('/AWS Data Quest.html')?'public/realtest.html':'realtest.html')+(QA?'?qa=1':'');return;}page=next;finished=null;render();window.scrollTo(0,0);}
   function metrics() {
-    const progress=Object.values(state.progress);
+    const progress=BANK.questions.map(q=>state.progress[q.id]).filter(Boolean);
     return {seen:progress.length,mastered:progress.filter(mastered).length,weak:weakIds().length,commitments:state.history.filter(h=>h.status==='complete').length};
   }
   function sidebar() {
     const m=metrics();
-    return `<aside class="sidebar">${brand()}<div class="nav-label">HÀNH TRÌNH CỦA BẠN</div><nav>${[['map','◈','Bản đồ nhiệm vụ'],['review','↻','Ôn câu chưa chắc'],['flashcards','🃏','Flashcard · Nhớ nhanh'],['theory','📚','Lý thuyết nhanh'],['lab','◈','Architect Quest · Lab'],['history','⚑','Nhật ký cam kết'],['exam','🎯','Phòng thi · 5 đề'],['originals','▤','Bốn đề gốc']].map(([id,icon,label])=>`<button class="nav-item ${page===id?'active':''}" data-action="page" data-page="${id}" ${page===id?'aria-current="page"':''}><span>${icon}</span>${label}</button>`).join('')}</nav><div class="sidebar-bottom"><div class="side-card"><div class="eyebrow">Từng phiên, từng bước</div><strong>${m.commitments}</strong> <small>cam kết đã giữ</small><p>Không cần đúng tất cả.<br>Hãy hoàn thành điều đã hứa.</p></div><span class="sidebar-note">Tiến độ lưu theo tài khoản trên DB.<br>Câu hỏi & lời giải giữ nguyên từ 4 đề.</span><div class="row wrap spaced"></div></div></aside>`;
+    return `<aside class="sidebar">${brand()}<div class="nav-label">HÀNH TRÌNH CỦA BẠN</div><nav>${[['map','◈','Bản đồ nhiệm vụ'],['review','↻','Ôn câu chưa chắc'],['flashcards','🃏','Flashcard · Nhớ nhanh'],['theory','📚','Lý thuyết nhanh'],['lab','◈','Architect Quest · Lab'],['history','⚑','Nhật ký cam kết'],['exam','🎯','Phòng thi · 5 đề'],['originals','▤','Bốn đề gốc']].map(([id,icon,label])=>`<button class="nav-item ${page===id?'active':''}" data-action="page" data-page="${id}" ${page===id?'aria-current="page"':''}><span>${icon}</span>${label}</button>`).join('')}<button class="nav-item" data-action="commit" data-topic="log"><span>📜</span>LOG · Ôn chuyên đề</button></nav><div class="sidebar-bottom"><div class="side-card"><div class="eyebrow">Từng phiên, từng bước</div><strong>${m.commitments}</strong> <small>cam kết đã giữ</small><p>Không cần đúng tất cả.<br>Hãy hoàn thành điều đã hứa.</p></div><span class="sidebar-note">Tiến độ lưu theo tài khoản trên DB.<br>Câu hỏi & lời giải giữ nguyên từ 4 đề.</span><div class="row wrap spaced"></div></div></aside>`;
   }
   function render() {
     renderScreen();
@@ -112,10 +116,10 @@
   }
   function mapView() {
     const m=metrics(),recommended=TOPICS.find(t=>topicQuestions(t.id).some(q=>!state.progress[q.id])) || TOPICS[0];
-    return `<section class="hero"><div><span class="eyebrow">YOUR NEXT LEVEL STARTS HERE</span><h1>Biến kiến thức rời rạc<br>thành một hành trình.</h1><p>7 vùng kiến thức. Mỗi phiên khoảng 40 câu.<br>Chọn nhiệm vụ, giữ cam kết, hiểu thêm một chút về AWS.</p><button class="btn primary" data-action="commit" data-topic="${recommended.id}">▶ ${m.seen?'Tiếp tục hành trình':'Bắt đầu hành trình'} <span>→</span></button></div><div class="hero-art" aria-hidden="true"><div class="orbit"></div><div class="orbit second"></div><span class="spark">✧</span><div class="core"><strong>260</strong><span>QUESTIONS</span></div><span class="sat one">↯ INGEST</span><span class="sat two">⌘ TRANSFORM</span><span class="sat three">◈ ANALYZE</span></div></section><section class="stats" aria-label="Tiến độ"><div class="stat"><div class="stat-value">${m.seen}<small> / 260</small></div><div class="stat-label">Câu đã trả lời</div></div><div class="stat"><div class="stat-value" style="color:var(--mint)">${m.mastered}</div><div class="stat-label">Đã nắm qua các ngày ôn</div></div><div class="stat"><div class="stat-value" style="color:var(--yellow)">${m.weak}</div><div class="stat-label">Câu cần ôn lại</div></div><div class="stat"><div class="stat-value" style="color:var(--lime)">${m.commitments}</div><div class="stat-label">Phiên giữ trọn cam kết</div></div></section><div class="section-head row between"><div><h2>Bản đồ nhiệm vụ</h2><p>Học các câu liên quan cạnh nhau. Mọi phiên đều đã mở.</p></div><span class="pill">7 PHIÊN · 32–42 CÂU / PHIÊN</span></div><div class="session-grid">${TOPICS.map((t,i)=>{
+    return `<section class="hero"><div><span class="eyebrow">YOUR NEXT LEVEL STARTS HERE</span><h1>Biến kiến thức rời rạc<br>thành một hành trình.</h1><p>7 vùng kiến thức + chủ đề đặc biệt LOG. Mỗi phiên khoảng 40 câu.<br>Chọn nhiệm vụ, giữ cam kết, hiểu thêm một chút về AWS.</p><button class="btn primary" data-action="commit" data-topic="${recommended.id}">▶ ${m.seen?'Tiếp tục hành trình':'Bắt đầu hành trình'} <span>→</span></button></div><div class="hero-art" aria-hidden="true"><div class="orbit"></div><div class="orbit second"></div><span class="spark">✧</span><div class="core"><strong>260</strong><span>QUESTIONS</span></div><span class="sat one">↯ INGEST</span><span class="sat two">⌘ TRANSFORM</span><span class="sat three">◈ ANALYZE</span></div></section><section class="stats" aria-label="Tiến độ"><div class="stat"><div class="stat-value">${m.seen}<small> / 260</small></div><div class="stat-label">Câu đã trả lời</div></div><div class="stat"><div class="stat-value" style="color:var(--mint)">${m.mastered}</div><div class="stat-label">Đã nắm qua các ngày ôn</div></div><div class="stat"><div class="stat-value" style="color:var(--yellow)">${m.weak}</div><div class="stat-label">Câu cần ôn lại</div></div><div class="stat"><div class="stat-value" style="color:var(--lime)">${m.commitments}</div><div class="stat-label">Phiên giữ trọn cam kết</div></div></section><div class="section-head row between"><div><h2>Bản đồ nhiệm vụ</h2><p>Học các câu liên quan cạnh nhau. Mọi phiên đều đã mở.</p></div><span class="pill">7 PHIÊN + LOG ĐẶC BIỆT</span></div><div class="session-grid">${TOPICS.map((t,i)=>{
       const qs=topicQuestions(t.id),seen=qs.filter(q=>state.progress[q.id]).length,done=state.history.some(h=>h.topic===t.id && h.status==='complete'),rec=t.id===recommended.id;
-      return `<article class="session-card ${rec?'recommended':''}" style="--accent:${t.color};--accent-bg:${t.bg}"><div class="row between"><span class="session-icon" aria-hidden="true">${t.icon}</span><span class="pill ${done||rec?'lime':''}">${done?'✓ Đã giữ cam kết':rec?'✧ Gợi ý tiếp theo':`PHIÊN 0${i+1}`}</span></div><h3>${t.name}</h3><p>${t.desc}</p><div class="card-bottom"><div class="row between"><small>${qs.length} câu · ${chunks(qs.map(q=>q.id)).length} chặng nhỏ</small><small>${seen}/${qs.length} đã học</small></div><div class="progress-track"><div class="progress-fill" style="width:${seen/qs.length*100}%;background:${t.color}"></div></div><button class="btn ${rec?'primary':''} full" data-action="commit" data-topic="${t.id}">${done?'Chơi lại phiên':'Nhận nhiệm vụ'} <span>→</span></button></div></article>`;
-    }).join('')}</div><p class="footnote">Mỗi câu có một vị trí học chính. Số câu linh hoạt để giữ các nhóm kiến thức liên quan trong cùng phiên. “Đã nắm” cần ít nhất hai lượt đúng, tự tin, cách nhau từ 24 giờ.</p>`;
+      return `<article class="session-card ${rec?'recommended':''}" style="--accent:${t.color};--accent-bg:${t.bg}"><div class="row between"><span class="session-icon" aria-hidden="true">${t.icon}</span><span class="pill ${done||rec?'lime':''}">${t.id==='log'?'LOG · ĐẶC BIỆT':done?'✓ Đã giữ cam kết':rec?'✧ Gợi ý tiếp theo':`PHIÊN 0${i+1}`}</span></div><h3>${t.name}</h3><p>${t.desc}</p><div class="card-bottom"><div class="row between"><small>${qs.length} câu · ${chunks(qs.map(q=>q.id),t.id==='log').length} chặng nhỏ</small><small>${seen}/${qs.length} đã học</small></div><div class="progress-track"><div class="progress-fill" style="width:${seen/qs.length*100}%;background:${t.color}"></div></div><button class="btn ${rec?'primary':''} full" data-action="commit" data-topic="${t.id}">${done?'Chơi lại phiên':'Nhận nhiệm vụ'} <span>→</span></button></div></article>`;
+    }).join('')}</div><p class="footnote">LOG là bộ ôn gom từ 5 đề; câu trùng dùng chung tiến độ với chủ đề gốc. Mỗi câu có một vị trí học chính. Số câu linh hoạt để giữ các nhóm kiến thức liên quan trong cùng phiên. “Đã nắm” cần ít nhất hai lượt đúng, tự tin, cách nhau từ 24 giờ.</p>`;
   }
   function reviewView() {
     const ids=weakIds();
@@ -134,7 +138,7 @@
     const t=TOPICS.find(t=>t.id===topic),ids=review?weakIds().slice(0,40):topicQuestions(topic).map(q=>q.id);
     if(!ids.length) return;
     pending={topic:review?'review':topic,ids,label:review?'Ôn câu chưa chắc':t.name};
-    const parts=chunks(ids);
+    const parts=chunks(ids,topic==='log');
     $('modal').innerHTML=`<span class="eyebrow">MỘT CAM KẾT VỚI CHÍNH MÌNH</span><h2 id="modal-title">${escape(pending.label)}</h2><div class="commit-count">${ids.length} <small>câu trong phiên này</small></div><p>Chia thành ${parts.length} chặng nhỏ theo nhóm kiến thức. Bạn có thể nghỉ tại chỗ giữa các chặng.</p><div class="commit-steps">${parts.map((p,i)=>`<span>${i+1}<br><strong>${p.ids.length} câu</strong></span>`).join('')}</div><p>Cam kết hoàn thành đủ câu. Sau khi kiểm tra, bấm từng đáp án để đọc lời giải tiếng Việt. Rời trang hay đóng trình duyệt, phiên vẫn chờ bạn quay lại.</p><p><small>Trang học không thể khóa Facebook hoặc các website khác.</small></p><div class="modal-actions"><button class="btn quiet" data-action="close">Để sau</button><button class="btn primary" data-action="start">Tôi cam kết · Bắt đầu →</button></div>`;
     $('modal').showModal();
   }
@@ -180,7 +184,7 @@
     const q=byId.get(a.ids[a.pos]);
     a.results.push({id:q.id,correct:correct(q,a.selected),certain:a.certain});
     if(a.pos===a.ids.length-1){finishSession('complete');return;}
-    const parts=chunks(a.ids),boundary=parts.some((p,i)=>i<parts.length-1 && p.ids[p.ids.length-1]===q.id);
+    const parts=chunks(a.ids,a.topic==='log'),boundary=parts.some((p,i)=>i<parts.length-1 && p.ids[p.ids.length-1]===q.id);
     a.pos++;a.selected=[];a.checked=false;a.certain=true;a.reviewed=false;
     a.order=shuffle(byId.get(a.ids[a.pos]).answers.map((_,i)=>i));
     if(boundary) a.breakUntil=Date.now()+60000;
@@ -194,7 +198,7 @@
     if(status==='complete')window.QuestFun?.celebrate('finish');
   }
   function renderFocus() {
-    const a=state.active,q=byId.get(a.ids[a.pos]),topic=TOPICS.find(t=>t.id===q.topic),parts=chunks(a.ids),partIndex=parts.findIndex(p=>p.ids.includes(q.id)),part=parts[partIndex];
+    const a=state.active,q=a.topic==='log'?logQuestion(a.ids[a.pos]):byId.get(a.ids[a.pos]),topic=TOPICS.find(t=>t.id===q.topic),parts=chunks(a.ids,a.topic==='log'),partIndex=parts.findIndex(p=>p.ids.includes(q.id)),part=parts[partIndex];
     if(a.breakUntil){renderBreak(parts,partIndex);return;}
     const right=a.checked && correct(q,a.selected);
     $('app').innerHTML=`<main class="focus-shell"><header class="focus-header row between">${brand()}<div class="row"><button class="btn quiet small" data-action="quit">Kết thúc sớm</button></div></header>${a.returnNotice?`<div class="resume-banner" role="status"><div><strong>Phiên của bạn vẫn đang chờ.</strong><br><small>Còn ${a.ids.length-a.pos} câu để giữ trọn cam kết. Quay lại từ câu này nhé.</small></div><button class="btn small" data-action="return">Tôi quay lại rồi →</button></div>`:''}<section class="focus-meta"><div class="row between wrap"><span class="eyebrow">${escape(a.label)}</span><span class="pill lime">⚑ ${a.pos} / ${a.ids.length} hoàn thành</span></div><div class="checkpoint-row" aria-label="${a.pos} trên ${a.ids.length} câu hoàn thành">${a.ids.map((_,i)=>`<span class="checkpoint ${i<a.pos?'done':i===a.pos?'current':''}"></span>`).join('')}</div><div class="row between spaced"><small>CHẶNG ${partIndex+1}/${parts.length} · ${escape(topic.groups[q.group][0])}</small><small>${part.ids.indexOf(q.id)+1}/${part.ids.length} câu trong chặng</small></div></section><article class="question-card">${window.QuestionNotes?.button(q.question)||''}<div class="row between wrap"><span class="pill">CÂU ${a.pos+1} <span class="muted">/ ${a.ids.length}</span></span><small>${q.correct.length>1?`Chọn ${q.correct.length} đáp án`:'Chọn 1 đáp án'}</small></div><div class="question-text">${clean(q.question)}</div><div class="answer-list" role="group" aria-label="Các đáp án">${a.order.map((index,i)=>{

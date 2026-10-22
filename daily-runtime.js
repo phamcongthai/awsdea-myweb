@@ -27,7 +27,7 @@ window.DAILY_KEYS = {"p:2-58":{"count":5,"correct":[3,4]},"e:2:32":{"count":4,"c
   function save(){try{window.QuestStorage.setItem(KEY,JSON.stringify(state));}catch{issue='Trình duyệt không lưu được ôn đầu ngày. Hãy cho phép lưu dữ liệu website để giữ kết quả sau khi đóng trang.';}}
   function merge(){try{const raw=window.QuestStorage.getItem(KEY);if(!raw)return;const other=JSON.parse(raw);if(!valid(other))return;const wrong=[...new Set([...state.wrong,...other.wrong])];state=other;state.wrong=wrong;}catch{}}
   const same=(a,b)=>a.length===b.length&&a.every(n=>b.includes(n));
-  function add(id){if(keys[id]&&!state.wrong.includes(id))state.wrong.push(id);}
+  function add(id){id=id.replace(/^p:e5:/,'e:5:');if(keys[id]&&!state.wrong.includes(id))state.wrong.push(id);}
   function collect(){
     try{const p=JSON.parse(window.QuestStorage.getItem(PRACTICE));if(p){for(const [id,v] of Object.entries(p.progress||{}))if(v.correct===false||v.everWrong===true)add('p:'+id);for(const v of p.active?.results||[])if(v.correct===false)add('p:'+v.id);}}catch{}
     try{const e=JSON.parse(window.QuestStorage.getItem(EXAMS));const runs=[...(e?.history||[]).map(run=>({run,submitted:true})),...[e?.active,...Object.values(e?.parked||{})].filter(Boolean).map(run=>({run,submitted:false}))];for(const {run:h,submitted} of runs){if(!Number.isInteger(h.test)||!Array.isArray(h.answers))continue;h.answers.forEach((a,i)=>{const id=`e:${h.test}:${i+1}`;if(keys[id]&&(h.everWrong?.[i]===true||((submitted||h.checked?.[i]===true)&&Array.isArray(a)&&!same(a,keys[id].correct))))add(id);});}}catch{}
