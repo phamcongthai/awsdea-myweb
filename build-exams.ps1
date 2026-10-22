@@ -1,5 +1,6 @@
 $ErrorActionPreference='Stop'
 $root=$PSScriptRoot
+. (Join-Path $root 'build-auth.ps1')
 $bank=Join-Path $root 'exam-bank'
 $target=Join-Path $root 'public/exams'
 [IO.Directory]::CreateDirectory($target) | Out-Null
@@ -20,5 +21,6 @@ $js=[IO.File]::ReadAllText((Join-Path $root 'quest-music.js'))+"`n"+$js
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'question-notes.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'question-notes.js')) + "`n" + $js
 $html=$template.Replace('<!-- STYLE -->','<style>'+$css+'</style>').Replace('<!-- APP -->','<script>'+$js+'</script>')
+$html=Add-QuestAuth $html
 [IO.File]::WriteAllText((Join-Path $root 'public/realtest.html'),$html,[Text.UTF8Encoding]::new($false))
 Write-Output 'Built exam banks and public/realtest.html'

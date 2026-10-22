@@ -1,5 +1,6 @@
 $ErrorActionPreference = 'Stop'
 $root = $PSScriptRoot
+. (Join-Path $root 'build-auth.ps1')
 $groups = @{
   1 = @{
     stream = '18,26,27,38,41,48,52,53,56,59,62,63,65'
@@ -95,10 +96,10 @@ $js = [IO.File]::ReadAllText((Join-Path $root 'quest-music.js')) + "`n" + $js
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'question-notes.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'question-notes.js')) + "`n" + $js
 $html = $template.Replace('<!-- QUEST_STYLE -->', '<style>'+$css+'</style>').Replace('<!-- QUEST_DATA -->', '<script>window.QUEST_BANK = '+$bank.Replace('</','<\/')+';</script>').Replace('<!-- QUEST_APP -->', '<script>'+$js+'</script>')
-[IO.File]::WriteAllText((Join-Path $root 'AWS Data Quest.html'), $html, [Text.UTF8Encoding]::new($false))
+[IO.File]::WriteAllText((Join-Path $root 'AWS Data Quest.html'), (Add-QuestAuth $html 'public/'), [Text.UTF8Encoding]::new($false))
 $publishDirectory = Join-Path $root 'public'
 [IO.Directory]::CreateDirectory($publishDirectory) | Out-Null
-[IO.File]::WriteAllText((Join-Path $publishDirectory 'index.html'), $html, [Text.UTF8Encoding]::new($false))
+[IO.File]::WriteAllText((Join-Path $publishDirectory 'index.html'), (Add-QuestAuth $html), [Text.UTF8Encoding]::new($false))
 foreach ($source in $sources) {
   Copy-Item -LiteralPath (Join-Path $root $source.file) -Destination (Join-Path $publishDirectory $source.file) -Force
 }
