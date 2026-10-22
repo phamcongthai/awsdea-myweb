@@ -20,6 +20,7 @@ $target=Join-Path $root 'public/architect'
 [IO.Directory]::CreateDirectory($target)|Out-Null
 $css=[IO.File]::ReadAllText((Join-Path $root 'quest.css'))+"`n"+[IO.File]::ReadAllText((Join-Path $root 'quest-daily.css'))+"`n"+[IO.File]::ReadAllText((Join-Path $root 'quest-music.css'))
 $css=[regex]::Replace($css,'@import\s+url\([^)]*\)\s*;','')
+$css=$css.Replace('url("assets/galaxy-bg.jpg")','url("../assets/galaxy-bg.jpg")')
 [IO.File]::WriteAllText((Join-Path $target 'shared.css'),$css,[Text.UTF8Encoding]::new($false))
 Copy-Item -LiteralPath (Join-Path $root 'daily-runtime.js') -Destination (Join-Path $target 'daily.js') -Force
 Copy-Item -LiteralPath (Join-Path $root 'quest-music.js') -Destination (Join-Path $target 'music.js') -Force
