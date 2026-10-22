@@ -4,6 +4,7 @@
  const client=window.supabase.createClient('https://mvycbcgzjqfyhtzctdrb.supabase.co','sb_publishable_JoH1K-UyR92C1oSLfXPh1g_j1rh7aaQ',{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:location.protocol!=='file:',storageKey:qa?'data-quest-auth-test-v1':'data-quest-auth-v1'},global:{fetch:(url,options)=>fetch(url,{...options,cache:'no-store'})}});
  const keys=new Set(qa?['aws-data-quest-test-v1','aws-realtest-qa-v1','data-quest-daily-test-v1','data-quest-flashcards-test-v1','architect-quest-qa-v1','architect-data-qa','data-quest-fun-test']:['aws-data-quest-v1','aws-realtest-v1','data-quest-daily-v1','data-quest-flashcards-v1','architect-quest-v1','data-quest-fun']);
  keys.add(qa?'data-quest-music-test':'data-quest-music');
+ keys.add(qa?'quest-notebook-test-v1':'quest-notebook-v1');
  const allowed=k=>keys.has(k)||k.startsWith(qa?'quest-note-test:':'quest-note:');
  let data={},revision=0,dirty=false,user=null,started=false,loaded=false,blocked=false,inflight=null,timer=null,generation=0,resolveReady;
  const ready=new Promise(r=>resolveReady=r),copy=v=>JSON.parse(JSON.stringify(v));
