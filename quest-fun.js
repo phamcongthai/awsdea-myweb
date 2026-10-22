@@ -4,7 +4,7 @@
   const qa = new URLSearchParams(location.search).has('qa');
   const key = qa ? 'data-quest-fun-test' : 'data-quest-fun';
   let prefs = {effects:true,sound:true};
-  try {const saved=JSON.parse(localStorage.getItem(key));if(saved){prefs.effects=saved.effects!==false;prefs.sound=saved.sound!==false;}} catch (_) {}
+  try {const saved=JSON.parse(window.QuestStorage.getItem(key));if(saved){prefs.effects=saved.effects!==false;prefs.sound=saved.sound!==false;}} catch (_) {}
   let audio, burstTimer, lastCelebration=0;
   let soundRequest=0;
   const voices=new Set();
@@ -105,7 +105,7 @@
     }
     if(button.dataset.fun==='effects')prefs.effects=!prefs.effects;
     if(button.dataset.fun==='sound'){prefs.sound=!prefs.sound;if(prefs.sound)tone('right');else stopSound();}
-    try{localStorage.setItem(key,JSON.stringify(prefs));}catch(_){}
+    try{window.QuestStorage.setItem(key,JSON.stringify(prefs));}catch(_){}
     applyPrefs();
     if(!prefs.effects)document.getElementById('quest-confetti')?.replaceChildren();
   });

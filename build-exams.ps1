@@ -20,6 +20,7 @@ $js=[IO.File]::ReadAllText((Join-Path $root 'daily-runtime.js'))+"`n"+$js
 $js=[IO.File]::ReadAllText((Join-Path $root 'quest-music.js'))+"`n"+$js
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'question-notes.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'question-notes.js')) + "`n" + $js
+$js = "window.QuestCloud.ready.then(()=>{`n"+$js+"`n});"
 $html=$template.Replace('<!-- STYLE -->','<style>'+$css+'</style>').Replace('<!-- APP -->','<script>'+$js+'</script>')
 $html=Add-QuestAuth $html
 [IO.File]::WriteAllText((Join-Path $root 'public/realtest.html'),$html,[Text.UTF8Encoding]::new($false))

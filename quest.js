@@ -72,7 +72,7 @@
     return true;
   }
   try {
-    const stored=localStorage.getItem(KEY);
+    const stored=window.QuestStorage.getItem(KEY);
     if(stored) {const parsed=JSON.parse(stored);if(!validState(parsed)) throw Error('Dữ liệu lưu không hợp lệ');state=parsed;}
   } catch(e) {
     storageOK=false;
@@ -80,7 +80,7 @@
     $('storage-warning').textContent='Không đọc được tiến độ trên trình duyệt này. Bạn vẫn có thể học; hãy xuất bản sao tiến độ trước khi đóng trang.';
   }
   function save() {
-    try {localStorage.setItem(KEY,JSON.stringify(state));storageOK=true;}
+    try {window.QuestStorage.setItem(KEY,JSON.stringify(state));storageOK=true;}
     catch(e) {storageOK=false;$('storage-warning').hidden=false;$('storage-warning').textContent='Trình duyệt không lưu được tiến độ. Hãy xuất bản sao tiến độ trước khi đóng trang.';}
   }
   function toast(message) {$('toast').textContent=message;$('toast').classList.add('visible');setTimeout(()=>$('toast').classList.remove('visible'),4000);}

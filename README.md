@@ -1,5 +1,9 @@
 # awsdea-myweb
 
+## Tài khoản và đồng bộ DB
+
+Production bắt buộc đăng nhập email + mật khẩu và tải tiến độ từ Supabase. Tiến độ luyện tập, câu sai đầu ngày, ghi chú, flashcard, bài thi dở/lịch sử/huy hiệu và lab lưu theo tài khoản trên DB; không lưu tiến độ mới trong localStorage. Trình duyệt chỉ giữ phiên đăng nhập và bộ đệm RAM trong lúc gửi. Có nhập dữ liệu cũ lên DB, báo trạng thái lưu, xử lý xung đột giữa thiết bị và chặn học khi chưa tải/ghi được. Xem [cấu hình Supabase](SUPABASE-SETUP.md) và [SQL tạo bảng/phân quyền](supabase/schema.sql). Các mô tả lưu local/offline trong phần lịch sử bên dưới thuộc phiên bản cũ hoặc chế độ QA độc lập.
+
 ## World 3 — Data Engineering / NovaMart
 
 Vào **Architect Quest → Data Engineering**, hoặc `/data.html`. Tám lab đều có cấu hình ban đầu cần sửa, engine chạy trên dữ liệu, output artifacts, trace, XP một lần và 3 câu tiếng Anh với giải thích tiếng Việt. Bật **Luyện tự do** để truy cập cả 8 ngay từ đầu.

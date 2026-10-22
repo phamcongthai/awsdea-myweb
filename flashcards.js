@@ -12,8 +12,8 @@
   const a=s.active;if(!a)return true;
   return Array.isArray(a.ids)&&a.ids.length>0&&a.ids.length<=cards.length&&new Set(a.ids).size===a.ids.length&&a.ids.every(id=>byId.has(id))&&Number.isInteger(a.pos)&&a.pos>=0&&a.pos<=a.ids.length&&typeof a.flipped==='boolean'&&Number.isFinite(a.started)&&Array.isArray(a.results)&&a.results.length===a.pos&&a.results.every(r=>typeof r==='boolean');
  }
- try{const raw=localStorage.getItem(key);if(raw){const s=JSON.parse(raw);if(!valid(s))throw Error();state=s;}}catch{issue='Không đọc được tiến độ flashcard đã lưu. Tiến độ làm đề vẫn được giữ riêng.';}
- function save(){try{localStorage.setItem(key,JSON.stringify(state));issue='';}catch{issue='Trình duyệt chưa lưu được flashcard. Hãy giữ trang mở để không mất phiên này.';}}
+ try{const raw=window.QuestStorage.getItem(key);if(raw){const s=JSON.parse(raw);if(!valid(s))throw Error();state=s;}}catch{issue='Không đọc được tiến độ flashcard đã lưu. Tiến độ làm đề vẫn được giữ riêng.';}
+ function save(){try{window.QuestStorage.setItem(key,JSON.stringify(state));issue='';}catch{issue='Trình duyệt chưa lưu được flashcard. Hãy giữ trang mở để không mất phiên này.';}}
  const allowed=()=>!window.DailyGate||window.DailyGate.allow();
  const due=c=>!state.progress[c.id]||state.progress[c.id].due<=Date.now();
  function matching(){const f=state.filters,q=f.query.toLocaleLowerCase('vi');return cards.filter(c=>(f.topic==='all'||c.topic===f.topic)&&(!q||(c.front+' '+c.back+' '+c.hint).toLocaleLowerCase('vi').includes(q))&&(f.mode==='all'||f.mode==='due'&&due(c)||f.mode==='weak'&&state.progress[c.id]?.known===false||f.mode==='starred'&&state.stars.includes(c.id)));}

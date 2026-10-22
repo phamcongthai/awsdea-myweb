@@ -1,29 +1,31 @@
-# Tài khoản email và mật khẩu
+# Supabase: tài khoản và dữ liệu học
 
-Website dùng Supabase Auth để đăng ký, đăng nhập và đăng xuất trên thiết bị hiện tại. Không có Google/OAuth. Chưa có đồng bộ tiến độ học: tiến độ, ghi chú, lịch sử thi và huy hiệu tiếp tục nằm trong localStorage của trình duyệt như trước. Đổi tài khoản không tách hoặc chuyển các dữ liệu học này.
+Email + mật khẩu. Mỗi tài khoản lưu trên PostgreSQL Supabase: luyện tập, câu sai đầu ngày, ghi chú, flashcard, lịch sử thi, bài dở, thứ tự câu/đáp án, deadline Hardcore, huy hiệu và lab.
 
-## Cấu hình một lần
+## Cấu hình
 
-1. Mở project `awsexam` trong Supabase.
-2. Trong **Authentication → URL Configuration**, đặt **Site URL** thành URL production thật của website trên Vercel, ví dụ `https://ten-web.vercel.app`.
-3. Thêm URL trang đăng nhập vào **Redirect URLs**: `https://ten-web.vercel.app/`, `https://ten-web.vercel.app/index.html`, `https://ten-web.vercel.app/realtest.html`. Thay `ten-web` bằng domain thật. Đây là các trang nhận liên kết xác nhận email.
-4. Email provider và đăng ký đã được kiểm tra đang bật. Project hiện bật xác nhận email, nên người đăng ký phải mở thư xác nhận trước lần đăng nhập đầu tiên. Nếu muốn đăng ký xong vào ngay, có thể tắt **Confirm email** trong cấu hình Email của Authentication. Không cần thêm Google hay provider khác.
+1. Chạy `supabase/schema.sql` trong Supabase → SQL Editor → New query. Script tạo bảng, phân quyền đọc của chính mình và hàm ghi kiểm tra phiên bản để chống ghi đè từ hai thiết bị. Có thể chạy lại.
+2. Authentication → URL Configuration: đặt Site URL thành domain Vercel thật. Thêm `/`, `/index.html`, `/realtest.html` vào Redirect URLs trên domain đó để xác nhận email trở về website.
+3. Email provider đang bật, project hiện yêu cầu xác nhận email trước lần đăng nhập đầu tiên. Không cần Google/OAuth.
 
-Không cần chạy SQL, tạo bảng hay nhập service_role/Secret key. Auth được Supabase quản lý. Publishable key là khóa công khai và được cấu hình trong `quest-auth.js`.
+Không cần service_role/Secret key. Publishable key công khai và phiên người dùng đủ để truy cập theo phân quyền. Không cấp quyền cho `anon` để khắc phục lỗi 401: người chưa đăng nhập phải bị từ chối.
 
-## Phiên đăng nhập
+## Cách lưu
 
-- Supabase JS 2.49.8 được lưu tại `public/vendor`, kèm MIT license; không phụ thuộc CDN lúc người dùng mở website.
-- `persistSession: true` giữ phiên trong localStorage; `autoRefreshToken: true` tự làm mới token; các trang cùng origin dùng cùng phiên.
-- Đăng xuất dùng scope `local`, không đăng xuất mọi thiết bị. Website không lưu mật khẩu do người dùng nhập.
-- Khóa production: `data-quest-auth-v1`; QA: `data-quest-auth-test-v1`, tách riêng.
-- Xóa dữ liệu website, chế độ riêng tư, phiên bị thu hồi hoặc trình duyệt chặn lưu trữ có thể yêu cầu đăng nhập lại. Lỗi lưu trữ hiển thị ngay trong hộp tài khoản.
-- Dùng origin Vercel ổn định: một deployment preview/domain khác hoặc file HTML mở trực tiếp có kho lưu riêng.
+- Phải đăng nhập; tải DB xong mới khởi tạo phần học. Không lấy tiến độ từ localStorage nữa.
+- QuestStorage là bộ đệm RAM, không phải kho lưu lâu dài trên trình duyệt. Thay đổi được gửi sau khoảng 180 ms; các lần ghi chạy tuần tự.
+- Chờ **Đã lưu trên DB** trước khi đóng trang. Lỗi mạng: bản chưa gửi chỉ ở RAM, chặn thao tác tiếp, cho thử lại/tải bản sao. Không có chế độ học offline lưu bền vững.
+- Chỉ phiên đăng nhập giữ trong localStorage (`data-quest-auth-v1`); không lưu mật khẩu.
+- Dữ liệu cũ được đề nghị nhập lên DB một lần. Chỉ xóa bản cũ sau khi ghi thành công, hoặc khi người dùng chọn dùng bản DB. Có nút tải bản sao trước khi chọn.
+- Hai thiết bị cùng sửa: lần ghi thứ hai nhận xung đột, chọn bản DB hoặc chủ động giữ bản đang làm. Không tự gộp hai lượt thi khác nhau.
+- Kiểm tra bản mới khi trở lại tab và mỗi 20 giây. Có bản mới thì yêu cầu mở bản mới trước khi tiếp tục.
+- Đăng xuất chờ lưu xong rồi nạp lại trang đăng nhập. Tài khoản mới không dùng bộ nhớ học của tài khoản trước.
+- Đổi thiết bị giữ nguyên deadline, không cấp thêm thời gian.
 
-## Build
+## Build và kiểm tra
 
-`build-auth.ps1` gắn CSS, thư viện và UI vào hai builder hiện tại. Chạy `powershell -ExecutionPolicy Bypass -File build-quest.ps1` để dựng lại trang học và phòng thi. Không cần backend Python riêng cho phạm vi chỉ xác thực này.
+Chạy `powershell -ExecutionPolicy Bypass -File build-quest.ps1`. Nếu sửa Data Engineering World, chạy `node build-data.mjs` trước, rồi `build-architect.ps1`.
 
-## Kiểm chứng
+`node scripts/test-cloud.mjs`: API giả lập, hai browser context độc lập, khôi phục bài dở/ghi chú, phân tách tài khoản, xung đột, mất mạng/thử lại, đăng xuất, nhập dữ liệu cũ và lab. `node scripts/test-auth.mjs`: đăng ký, đăng nhập, refresh token, khôi phục phiên. Các test dùng QA storage riêng: `?qa=1&cloud=1` kiểm tra cloud, `?qa=1` giữ bộ test cũ độc lập production.
 
-Đã kiểm tra API settings thực tế bằng Publishable key (chỉ đọc). Luồng đăng ký, xác nhận email, sai mật khẩu, khôi phục phiên qua reload/chuyển trang/đóng mở trình duyệt, refresh token hết hạn và đăng xuất được kiểm tra với Supabase Auth giả lập trong trình duyệt; không tạo tài khoản thử trên project production. Sau cấu hình URL, cần tự đăng ký một email thật để kiểm tra gửi và nhận thư của project.
+Đã kiểm tra bảng thật tồn tại và người chưa đăng nhập bị từ chối truy cập. Chưa dùng tài khoản thật để tạo/sửa dữ liệu học; cần thử cùng tài khoản trên hai thiết bị sau khi Vercel triển khai.

@@ -3,14 +3,15 @@ import {CATALOG,clone,node,connection,validateGraph,rule} from './catalog.mjs';
 import {missions,createMission,score,docs} from './missions.mjs';
 import {run,verify} from './engine.mjs';
 import {questions} from './questions.mjs';
+await window.QuestCloud.ready;
 const $=s=>document.querySelector(s),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const qa=new URLSearchParams(location.search).has('qa'),KEY=qa?'architect-quest-qa-v1':'architect-quest-v1';
 let store={version:1,completed:{},saves:{},xp:0,theme:'dark',mode:'beginner',last:null,history:[]};
-try{const v=JSON.parse(localStorage.getItem(KEY));if(v?.version===1&&v.completed&&v.saves)store={...store,...v};}catch(_){toast('Không đọc được tiến độ lab. Bạn có thể khôi phục từ bản sao lưu.');}
+try{const v=JSON.parse(window.QuestStorage.getItem(KEY));if(v?.version===1&&v.completed&&v.saves)store={...store,...v};}catch(_){toast('Không đọc được tiến độ lab. Bạn có thể khôi phục từ bản sao lưu.');}
 let mission,session,selected=new Set(),edgeStart=null,undo=[],redo=[],view={x:30,y:50,z:.75},timer=null,result=null,cursor=0,states={},playing=false,sheet=null,world=null,quizAnswers={};
 let userRequest={},speed=1,drag=null,pointers=new Map(),pinch=null;
 const app=$('#aq');document.body.classList.toggle('light',store.theme==='light');
-function persist(){try{if(mission&&session){store.saves[mission.id]=session;store.last=mission.id;}localStorage.setItem(KEY,JSON.stringify(store));}catch(_){toast('Bộ nhớ đầy hoặc bị chặn. Hãy xuất tiến độ để không mất bản thiết kế.');}}
+function persist(){try{if(mission&&session){store.saves[mission.id]=session;store.last=mission.id;}window.QuestStorage.setItem(KEY,JSON.stringify(store));}catch(_){toast('Bộ nhớ đầy hoặc bị chặn. Hãy xuất tiến độ để không mất bản thiết kế.');}}
 function toast(t){const e=$('#aq-toast');if(!e)return; e.textContent=t;e.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>e.classList.remove('show'),4500);}
 function nav(){return `<nav class="aq-nav"><div class="aq-brand">AWS <span>ARCHITECT QUEST</span></div><div class="aq-actions"><a href="index.html${qa?'?qa=1':''}">← Data Quest</a><button data-do="theme" aria-label="Đổi giao diện sáng tối">◐</button><a href="data.html">Data Engineering ✦</a><button data-do="home">Thế giới</button><span class="pill">${store.xp} XP</span></div></nav>`;}
 function done(w){return missions.filter(m=>m.world===w&&store.completed[m.id]).length;}
