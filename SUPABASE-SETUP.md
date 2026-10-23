@@ -1,8 +1,12 @@
 # Supabase: tài khoản và dữ liệu học
 
-Email + mật khẩu. Mỗi tài khoản lưu trên PostgreSQL Supabase: luyện tập, câu sai đầu ngày, ghi chú, flashcard, lịch sử thi, bài dở, thứ tự câu/đáp án, deadline Hardcore, huy hiệu và lab.
+Email + mật khẩu. Mỗi tài khoản lưu trên PostgreSQL Supabase: luyện tập, câu sai đầu ngày, ghi chú, flashcard, lịch sử thi, bài dở, thứ tự câu/đáp án, deadline Hardcore, huy hiệu.
 
 Sổ tay cá nhân trên header lưu trong cùng payload riêng tư theo tài khoản, khóa `quest-notebook-v1` (QA: `quest-notebook-test-v1`). Ghi chú dạng văn bản thuần tối đa 20.000 ký tự và mốc đọc gần nhất đều đồng bộ DB; không cần tạo bảng mới. Icon có chấm đỏ và rung nhẹ khi chưa đọc mốc gần nhất lúc 07:00/19:00 giờ Việt Nam. Mở sổ tay đánh dấu đã đọc; nếu đang mở lúc sang mốc mới thì tính là đang đọc. Trước 07:00 dùng mốc 19:00 hôm trước, nên qua nửa đêm không nhắc thêm lần thứ ba. Timer kiểm tra đúng mốc và kiểm tra lại khi trở về tab; khi đóng web không có push notification, lời nhắc hiện khi quay lại. Tôn trọng reduced motion và tùy chọn tắt hiệu ứng.
+
+## Nhiều chứng chỉ
+
+Sau khi đã chạy `schema.sql` và `leaderboard.sql`, chạy thêm `multi-cert.sql` để tính xếp hạng riêng cho SAA và CLF. Dữ liệu DEA giữ nguyên; hai chứng chỉ mới dùng key `cert:saa:` / `cert:clf:` trong cùng snapshot tài khoản. Sổ tay và hồ sơ dùng chung; tiến độ học, thi, ôn đầu ngày và ghi chú câu hỏi tách riêng. Lab kéo thả đã gỡ khỏi bản web.
 
 ## Cấu hình
 

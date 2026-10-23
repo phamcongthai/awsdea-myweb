@@ -96,11 +96,14 @@ $js = [IO.File]::ReadAllText((Join-Path $root 'daily-runtime.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-music.js')) + "`n" + $js
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'question-notes.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'question-notes.js')) + "`n" + $js
-$js = "window.QuestCloud.ready.then(()=>{`n"+$js+"`n});"
+$js = "window.QuestCloud.ready.then(async()=>{await window.QuestCert.prepare();`n"+$js+"`n});"
 $html = $template.Replace('<!-- QUEST_STYLE -->', '<style>'+$css+'</style>').Replace('<!-- QUEST_DATA -->', '<script>window.QUEST_BANK = '+$bank.Replace('</','<\/')+';</script>').Replace('<!-- QUEST_APP -->', '<script>'+$js+'</script>')
 [IO.File]::WriteAllText((Join-Path $root 'AWS Data Quest.html'), (Add-QuestAuth $html 'public/'), [Text.UTF8Encoding]::new($false))
 $publishDirectory = Join-Path $root 'public'
 [IO.Directory]::CreateDirectory($publishDirectory) | Out-Null
+foreach($asset in @('quest-cert.js','quest-auth.js','quest-auth.css','quest-cloud.js','quest-cloud.css','quest-social.js','quest-social.css','quest-header.js','quest-header.css','quest-notebook.js','quest-notebook.css')) {
+  Copy-Item -LiteralPath (Join-Path $root $asset) -Destination (Join-Path $publishDirectory $asset) -Force
+}
 [IO.File]::WriteAllText((Join-Path $publishDirectory 'index.html'), (Add-QuestAuth $html), [Text.UTF8Encoding]::new($false))
 foreach ($source in $sources) {
   Copy-Item -LiteralPath (Join-Path $root $source.file) -Destination (Join-Path $publishDirectory $source.file) -Force
@@ -108,4 +111,3 @@ foreach ($source in $sources) {
 $questions | Group-Object { $_.topic } | Select-Object Name,Count | Format-Table -AutoSize
 Write-Output 'Built AWS Data Quest.html with 260 questions. Original files preserved.'
 & (Join-Path $root 'build-exams.ps1')
-& (Join-Path $root 'build-architect.ps1')

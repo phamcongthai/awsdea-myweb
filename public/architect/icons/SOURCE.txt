@@ -1,8 +1,0 @@
-AWS Architecture Icons, release 2026-07-31.
-Official source: https://aws.amazon.com/architecture/icons/
-Downloaded package:
-https://d1.awsstatic.com/onedam/marketing-channels/website/public/shared/architecture-icon-release/Icon-package_07312026.5846e92413caa21490223536cc97f1269e44fa92.zip
-SVG files extracted unchanged from Architecture-Service-Icons, Resource-Icons and Architecture-Group-Icons.
-AWS permits use of these assets in architecture diagrams per the source page.
-AWS service names/icons are Amazon trademarks. No endorsement implied.
-Subfeatures (Knowledge Base, embedding, SG/NACL/OAC) may use their parent service icon with explicit text labels.

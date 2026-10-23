@@ -3,5 +3,22 @@
   "framework": null,
   "buildCommand": "",
   "installCommand": "",
-  "outputDirectory": "public"
+  "outputDirectory": "public",
+  "redirects": [
+    {
+      "source": "/architect.html",
+      "destination": "/index.html",
+      "permanent": true
+    },
+    {
+      "source": "/data.html",
+      "destination": "/index.html",
+      "permanent": true
+    },
+    {
+      "source": "/architect/:path*",
+      "destination": "/index.html",
+      "permanent": true
+    }
+  ]
 }

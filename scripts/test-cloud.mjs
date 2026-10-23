@@ -22,6 +22,25 @@ try{
  console.log('PASS two independent devices restore same DB notes, active exam and checked answers; no learning data in localStorage');
  await settle(other);await other.locator('#quest-notebook').click();await other.waitForFunction(()=>document.getElementById('quest-notebook-dialog').open);assert.equal(await other.locator('#notebook-text').inputValue(),'Sổ tay theo tài khoản');await other.locator('.notebook-done').click();
  await settle(other);await a.reload();await ready(a);await a.waitForFunction(()=>Exam.bank);await settle(a);
+ // Certificate namespaces share one account snapshot but never overwrite each other.
+ for(const cert of ['saa','clf']){
+  await a.goto(file('realtest.html')+'&cert='+cert);await ready(a);
+  await a.evaluate(()=>{QuestStorage.setItem('quest-note-test:cert-only',QuestCert.id);QuestStorage.setItem('quest-selected-cert-v1',QuestCert.id);});await settle(a);
+  await a.evaluate(()=>Exam.start(1,'review'));await a.waitForFunction(()=>Exam.bank?.id===1);
+  await a.evaluate(()=>Exam.bank.questions[Exam.state.active.pos].correct.forEach(i=>Exam.choose(i)));await a.locator('[data-exam="check"]').click();await settle(a);
+  await other.goto(file('realtest.html')+'&cert='+cert);await ready(other);await other.waitForFunction(()=>Exam.bank?.id===1);
+  assert.equal(await other.evaluate(()=>QuestStorage.getItem('quest-note-test:cert-only')),cert);
+  assert.equal(await other.evaluate(()=>Exam.state.active.checked.filter(Boolean).length),1);
+  assert.ok(rows.get('user-a').payload['cert:'+cert+':aws-realtest-qa-v1']);
+  assert.equal(await a.evaluate(()=>localStorage.getItem('cert:'+QuestCert.id+':aws-realtest-qa-v1')),null);
+ }
+ await other.goto(file('index.html'));await other.waitForFunction(()=>window.Quest&&QuestCert.id==='clf');
+ await a.goto(file('realtest.html')+'&cert=dea');await ready(a);await a.waitForFunction(()=>Exam.bank?.id===5);
+ assert.equal(await a.evaluate(()=>Exam.state.active.checked.filter(Boolean).length),1);
+ assert.equal(await a.evaluate(()=>QuestStorage.getItem('quest-note-test:cert-only')),null);
+ await other.goto(file('realtest.html')+'&cert=dea');await ready(other);await other.waitForFunction(()=>Exam.bank?.id===5);
+ await settle(other);await a.reload();await ready(a);await a.waitForFunction(()=>Exam.bank?.id===5);await settle(a);
+ console.log('PASS per-certificate DB state restored on another device, DEA preserved, selected certificate restored, no browser progress');
  // A concurrent device save must not silently overwrite newer server data.
  await a.evaluate(()=>QuestStorage.setItem('quest-note-test:device-a','A'));await settle(a);
  await other.evaluate(()=>QuestStorage.setItem('quest-note-test:device-b','B'));await other.evaluate(()=>QuestCloud.flush().catch(()=>{}));await other.getByRole('heading',{name:'Tiến độ đã thay đổi trên thiết bị khác'}).waitFor();assert.equal(rows.get('user-a').payload['quest-note-test:device-b'],undefined);
@@ -32,8 +51,8 @@ try{
  await stranger.locator('#quest-account').click();await stranger.locator('[data-auth="logout"]').click();await stranger.waitForFunction(()=>window.QuestCloud&&!QuestCloud.loaded&&!window.Exam);assert.equal(await stranger.evaluate(()=>!!window.Exam),false);
  console.log('PASS network failure blocks further study and retries from RAM; logout clears app and account data');
  const legacy=await device('user-c');await legacy.evaluate(()=>localStorage.setItem('quest-note-test:old','old note'));await login(legacy);await ready(legacy);assert.equal(await legacy.evaluate(()=>QuestStorage.getItem('quest-note-test:old')),null);assert.equal(rows.get('user-c')?.payload['quest-note-test:old'],undefined);
- for(const name of ['index.html','architect.html','data.html']){await legacy.goto(file(name));await legacy.waitForFunction(()=>QuestCloud.loaded);if(name==='architect.html')await legacy.waitForFunction(()=>document.getElementById('aq')?.children.length>0);if(name==='data.html')await legacy.waitForFunction(()=>document.getElementById('data-root')?.children.length>0);assert.equal(await legacy.evaluate(()=>QuestStorage.getItem('quest-note-test:old')),null);}
- console.log('PASS new accounts ignore legacy browser data; all learning/lab pages load DB only');
+ for(const name of ['index.html']){await legacy.goto(file(name));await legacy.waitForFunction(()=>QuestCloud.loaded);assert.equal(await legacy.evaluate(()=>QuestStorage.getItem('quest-note-test:old')),null);}
+ console.log('PASS new accounts ignore legacy browser data; learning pages load DB only');
  missing=true;const noSchema=await device('user-d');await login(noSchema);await noSchema.getByText(/Chưa có bảng đồng bộ/).waitFor();assert.equal(await noSchema.evaluate(()=>!!window.Exam),false);missing=false;
  assert.deepEqual(errors,[]);console.log('PASS missing schema gives setup instructions; no browser JS errors');
 }finally{await b.close();}

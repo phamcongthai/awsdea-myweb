@@ -16,7 +16,7 @@ foreach($file in (Get-ChildItem (Join-Path $root 'exam-bank') -Filter 'test*.jso
 $keys=@{}
 foreach($id in $review.Keys){$keys[$id]=@{correct=$review[$id].correct;count=$review[$id].answers.Count}}
 $config=$keys|ConvertTo-Json -Depth 12 -Compress
-$runtime='window.DAILY_KEYS = '+$config+';'+"`n"+[IO.File]::ReadAllText((Join-Path $root 'quest-daily.js'))
+$runtime='window.DAILY_KEYS = window.QuestCert?.dailyKeys || '+$config+';'+"`n"+[IO.File]::ReadAllText((Join-Path $root 'quest-daily.js'))
 [IO.File]::WriteAllText((Join-Path $root 'daily-runtime.js'),$runtime,[Text.UTF8Encoding]::new($false))
 [IO.Directory]::CreateDirectory((Join-Path $root 'public'))|Out-Null
 [IO.File]::WriteAllText((Join-Path $root 'public/daily-bank.js'),'window.DAILY_REVIEW_BANK = '+($review|ConvertTo-Json -Depth 12 -Compress)+';',[Text.UTF8Encoding]::new($false))

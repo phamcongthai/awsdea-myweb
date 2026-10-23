@@ -5,7 +5,9 @@
  const keys=new Set(qa?['aws-data-quest-test-v1','aws-realtest-qa-v1','data-quest-daily-test-v1','data-quest-flashcards-test-v1','architect-quest-qa-v1','architect-data-qa','data-quest-fun-test']:['aws-data-quest-v1','aws-realtest-v1','data-quest-daily-v1','data-quest-flashcards-v1','architect-quest-v1','data-quest-fun']);
  keys.add(qa?'data-quest-music-test':'data-quest-music');
  keys.add(qa?'quest-notebook-test-v1':'quest-notebook-v1');
- const allowed=k=>keys.has(k)||k.startsWith(qa?'quest-note-test:':'quest-note:');
+ keys.add('quest-selected-cert-v1');
+ const scoped=k=>window.QuestCert.scope(k);
+ const allowed=k=>{k=k.replace(/^cert:(saa|clf):/,'');return keys.has(k)||k.startsWith(qa?'quest-note-test:':'quest-note:');};
  let data={},revision=0,dirty=false,user=null,started=false,loaded=false,blocked=false,inflight=null,timer=null,generation=0,resolveReady;
  const ready=new Promise(r=>resolveReady=r),copy=v=>JSON.parse(JSON.stringify(v));
  const panel=document.createElement('section');panel.id='quest-cloud-gate';panel.setAttribute('role','region');panel.setAttribute('aria-label','Đồng bộ tài khoản');
@@ -38,7 +40,7 @@
  function schedule(){dirty=true;generation++;state(blocked?'☁ Chưa lưu DB':'☁ Đang chờ lưu…');clearTimeout(timer);timer=setTimeout(()=>flush().catch(()=>{}),180);}
  // Timers (e.g. Hardcore expiry) may still advance while the network gate is up.
  // Retain their writes in RAM too; blocking UI must not discard a new deadline.
- window.QuestStorage=test?localStorage:{getItem:k=>data[k]??null,setItem(k,value){if(!allowed(k))throw Error('Unsupported learning key');if(!loaded)throw Error('Cloud data not ready');value=String(value);if(data[k]!==value){data[k]=value;schedule();}},removeItem(k){if(!loaded)throw Error('Cloud data not ready');if(k in data){delete data[k];schedule();}}};
+ window.QuestStorage=test?{getItem:k=>localStorage.getItem(scoped(k)),setItem:(k,v)=>localStorage.setItem(scoped(k),v),removeItem:k=>localStorage.removeItem(scoped(k))}:{getItem:k=>data[scoped(k)]??null,setItem(k,value){k=scoped(k);if(!allowed(k))throw Error('Unsupported learning key');if(!loaded)throw Error('Cloud data not ready');value=String(value);if(data[k]!==value){data[k]=value;schedule();}},removeItem(k){k=scoped(k);if(!loaded)throw Error('Cloud data not ready');if(k in data){delete data[k];schedule();}}};
  window.QuestCloud={client,ready,flush,get dirty(){return dirty;},get loaded(){return loaded;},get blocked(){return blocked;}};
  badge.onclick=()=>{if(blocked)panel.hidden=false;else if(dirty)flush().catch(()=>{});else window.QuestAuth.show();};
  if(test){panel.hidden=true;badge.hidden=true;resolveReady();return;}
