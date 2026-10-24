@@ -11,7 +11,8 @@ function Add-QuestAuth([string]$html, [string]$assetBase='') {
   $headerCss=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-header.css'))
   $headerJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-header.js'))
   $notebookCss=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-notebook.css'))
+  $notebookImageJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-notebook-images.js'))
   $notebookJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-notebook.js'))
   $html=$html.Replace('</head>',"<style>$authCss`n$cloudCss`n$socialCss`n$headerCss`n$notebookCss</style></head>")
-  return $html.Replace('<body>',"<body><script src=`"${assetBase}vendor/supabase-2.49.8.js`"></script><script>$certJs</script><script>$cloudJs</script><script>$authJs</script><script>$socialJs</script><script>$headerJs</script><script>$notebookJs</script>")
+  return $html.Replace('<body>',"<body><script src=`"${assetBase}vendor/supabase-2.49.8.js`"></script><script>$certJs</script><script>$cloudJs</script><script>$authJs</script><script>$socialJs</script><script>$headerJs</script><script>$notebookImageJs</script><script>$notebookJs</script>")
 }

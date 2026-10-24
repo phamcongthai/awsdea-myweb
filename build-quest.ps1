@@ -101,7 +101,7 @@ $html = $template.Replace('<!-- QUEST_STYLE -->', '<style>'+$css+'</style>').Rep
 [IO.File]::WriteAllText((Join-Path $root 'AWS Data Quest.html'), (Add-QuestAuth $html 'public/'), [Text.UTF8Encoding]::new($false))
 $publishDirectory = Join-Path $root 'public'
 [IO.Directory]::CreateDirectory($publishDirectory) | Out-Null
-foreach($asset in @('quest-cert.js','quest-auth.js','quest-auth.css','quest-cloud.js','quest-cloud.css','quest-social.js','quest-social.css','quest-header.js','quest-header.css','quest-notebook.js','quest-notebook.css')) {
+foreach($asset in @('quest-cert.js','quest-auth.js','quest-auth.css','quest-cloud.js','quest-cloud.css','quest-social.js','quest-social.css','quest-header.js','quest-header.css','quest-notebook.js','quest-notebook-images.js','quest-notebook.css')) {
   Copy-Item -LiteralPath (Join-Path $root $asset) -Destination (Join-Path $publishDirectory $asset) -Force
 }
 [IO.File]::WriteAllText((Join-Path $publishDirectory 'index.html'), (Add-QuestAuth $html), [Text.UTF8Encoding]::new($false))

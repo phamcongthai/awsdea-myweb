@@ -28,7 +28,7 @@ Rank tính riêng từng chứng chỉ từ tiến độ đã lưu: câu đúng 
 - Hardcore: khởi đầu 35 phút, chặng tối đa 12 câu; sai chỉ làm lại chặng đó và đảo thứ tự; qua chặng cộng 10 phút một lần. Có lưu và thoát; thời gian tiếp tục chạy khi rời trang. Hết giờ làm lại cả lượt.
 - Ultra Hardcore: cảnh báo xác nhận trước khi vào; 35 phút, sai một câu hoặc hết giờ làm lại toàn bộ; chặn thoát trong ứng dụng.
 - Ôn đầu ngày: nhắc làm lại các câu từng sai của chứng chỉ đang chọn; đạt **trên 90%** để mở khóa hoặc bấm **Bỏ qua hôm nay** ở màn hình bắt đầu/trong lượt ôn. Bỏ qua lưu theo tài khoản và chứng chỉ, không tính là vượt bài ôn, không xóa câu sai; ngày sau sẽ nhắc lại. Hiện tỷ lệ trong khi làm; vượt số lỗi cho phép sẽ reset ngay. Đảo câu/đáp án nhưng chấm theo chỉ số đáp án gốc.
-- Flashcard, lý thuyết AWS, ghi chú từng câu, sổ tay, nhạc và hiệu ứng vẫn dùng được. Thư viện lý thuyết AWS dùng chung.
+- Flashcard, lý thuyết AWS, ghi chú từng câu, sổ tay, nhạc và hiệu ứng vẫn dùng được. Sổ tay hỗ trợ chữ + ảnh đính kèm bên dưới: dán Ctrl+V/⌘V hoặc chọn file trên điện thoại, xem lại theo tài khoản trên thiết bị khác. Chạy thêm `supabase/notebook-images.sql` để bật kho ảnh riêng tư; không đổi dữ liệu chữ cũ. Thư viện lý thuyết AWS dùng chung.
 
 Lab kéo thả đã gỡ khỏi bản xuất bản. Các URL `/architect.html`, `/data.html` và `/architect/*` chuyển về trang học trên Vercel. Service worker cũ được thay bằng worker dọn cache và tự hủy đăng ký. Mã lab lịch sử ngoài `public/` không được triển khai.
 

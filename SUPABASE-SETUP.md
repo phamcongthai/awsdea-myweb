@@ -4,6 +4,16 @@ Email + mật khẩu. Mỗi tài khoản lưu trên PostgreSQL Supabase: luyện
 
 Sổ tay cá nhân trên header lưu trong cùng payload riêng tư theo tài khoản, khóa `quest-notebook-v1` (QA: `quest-notebook-test-v1`). Ghi chú dạng văn bản thuần tối đa 20.000 ký tự và mốc đọc gần nhất đều đồng bộ DB; không cần tạo bảng mới. Icon có chấm đỏ và rung nhẹ khi chưa đọc mốc gần nhất lúc 07:00/19:00 giờ Việt Nam. Mở sổ tay đánh dấu đã đọc; nếu đang mở lúc sang mốc mới thì tính là đang đọc. Trước 07:00 dùng mốc 19:00 hôm trước, nên qua nửa đêm không nhắc thêm lần thứ ba. Timer kiểm tra đúng mốc và kiểm tra lại khi trở về tab; khi đóng web không có push notification, lời nhắc hiện khi quay lại. Tôn trọng reduced motion và tùy chọn tắt hiệu ứng.
 
+## Ảnh trong sổ tay
+
+Chạy thêm `supabase/notebook-images.sql` để tạo bucket private `quest-notebook-images` và chính sách chủ tài khoản trên Storage. Script không thay đổi bảng tiến độ hoặc chữ trong sổ cũ. Không cần secret/service-role key.
+
+Sổ tay giữ ô viết chữ và bổ sung ảnh bên dưới. Dán PNG/JPG/WebP từ clipboard khi đang viết (Ctrl+V/⌘V), hoặc bấm **Thêm ảnh** để chọn file trên máy tính/điện thoại. Giữ tối đa 20 ảnh trong sổ; đầu vào tối đa 20 MB/ảnh. Trình duyệt thu nhỏ cạnh dài về tối đa 2.400 px và chuyển WebP (PNG nếu trình duyệt không hỗ trợ), tối đa 2 MB/file lưu. Ảnh có thể được xem trên thiết bị khác sau khi báo lưu thành công.
+
+File ảnh nằm trong thư mục `<auth.uid()>/<random-id>.webp` của bucket; PostgreSQL chỉ lưu đường dẫn/tên ảnh trong `quest-notebook-v1`, không nhét base64 hay URL ký vào snapshot. Ảnh được đọc qua URL có thời hạn một giờ, tạo lại khi mở sổ. Xóa ảnh lưu thay đổi ghi chú trước rồi xóa file; hàng đợi xóa được giữ để thử lại khi mở sổ nếu mất mạng giữa chừng. Sổ và ảnh dùng chung giữa các chứng chỉ của cùng tài khoản.
+
+Tham khảo: [bucket riêng tư và URL có thời hạn](https://supabase.com/docs/guides/storage/serving/downloads), [quyền truy cập Storage](https://supabase.com/docs/guides/storage/security/access-control).
+
 ## Nhiều chứng chỉ
 
 Sau khi đã chạy `schema.sql` và `leaderboard.sql`, chạy thêm `multi-cert.sql` để tính xếp hạng riêng cho SAA và CLF. Dữ liệu DEA giữ nguyên; hai chứng chỉ mới dùng key `cert:saa:` / `cert:clf:` trong cùng snapshot tài khoản. Sổ tay và hồ sơ dùng chung; tiến độ học, thi, ôn đầu ngày và ghi chú câu hỏi tách riêng. Lab kéo thả đã gỡ khỏi bản web.
