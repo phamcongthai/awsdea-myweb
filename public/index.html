@@ -247,6 +247,16 @@ body.has-quest-header{padding-top:84px!important}#quest-header{position:fixed;in
   const next=e.key==='Enter'?(daily?document.querySelector('#daily-gate [data-daily="check"]'):document.querySelector('[data-action="check"],[data-exam="check"]'))||(!daily?document.querySelector('[data-action="next"]'):null):daily?document.querySelector('#daily-gate [data-daily="next"]'):document.querySelector('[data-action="next"],.exam-move button:last-child[data-exam="jump"]');
   if(next&&!next.closest('[inert]')){e.preventDefault();if(e.key==='Enter')e.stopImmediatePropagation();if(!next.disabled)next.click();}
  },true);
+ let backdropDialog=null;
+ const outside=(e,d)=>{const r=d.getBoundingClientRect();return e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom;};
+ document.addEventListener('pointerdown',e=>{const d=e.target.closest?.('dialog[open]');backdropDialog=d&&e.target===d&&outside(e,d)?d:null;},true);
+ document.addEventListener('click',e=>{
+  const d=backdropDialog;backdropDialog=null;
+  if(!d?.open||e.target!==d||!outside(e,d))return;
+  e.preventDefault();e.stopImmediatePropagation();
+  if(d.dispatchEvent(new Event('cancel',{cancelable:true})))d.close();
+ },true);
+ document.addEventListener('pointercancel',()=>{backdropDialog=null;},true);
  collect();new MutationObserver(collect).observe(document.body,{childList:true});
 })();
 </script><script>'use strict';
