@@ -176,8 +176,8 @@
   }
   function scrollToQuestion() {
     const card=document.querySelector('.focus-shell .question-card');
-    const offset=(document.getElementById('daily-date')?.getBoundingClientRect().bottom||0)+12;
-    window.scrollTo({top:matchMedia('(max-width:780px)').matches&&card?Math.max(0,scrollY+card.getBoundingClientRect().top-offset):0,behavior:'instant'});
+    const offset=(document.getElementById('quest-header')?.getBoundingClientRect().bottom||document.getElementById('daily-date')?.getBoundingClientRect().bottom||0)+12;
+    window.scrollTo({top:card?Math.max(0,scrollY+card.getBoundingClientRect().top-offset):0,behavior:'instant'});
   }
   function nextQuestion() {
     if(window.DailyGate && !window.DailyGate.allow())return;
