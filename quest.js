@@ -258,7 +258,6 @@
   document.addEventListener('keydown',e=>{
     if(document.getElementById('question-note-dialog')?.open || !state.active || $('modal').open || state.active.breakUntil || /INPUT|TEXTAREA|SELECT|A|SUMMARY/.test(e.target.tagName) || e.ctrlKey || e.altKey || e.metaKey)return;
     if(/^[1-6]$/.test(e.key)){const index=state.active.order[Number(e.key)-1];if(index!==undefined){e.preventDefault();state.active.checked?showOptionExplanation(index):select(index);}}
-    else if(e.key==='Enter' && (e.target.tagName!=='BUTTON' || e.target.dataset.action==='select')){e.preventDefault();state.active.checked?nextQuestion():checkAnswer();}
   });
   document.addEventListener('visibilitychange',()=>{
     if(!state.active)return;
