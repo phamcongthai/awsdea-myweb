@@ -3,8 +3,8 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const qa = new URLSearchParams(location.search).has('qa');
   const key = qa ? 'data-quest-fun-test' : 'data-quest-fun';
-  let prefs = {effects:true,sound:true};
-  try {const saved=JSON.parse(window.QuestStorage.getItem(key));if(saved){prefs.effects=saved.effects!==false;prefs.sound=saved.sound!==false;}} catch (_) {}
+  let prefs = {version:2,effects:true,sound:true};
+  try {const saved=JSON.parse(window.QuestStorage.getItem(key));if(saved){prefs.effects=saved.effects!==false;prefs.sound=saved.version===2?saved.sound!==false:true;}} catch (_) {}
   let audio, burstTimer, lastCelebration=0;
   let soundRequest=0;
   const voices=new Set();
@@ -29,7 +29,7 @@
   function applyPrefs() {
     document.body.classList.toggle('quiet-effects',!prefs.effects||reduced.matches);
     document.querySelectorAll('[data-fun="effects"]').forEach(b=>{b.textContent=prefs.effects?'✨ Hiệu ứng':'🌿 Êm dịu';b.setAttribute('aria-pressed',String(prefs.effects));});
-    document.querySelectorAll('[data-fun="sound"]').forEach(b=>{b.textContent=prefs.sound?'🔊 Âm thanh: Bật':'🔇 Âm thanh: Tắt';b.setAttribute('aria-pressed',String(prefs.sound));b.title=prefs.sound?'Tắt âm báo trả lời đúng / sai':'Bật âm báo trả lời đúng / sai';});
+    document.querySelectorAll('[data-fun="sound"]').forEach(b=>{b.textContent=prefs.sound?'🔊 Âm báo: Bật':'🔇 Âm báo: Tắt';b.setAttribute('aria-pressed',String(prefs.sound));b.title=prefs.sound?'Tắt âm báo trả lời đúng / sai':'Bật âm báo trả lời đúng / sai';});
   }
   function decorate(state,finished) {
     const total=Object.keys(state.progress).length*10+state.history.filter(h=>h.status==='complete').length*50;
@@ -55,6 +55,13 @@
     for(const osc of voices){try{osc.stop();}catch(_){} }
     voices.clear();
   }
+  function primeSound(e) {
+    if(!e.isTrusted||!prefs.sound)return;
+    try{if(!audio||audio.state==='closed')audio=new (window.AudioContext||window.webkitAudioContext)();if(audio.state==='suspended')audio.resume().catch(()=>{});}catch(_){}
+  }
+  // Unlock during the real gesture, before cloud saves replay clicks asynchronously.
+  document.addEventListener('pointerdown',primeSound,true);
+  document.addEventListener('keydown',primeSound,true);
   async function tone(kind) {
     if(!prefs.sound)return;
     stopSound();
