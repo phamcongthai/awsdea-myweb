@@ -1,0 +1,225 @@
+{
+  "source": "DOJOS/Sections/TIME_MODE/tf3/📊 Your Progress - Tutorials Dojo.html",
+  "sourceSha256": "a5cba389c726b56d099817d884d59fb239efb57d83a7be0cd3cb14b4a75e1354",
+  "sourceCount": 64,
+  "excludedExisting": [
+    {
+      "sourceNumber": 7,
+      "test": 5,
+      "question": 29,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 9,
+      "test": 5,
+      "question": 65,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 10,
+      "test": 5,
+      "question": 28,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 11,
+      "test": 5,
+      "question": 62,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 12,
+      "test": 5,
+      "question": 57,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 13,
+      "test": 5,
+      "question": 54,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 14,
+      "test": 5,
+      "question": 22,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 15,
+      "test": 5,
+      "question": 12,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 16,
+      "test": 5,
+      "question": 45,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 20,
+      "test": 5,
+      "question": 58,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 22,
+      "test": 5,
+      "question": 35,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 23,
+      "test": 5,
+      "question": 40,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 27,
+      "test": 5,
+      "question": 4,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 29,
+      "test": 5,
+      "question": 33,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 34,
+      "test": 5,
+      "question": 63,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 35,
+      "test": 5,
+      "question": 9,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 37,
+      "test": 5,
+      "question": 53,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 38,
+      "test": 5,
+      "question": 52,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 39,
+      "test": 5,
+      "question": 51,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 41,
+      "test": 5,
+      "question": 60,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 45,
+      "test": 5,
+      "question": 50,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 48,
+      "test": 5,
+      "question": 43,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 51,
+      "test": 5,
+      "question": 36,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 56,
+      "test": 5,
+      "question": 38,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 57,
+      "test": 5,
+      "question": 39,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 60,
+      "test": 5,
+      "question": 56,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 61,
+      "test": 5,
+      "question": 59,
+      "previouslyWrong": false
+    },
+    {
+      "sourceNumber": 62,
+      "test": 5,
+      "question": 23,
+      "previouslyWrong": false
+    }
+  ],
+  "excludedBetweenFiles": [
+    {
+      "sourceNumber": 19,
+      "test": 7,
+      "question": 6,
+      "previouslyWrong": false
+    }
+  ],
+  "excludedWithinSource": [],
+  "importedCount": 35,
+  "importedSourceNumbers": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8,
+    17,
+    18,
+    21,
+    24,
+    25,
+    26,
+    28,
+    30,
+    31,
+    32,
+    33,
+    36,
+    40,
+    42,
+    43,
+    44,
+    46,
+    47,
+    49,
+    50,
+    52,
+    53,
+    54,
+    55,
+    58,
+    59,
+    63,
+    64
+  ],
+  "priorWrongNew": [],
+  "nearMatches": [],
+  "minutes": 70
+}

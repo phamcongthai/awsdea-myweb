@@ -4,7 +4,7 @@ Chọn chứng chỉ trên header:
 
 | Chứng chỉ | Luyện theo chủ đề | Phòng thi |
 | --- | --- | --- |
-| Data Engineer Associate | 260 câu gốc + LOG đặc biệt | 5 đề × 65 câu + Time Mode 1 (46 câu) |
+| Data Engineer Associate | 260 câu gốc + LOG đặc biệt | 5 đề × 65 câu + Time Mode 1/2/3 (46/51/35 câu) |
 | Solutions Architect Associate | 390 câu, 11 phiên tối đa 40 câu | 6 đề × 65 câu |
 | Cloud Practitioner | 340 câu, 11 phiên tối đa 40 câu | 1 bài chẩn đoán 15 câu + 5 đề × 65 câu |
 
@@ -17,6 +17,14 @@ Toàn bộ đề SAA/CLF vừa nhập được dùng cho cả luyện tập và 
 15 câu có thống kê trả lời sai trong file review được gắn badge **! Cần ôn · Sai trong review đã nhập**. Đây là dấu của lượt review nguồn, không phải kết quả của người dùng mới. Các câu làm sai trên tài khoản trong web cũng có badge cần ôn; câu sai trong đề phụ được ghi vào ôn đầu ngày bằng ID `e:6:n`. Đáp án và lời giải giữ nguyên nguồn, ảnh được đóng gói cục bộ. Lời giải phần nhập này là tiếng Anh.
 
 Chạy `node import-dojo-time.mjs` để nhập lại nguồn rồi `build-quest.ps1` để sinh web. Danh sách 19 câu loại, số câu nguồn được giữ và dấu câu sai nằm trong `exam-bank/time-mode-1-report.json`. Import so nội dung câu hỏi đã chuẩn hóa Unicode/khoảng trắng/dấu ngoặc kép, không so chữ cái đáp án hoặc số thứ tự; kiểm tra mapping từng đáp án bằng `node scripts/test-dojo-time.mjs`.
+
+## Time Mode 2 và 3 · TF2/TF3
+
+Nguồn cục bộ: `DOJOS/Sections/TIME_MODE/tf2/` và `tf3/`. TF2 có 65 câu, loại 14 câu đã có trong đề 5, giữ 51 câu thành **Time Mode 2** (ID 7, 102 phút). TF3 thực tế lưu 64 câu, loại 28 câu đã có trong đề 5 và 1 câu đã giữ ở TF2, còn 35 câu thành **Time Mode 3** (ID 8, 70 phút). Cả hai nguồn đều được đối chiếu thêm với Time Mode 1; không có trùng khớp với bộ này. Không tự bổ sung câu thứ 65 vào TF3 khi file không chứa nó. Hai file lưu không có lựa chọn người làm (không có input checked); các câu này không bị gắn nhầm badge đã trả lời sai chỉ vì bài nguồn được nộp trống. Câu trả lời sai khi làm trên web vẫn có badge cần ôn.
+
+Khi trùng giữa TF2 và TF3, giữ ở TF2. Hai đề mới giữ mapping đáp án và lời giải, hỗ trợ cùng các chế độ và lưu tiến độ theo tài khoản như đề trước. Câu sai khi làm trên web vẫn vào ôn đầu ngày; điểm đề phụ không cộng rank của 5 đề chính. Không thay đổi câu hỏi/ID đề 5 và Time Mode 1, không cần SQL mới.
+
+Chạy `node import-dojo-time-next.mjs` rồi `build-quest.ps1`. Các báo cáo `exam-bank/time-mode-2-report.json` và `time-mode-3-report.json` ghi rõ từng câu bị loại, đề/câu tương ứng và số thứ tự nguồn được giữ. Đối chiếu dùng nội dung câu hỏi chuẩn hóa, không dựa vào thứ tự đáp án. `node scripts/test-dojo-time-next.mjs` kiểm tra đủ 86 câu không trùng, đáp án theo từng nguồn, thời gian/chấm điểm, Review, bài dở và Hardcore.
 
 ## Bút ghi nhớ trong sổ tay
 
