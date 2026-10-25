@@ -16,8 +16,9 @@
  function refresh(){let due=ready&&entry.lastReadSlot!==slotAt();if(ready&&dialog.open&&due){entry.lastReadSlot=slotAt();save();flush();due=false;}button.classList.toggle('needs-reading',due);button.setAttribute('aria-label',due?'Sổ tay · Đến giờ đọc lại ghi chú':'Mở sổ tay cá nhân');button.title=due?'Đến giờ đọc lại sổ tay · 07:00 và 19:00':'Sổ tay cá nhân';}
  function schedule(){clearTimeout(boundaryTimer);boundaryTimer=setTimeout(()=>{refresh();schedule();},Math.max(50,Date.parse(slotAt())+12*3600000-Date.now()+50));}
  async function flush(){try{await window.QuestCloud.flush();status.textContent='✓ Đã lưu trên DB theo tài khoản.';return true;}catch{status.textContent='Chưa lưu được. Giữ trang mở và thử lại khi có mạng.';return false;}}
- function open(){if(!ready){window.QuestAuth.show();return;}if(window.QuestCloud.blocked)return;input.value=entry.text;count.textContent=input.value.length.toLocaleString('vi-VN')+' / 20.000 ký tự';entry.lastReadSlot=slotAt();save();refresh();dialog.showModal();dialog.scrollTop=0;dialog.querySelector('[data-notebook-close]').focus({preventScroll:true});input.scrollTop=0;pictureNotes.open();flush();}
+ function open(){if(!ready){window.QuestAuth.show();return;}if(window.QuestCloud.blocked)return;input.value=entry.text;count.textContent=input.value.length.toLocaleString('vi-VN')+' / 20.000 ký tự';entry.lastReadSlot=slotAt();save();refresh();dialog.showModal();dialog.scrollTop=0;dialog.querySelector('[data-notebook-close]').focus({preventScroll:true});input.scrollTop=0;pictureNotes.open();pen.open();flush();}
  const pictureNotes=window.QuestNotebookImages.mount({dialog,input,getEntry:()=>entry,save,flush});
+ const pen=window.QuestNotebookPen.mount({input,dialog,getEntry:()=>entry,save,flush});
  button.onclick=open;
  input.addEventListener('input',()=>{entry.text=input.value;count.textContent=input.value.length.toLocaleString('vi-VN')+' / 20.000 ký tự';save();clearTimeout(saveTimer);saveTimer=setTimeout(flush,650);});
  dialog.querySelectorAll('[data-notebook-close]').forEach(b=>b.onclick=()=>dialog.close());dialog.addEventListener('close',()=>{clearTimeout(saveTimer);flush();});

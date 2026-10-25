@@ -36,7 +36,7 @@
    }message.textContent='✓ Đã lưu ảnh theo tài khoản. Bạn có thể xem trên thiết bị khác.';
   }catch(e){error(e);}finally{picker.value='';lock(false);}}
   add.onclick=()=>picker.click();picker.onchange=()=>upload([...picker.files]);
-  dialog.addEventListener('paste',e=>{if(e.target!==input)return;const files=[...(e.clipboardData?.items||[])].filter(i=>i.kind==='file'&&i.type.startsWith('image/')).map(i=>i.getAsFile()).filter(Boolean);if(files.length){e.preventDefault();upload(files);}});
+  dialog.addEventListener('paste',e=>{if(e.target!==input&&!e.target.closest?.('[data-notebook-rich]'))return;const files=[...(e.clipboardData?.items||[])].filter(i=>i.kind==='file'&&i.type.startsWith('image/')).map(i=>i.getAsFile()).filter(Boolean);if(files.length){e.preventDefault();upload(files);}});
   return {open(){message.textContent='';render();if(!busy&&(getEntry().imageTrash||[]).length)cleanup().catch(error);}};
  }};
 })();

@@ -18,11 +18,11 @@ Toàn bộ đề SAA/CLF vừa nhập được dùng cho cả luyện tập và 
 
 Chạy `node import-dojo-time.mjs` để nhập lại nguồn rồi `build-quest.ps1` để sinh web. Danh sách 19 câu loại, số câu nguồn được giữ và dấu câu sai nằm trong `exam-bank/time-mode-1-report.json`. Import so nội dung câu hỏi đã chuẩn hóa Unicode/khoảng trắng/dấu ngoặc kép, không so chữ cái đáp án hoặc số thứ tự; kiểm tra mapping từng đáp án bằng `node scripts/test-dojo-time.mjs`.
 
-## Bút tô sáng
+## Bút ghi nhớ trong sổ tay
 
-Bôi đen một đoạn trong câu hỏi/đáp án, rồi chọn màu vàng, xanh lá, xanh dương hoặc hồng ở bảng bút. Nút **🖍 Tô sáng** trong thẻ câu hỏi mở hướng dẫn và bảng màu. **Tẩy** xóa màu đoạn đang chọn; **Xóa màu câu** xóa toàn bộ dấu của câu. Hỗ trợ luyện tập, phòng thi/Review và ôn đầu ngày; chọn chữ trong đáp án không tự chọn đáp án.
+Mở sổ tay trên header, bôi đen chữ rồi chọn một trong bốn màu ở thanh **🖍 Bút ghi nhớ**. Vùng ghi chú chuyển sang chế độ tô sáng, vẫn viết và xuống dòng được. **Tẩy đoạn** bỏ màu của đoạn chọn; **Xóa màu** giữ nguyên chữ. Nút **Viết chữ thường** chuyển về ô nhập cơ bản; khi đã lưu dấu màu, mở lại sổ sẽ hiển thị phần ghi chú có màu.
 
-Dấu tô lưu theo tài khoản và chứng chỉ, dùng cùng câu hỏi khi quay lại hoặc đảo đáp án. Khóa `quest-highlight:<nội dung câu chuẩn hóa>` lưu văn bản và các khoảng ký tự, không lưu HTML. Nếu văn bản khác phiên bản đã đánh dấu thì bỏ qua dấu cũ để tránh tô nhầm. Không cần chạy SQL mới. Test: `node scripts/test-highlights.mjs`; đồng bộ giữa thiết bị được kiểm tra trong test cloud.
+Văn bản, các khoảng màu và danh sách ảnh cùng lưu trong `quest-notebook-v1` theo tài khoản, dùng chung giữa các chứng chỉ; không lưu HTML tự do. Dữ liệu chữ và ảnh cũ được giữ nguyên. Không cần chạy SQL mới. Bút ở câu hỏi của phiên bản trước đã được gỡ khỏi giao diện theo yêu cầu; các key cũ vẫn được chấp nhận khi tải snapshot để không làm hỏng tài khoản đã lưu.
 
 ## Tài khoản và tiến độ
 

@@ -8,7 +8,7 @@
  window.QuestCert.mount(header,actions);
  document.addEventListener('keydown',e=>{
   if(!['ArrowRight','Enter'].includes(e.key)||e.repeat||e.isComposing||e.ctrlKey||e.altKey||e.metaKey||e.shiftKey||e.defaultPrevented)return;
-  if(e.target.closest?.('input,textarea,select,[contenteditable="true"],#quest-music,.highlight-palette')||document.querySelector('dialog[open]')||window.QuestCloud?.blocked)return;
+  if(e.target.closest?.('input,textarea,select,[contenteditable="true"],#quest-music')||document.querySelector('dialog[open]')||window.QuestCloud?.blocked)return;
   const daily=window.DailyGate?.isLocked;
   if(e.key==='Enter'&&e.target.closest?.('button,a,summary')&&!e.target.closest('[data-action="select"],[data-action="check"],[data-action="next"],[data-exam="answer"],[data-exam="check"],[data-daily="answer"],[data-daily="check"],[data-daily="next"]'))return;
   const next=e.key==='Enter'?(daily?document.querySelector('#daily-gate [data-daily="check"]'):document.querySelector('[data-action="check"],[data-exam="check"]'))||(!daily?document.querySelector('[data-action="next"]'):null):daily?document.querySelector('#daily-gate [data-daily="next"]'):document.querySelector('[data-action="next"],.exam-move button:last-child[data-exam="jump"]');

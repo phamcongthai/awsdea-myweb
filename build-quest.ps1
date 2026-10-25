@@ -96,14 +96,12 @@ $js = [IO.File]::ReadAllText((Join-Path $root 'daily-runtime.js')) + "`n" + $js
 $js = [IO.File]::ReadAllText((Join-Path $root 'quest-music.js')) + "`n" + $js
 $css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'question-notes.css'))
 $js = [IO.File]::ReadAllText((Join-Path $root 'question-notes.js')) + "`n" + $js
-$css += "`n" + [IO.File]::ReadAllText((Join-Path $root 'question-highlights.css'))
-$js = [IO.File]::ReadAllText((Join-Path $root 'question-highlights.js')) + "`n" + $js
 $js = "window.QuestCloud.ready.then(async()=>{await window.QuestCert.prepare();`n"+$js+"`n});"
 $html = $template.Replace('<!-- QUEST_STYLE -->', '<style>'+$css+'</style>').Replace('<!-- QUEST_DATA -->', '<script>window.QUEST_BANK = '+$bank.Replace('</','<\/')+';</script>').Replace('<!-- QUEST_APP -->', '<script>'+$js+'</script>')
 [IO.File]::WriteAllText((Join-Path $root 'AWS Data Quest.html'), (Add-QuestAuth $html 'public/'), [Text.UTF8Encoding]::new($false))
 $publishDirectory = Join-Path $root 'public'
 [IO.Directory]::CreateDirectory($publishDirectory) | Out-Null
-foreach($asset in @('quest-cert.js','quest-auth.js','quest-auth.css','quest-cloud.js','quest-cloud.css','quest-social.js','quest-social.css','quest-header.js','quest-header.css','quest-notebook.js','quest-notebook-images.js','quest-notebook.css')) {
+foreach($asset in @('quest-cert.js','quest-auth.js','quest-auth.css','quest-cloud.js','quest-cloud.css','quest-social.js','quest-social.css','quest-header.js','quest-header.css','quest-notebook.js','quest-notebook-images.js','quest-notebook-pen.js','quest-notebook.css')) {
   Copy-Item -LiteralPath (Join-Path $root $asset) -Destination (Join-Path $publishDirectory $asset) -Force
 }
 [IO.File]::WriteAllText((Join-Path $publishDirectory 'index.html'), (Add-QuestAuth $html), [Text.UTF8Encoding]::new($false))
