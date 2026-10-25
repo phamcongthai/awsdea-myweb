@@ -18,6 +18,12 @@ Toàn bộ đề SAA/CLF vừa nhập được dùng cho cả luyện tập và 
 
 Chạy `node import-dojo-time.mjs` để nhập lại nguồn rồi `build-quest.ps1` để sinh web. Danh sách 19 câu loại, số câu nguồn được giữ và dấu câu sai nằm trong `exam-bank/time-mode-1-report.json`. Import so nội dung câu hỏi đã chuẩn hóa Unicode/khoảng trắng/dấu ngoặc kép, không so chữ cái đáp án hoặc số thứ tự; kiểm tra mapping từng đáp án bằng `node scripts/test-dojo-time.mjs`.
 
+## Bút tô sáng
+
+Bôi đen một đoạn trong câu hỏi/đáp án, rồi chọn màu vàng, xanh lá, xanh dương hoặc hồng ở bảng bút. Nút **🖍 Tô sáng** trong thẻ câu hỏi mở hướng dẫn và bảng màu. **Tẩy** xóa màu đoạn đang chọn; **Xóa màu câu** xóa toàn bộ dấu của câu. Hỗ trợ luyện tập, phòng thi/Review và ôn đầu ngày; chọn chữ trong đáp án không tự chọn đáp án.
+
+Dấu tô lưu theo tài khoản và chứng chỉ, dùng cùng câu hỏi khi quay lại hoặc đảo đáp án. Khóa `quest-highlight:<nội dung câu chuẩn hóa>` lưu văn bản và các khoảng ký tự, không lưu HTML. Nếu văn bản khác phiên bản đã đánh dấu thì bỏ qua dấu cũ để tránh tô nhầm. Không cần chạy SQL mới. Test: `node scripts/test-highlights.mjs`; đồng bộ giữa thiết bị được kiểm tra trong test cloud.
+
 ## Tài khoản và tiến độ
 
 Đăng nhập email/mật khẩu qua Supabase; phiên đăng nhập được giữ giữa các lần mở trình duyệt. Tiến độ học lưu trong DB theo tài khoản, tải lại được trên thiết bị khác. Dữ liệu học không lưu trong localStorage ở production; RAM chỉ là bộ đệm trong lúc gửi. Khi lỗi mạng hoặc có xung đột phiên bản, giao diện chặn và hướng dẫn xử lý.

@@ -7,7 +7,7 @@
  keys.add(qa?'quest-notebook-test-v1':'quest-notebook-v1');
  keys.add('quest-selected-cert-v1');
  const scoped=k=>window.QuestCert.scope(k);
- const allowed=k=>{k=k.replace(/^cert:(saa|clf):/,'');return keys.has(k)||k.startsWith(qa?'quest-note-test:':'quest-note:');};
+ const allowed=k=>{k=k.replace(/^cert:(saa|clf):/,'');return keys.has(k)||k.startsWith(qa?'quest-note-test:':'quest-note:')||k.startsWith(qa?'quest-highlight-test:':'quest-highlight:');};
  let data={},revision=0,dirty=false,user=null,started=false,loaded=false,blocked=false,inflight=null,timer=null,generation=0,resolveReady;
  const ready=new Promise(r=>resolveReady=r),copy=v=>JSON.parse(JSON.stringify(v));
  const panel=document.createElement('section');panel.id='quest-cloud-gate';panel.setAttribute('role','region');panel.setAttribute('aria-label','Đồng bộ tài khoản');
