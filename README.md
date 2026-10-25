@@ -4,11 +4,19 @@ Chọn chứng chỉ trên header:
 
 | Chứng chỉ | Luyện theo chủ đề | Phòng thi |
 | --- | --- | --- |
-| Data Engineer Associate | 260 câu gốc + LOG đặc biệt | 5 đề × 65 câu |
+| Data Engineer Associate | 260 câu gốc + LOG đặc biệt | 5 đề × 65 câu + Time Mode 1 (46 câu) |
 | Solutions Architect Associate | 390 câu, 11 phiên tối đa 40 câu | 6 đề × 65 câu |
 | Cloud Practitioner | 340 câu, 11 phiên tối đa 40 câu | 1 bài chẩn đoán 15 câu + 5 đề × 65 câu |
 
 Toàn bộ đề SAA/CLF vừa nhập được dùng cho cả luyện tập và phòng thi. Chia nhóm theo domain của nguồn, không thay đổi đáp án gốc. Lời giải SAA/CLF hiện giữ tiếng Anh từ nguồn; bộ DEA giữ lời giải tiếng Việt hiện có. Hình minh họa bên ngoài cần Internet. Flashcard SAA/CLF được tạo từ câu hỏi và đáp án đúng của chính các bộ đề này; không phải nội dung Quizlet.
+
+## Time Mode 1 · Dojo bổ sung
+
+Đề phụ nằm trong Phòng thi của DEA, ID nội bộ 6. Nguồn là file review do người dùng lưu tại `DOJOS/Sections/TIME_MODE/`. Import 65 câu, loại 19 câu trùng nội dung đề 5, còn 46 câu. Không sửa bộ đề 5 hoặc tiến độ cũ. Thời gian thi có giờ: 92 phút (2 phút/câu); cũng dùng được Review, Hardcore và Ultra theo cơ chế hiện tại. Điểm đề phụ không cộng vào rank DEA đang giới hạn 5 đề chính; không cần đổi SQL.
+
+15 câu có thống kê trả lời sai trong file review được gắn badge **! Cần ôn · Sai trong review đã nhập**. Đây là dấu của lượt review nguồn, không phải kết quả của người dùng mới. Các câu làm sai trên tài khoản trong web cũng có badge cần ôn; câu sai trong đề phụ được ghi vào ôn đầu ngày bằng ID `e:6:n`. Đáp án và lời giải giữ nguyên nguồn, ảnh được đóng gói cục bộ. Lời giải phần nhập này là tiếng Anh.
+
+Chạy `node import-dojo-time.mjs` để nhập lại nguồn rồi `build-quest.ps1` để sinh web. Danh sách 19 câu loại, số câu nguồn được giữ và dấu câu sai nằm trong `exam-bank/time-mode-1-report.json`. Import so nội dung câu hỏi đã chuẩn hóa Unicode/khoảng trắng/dấu ngoặc kép, không so chữ cái đáp án hoặc số thứ tự; kiểm tra mapping từng đáp án bằng `node scripts/test-dojo-time.mjs`.
 
 ## Tài khoản và tiến độ
 

@@ -1,6 +1,7 @@
 # Dot-source this helper from HTML builders. No server secrets are embedded.
 function Add-QuestAuth([string]$html, [string]$assetBase='') {
   if($assetBase){$html=$html.Replace('url("assets/galaxy-bg.jpg")',('url("'+$assetBase+'assets/galaxy-bg.jpg")'))}
+  $deaTestsJs='window.QUEST_DEA_TESTS = '+[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'exam-bank/manifest.json'))+';'
   $certJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-cert.js'))
   $authCss=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-auth.css'))
   $authJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-auth.js'))
@@ -14,5 +15,5 @@ function Add-QuestAuth([string]$html, [string]$assetBase='') {
   $notebookImageJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-notebook-images.js'))
   $notebookJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-notebook.js'))
   $html=$html.Replace('</head>',"<style>$authCss`n$cloudCss`n$socialCss`n$headerCss`n$notebookCss</style></head>")
-  return $html.Replace('<body>',"<body><script src=`"${assetBase}vendor/supabase-2.49.8.js`"></script><script>$certJs</script><script>$cloudJs</script><script>$authJs</script><script>$socialJs</script><script>$headerJs</script><script>$notebookImageJs</script><script>$notebookJs</script>")
+  return $html.Replace('<body>',"<body><script src=`"${assetBase}vendor/supabase-2.49.8.js`"></script><script>$deaTestsJs</script><script>$certJs</script><script>$cloudJs</script><script>$authJs</script><script>$socialJs</script><script>$headerJs</script><script>$notebookImageJs</script><script>$notebookJs</script>")
 }
