@@ -28,7 +28,7 @@ Chạy `node import-dojo-time-next.mjs` rồi `build-quest.ps1`. Các báo cáo 
 
 ## Bút ghi nhớ trong sổ tay
 
-Mở sổ tay trên header, bôi đen chữ rồi chọn một trong bốn màu ở thanh **🖍 Bút ghi nhớ**. Vùng ghi chú chuyển sang chế độ tô sáng, vẫn viết và xuống dòng được. **Tẩy đoạn** bỏ màu của đoạn chọn; **Xóa màu** giữ nguyên chữ. Nút **Viết chữ thường** chuyển về ô nhập cơ bản; khi đã lưu dấu màu, mở lại sổ sẽ hiển thị phần ghi chú có màu.
+Mở sổ tay trên header, bôi đen chữ rồi chọn một trong bốn màu ở thanh **🖍 Bút ghi nhớ**. Máy tính có bảng màu ghim bên phải sổ, luôn trong tầm bấm khi cuộn; điện thoại dùng bảng màu ghim phía trên nội dung. Vùng ghi chú chuyển sang chế độ tô sáng, vẫn viết và xuống dòng được. **Tẩy đoạn** bỏ màu của đoạn chọn; **Xóa màu** giữ nguyên chữ. Nút **Viết chữ thường** chuyển về ô nhập cơ bản; khi đã lưu dấu màu, mở lại sổ sẽ hiển thị phần ghi chú có màu.
 
 Văn bản, các khoảng màu và danh sách ảnh cùng lưu trong `quest-notebook-v1` theo tài khoản, dùng chung giữa các chứng chỉ; không lưu HTML tự do. Dữ liệu chữ và ảnh cũ được giữ nguyên. Không cần chạy SQL mới. Bút ở câu hỏi của phiên bản trước đã được gỡ khỏi giao diện theo yêu cầu; các key cũ vẫn được chấp nhận khi tải snapshot để không làm hỏng tài khoản đã lưu.
 
