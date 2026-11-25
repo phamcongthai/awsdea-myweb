@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';import {pathToFileURL} from 'node:url';import {chromium} from 'playwright';
+const browser=await chromium.launch({executablePath:'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true,args:['--allow-file-access-from-files']});
+try{const p=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto(pathToFileURL(process.cwd()+'/public/index.html').href+'?qa=1');await p.waitForSelector('#quest-theme-toggle');
+await p.locator('#quest-theme-toggle').click();assert.equal(await p.getAttribute('html','data-theme'),'light');assert.equal(await p.evaluate(()=>getComputedStyle(document.body).backgroundColor),'rgb(238, 241, 246)');
+await p.reload();await p.waitForSelector('#quest-theme-toggle');assert.equal(await p.getAttribute('html','data-theme'),'light');await p.screenshot({path:'.qa/theme-home-light.png'});
+await p.locator('#quest-notebook').click();await p.screenshot({path:'.qa/theme-notebook-light.png'});await p.keyboard.press('Escape');
+for(const width of [390,320]){await p.setViewportSize({width,height:900});assert.equal(await p.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);assert.ok(await p.locator('#quest-theme-toggle').isVisible());await p.screenshot({path:`.qa/theme-mobile-${width}.png`});}
+await p.goto(pathToFileURL(process.cwd()+'/public/realtest.html').href+'?qa=1');await p.waitForFunction(()=>window.Exam);assert.equal(await p.getAttribute('html','data-theme'),'light');await p.evaluate(()=>Exam.start(10,'review'));await p.setViewportSize({width:1440,height:1000});await p.screenshot({path:'.qa/theme-exam-light.png'});
+await p.locator('#quest-theme-toggle').click();assert.equal(await p.getAttribute('html','data-theme'),'dark');await p.reload();await p.waitForSelector('#quest-theme-toggle');assert.equal(await p.getAttribute('html','data-theme'),'dark');assert.deepEqual(errors,[]);console.log('PASS theme toggle/persistence, practice/exam/notebook, mobile 320/390 no overflow, dark restore');
+}finally{await browser.close();}

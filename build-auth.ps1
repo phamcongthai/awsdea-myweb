@@ -15,6 +15,11 @@ function Add-QuestAuth([string]$html, [string]$assetBase='') {
   $notebookPenJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-notebook-pen.js'))
   $notebookImageJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-notebook-images.js'))
   $notebookJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-notebook.js'))
-  $html=$html.Replace('</head>',"<style>$authCss`n$cloudCss`n$socialCss`n$headerCss`n$notebookCss</style></head>")
+  $themeCss=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-theme.css'))
+  $themeJs=[IO.File]::ReadAllText((Join-Path $PSScriptRoot 'quest-theme.js'))
+  $themeBoot="<script>try{document.documentElement.dataset.theme=localStorage.getItem('quest-color-theme-v1')==='light'?'light':'dark'}catch{document.documentElement.dataset.theme='dark'}</script>"
+  $html=$html.Replace('<head>',('<head>'+$themeBoot))
+  $html=$html.Replace('</head>',"<style>$authCss`n$cloudCss`n$socialCss`n$headerCss`n$notebookCss`n$themeCss</style><script defer src=`"${assetBase}quest-theme.js`"></script></head>")
+  [IO.File]::WriteAllText((Join-Path $PSScriptRoot 'public/quest-theme.js'),$themeJs,[Text.UTF8Encoding]::new($false))
   return $html.Replace('<body>',"<body><script src=`"${assetBase}vendor/supabase-2.49.8.js`"></script><script>$deaTestsJs</script><script>$certJs</script><script>$cloudJs</script><script>$authJs</script><script>$socialJs</script><script>$headerJs</script><script>$notebookPenJs</script><script>$notebookImageJs</script><script>$notebookJs</script>")
 }

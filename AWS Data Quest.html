@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="vi">
-<head>
+<head><script>try{document.documentElement.dataset.theme=localStorage.getItem('quest-color-theme-v1')==='light'?'light':'dark'}catch{document.documentElement.dataset.theme='dark'}</script>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#101915">
@@ -86,7 +86,51 @@ body.has-quest-header{padding-top:84px!important}#quest-header{position:fixed;in
 .notebook-pen{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:12px 0}.notebook-pen>span{font-size:12px;color:#dbe8bd;margin-right:6px}.notebook-pen button{font:12px/1.4 var(--font,system-ui);padding:7px 9px;min-height:32px;border:1px solid #71894c;border-radius:8px;background:#2b402b;color:#e7efda;cursor:pointer}.notebook-pen .notebook-ink{width:30px;padding:0;border:2px solid #ffffff80}.notebook-ink.yellow,.notebook-highlight.yellow{background:#ffe68a}.notebook-ink.green,.notebook-highlight.green{background:#aff0ac}.notebook-ink.blue,.notebook-highlight.blue{background:#a9dcff}.notebook-ink.pink,.notebook-highlight.pink{background:#ffc0db}.notebook-highlight{color:#172219;border-radius:3px;box-decoration-break:clone;-webkit-box-decoration-break:clone}.notebook-rich-editor{box-sizing:border-box;display:block;min-height:280px;width:100%;padding:17px;border:1px solid #5a6b47;border-radius:13px;background:#111d16;color:#edf3df;font:16px/32px var(--font,system-ui);white-space:pre-wrap;overflow-wrap:anywhere;outline-offset:3px}.notebook-rich-editor[hidden],#notebook-text[hidden]{display:none}.notebook-rich-editor:focus-visible{outline:2px solid #cedd91}.notebook-pen-hint{display:block;margin:8px 0;color:#c0d2aa;font-size:11px;line-height:1.6}.notebook-pen button:focus-visible{outline:2px solid #d0ef88;outline-offset:2px}
 #quest-notebook-dialog{width:min(880px,calc(100vw - 24px))}.notebook-layout{display:grid;grid-template-columns:minmax(0,1fr) 112px;gap:18px;align-items:start}.notebook-content{grid-column:1;grid-row:1;min-width:0}.notebook-layout>.notebook-pen{grid-column:2;grid-row:1;position:sticky;top:0;align-self:start;z-index:5;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:0;padding:12px 9px;box-sizing:border-box;max-height:calc(90dvh - 56px);overflow:auto;border:1px solid #71894c;border-radius:14px;background:linear-gradient(160deg,#33482e,#1b2d21);box-shadow:0 5px 20px #0003}.notebook-layout>.notebook-pen>span{grid-column:1/-1;margin:0 0 3px;text-align:center;font-size:11px}.notebook-layout>.notebook-pen .notebook-ink{width:100%;height:35px}.notebook-layout>.notebook-pen button:not(.notebook-ink){grid-column:1/-1;font-size:11px;padding:8px 5px;white-space:normal}.notebook-content #notebook-text,.notebook-content .notebook-rich-editor{max-width:100%}@media(max-width:600px){.notebook-layout{display:flex;flex-direction:column;gap:12px}.notebook-content{width:100%}.notebook-layout>.notebook-pen{display:flex;flex-wrap:wrap;align-self:stretch;gap:6px;max-height:40dvh;padding:9px;top:0}.notebook-layout>.notebook-pen>span{width:100%;text-align:left;margin:0}.notebook-layout>.notebook-pen .notebook-ink{width:32px;height:32px}.notebook-layout>.notebook-pen button:not(.notebook-ink){padding:6px 8px;font-size:10px}.notebook-layout>.notebook-pen [data-pen-mode]{margin-left:auto}}
 #quest-notebook-dialog{max-width:calc(100vw - 24px)}
-</style></head>
+
+#quest-theme-toggle{display:grid;place-items:center;flex:none;order:-1!important;width:40px;height:43px;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);font:24px/1 var(--font,system-ui);cursor:pointer}
+html[data-theme=light]{color-scheme:light;--bg:#eef1f6;--panel:#fff;--line:#d4dce6;--muted:#596779;--text:#253247;--lime:#426521;--mint:#176c55;--bad:#b13443;--yellow:#805916}
+html[data-theme=light] body{background:#eef1f6!important;color:var(--text)}
+html[data-theme=light] :is(#quest-header,.sidebar){background:#e5eaf2!important;color:var(--text);border-color:var(--line);box-shadow:0 4px 20px #26344a08}
+html[data-theme=light] :is(.hero,.side-card,.session-card.recommended,.game-hud,.finish-card,.social-me){background:linear-gradient(130deg,#f8fafc,#e8eef6)!important;border-color:#cbd6e2;color:var(--text)}
+html[data-theme=light] :is(.session-card,.stat,.question-card,.list-row,.theory-card,.theory-article,.theory-group,.flashcard,.flash-card,.cloud-box,.hardcore-stage,.social-row,.notebook-images figure){background:#fff!important;color:var(--text);border-color:var(--line)}
+html[data-theme=light] :is(dialog,#quest-notebook-dialog,#quest-social-dialog,#quest-auth-dialog,#daily-gate,#quest-cloud-panel){background:#f6f8fc!important;color:var(--text);border-color:var(--line)}
+html[data-theme=light] dialog::backdrop{background:#25334766;backdrop-filter:blur(5px)}
+html[data-theme=light] :is(.hero p,.callout,.explanation-content,.notebook-intro,.notebook-label,.notebook-footer,.notebook-reminder,.notebook-pen-hint,.notebook-image-message,.notebook-image-tools span,.social-note,.social-rules,.theory-intro,.theory-article p,.pal-line,.pal-name,.auth-footnote,.auth-session,.footnote){color:#526174!important}
+html[data-theme=light] :is(.quest-header-brand small,.quest-cert-picker,.notebook-heading .eyebrow,.notebook-pen>span){color:#54647a!important}
+html[data-theme=light] :is(input,textarea,select,.notebook-rich-editor,#notebook-text){background:#fff!important;color:#253247!important;border-color:#bfcbd9!important}
+html[data-theme=light] :is(input,textarea)::placeholder{color:#748196}
+html[data-theme=light] :is(.btn,.notebook-pen button:not(.notebook-ink),.fun-controls button,.exam-cell,.social-avatars button){background:#e9eef5;color:#35445b;border-color:#c5d0df}
+html[data-theme=light] .btn.quiet{background:transparent;color:#526174}
+html[data-theme=light] :is(.btn.primary,.auth-primary){background:#d7ecae!important;color:#2e451c!important;border-color:#afcc83!important}
+html[data-theme=light] .btn:hover:not(:disabled){background:#dce5ef}
+html[data-theme=light] :is(.btn.danger,.ultra-button){color:#a72e40}
+html[data-theme=light] :is(#quest-account,#quest-notebook,#daily-date){background:#f7f9fc!important;color:#35445b!important;border-color:#c5d0df!important}
+html[data-theme=light] #quest-header #daily-date small{color:#596779}
+html[data-theme=light] .answer{background:#f9fbfe;color:#253247;border-color:#ccd6e2}
+html[data-theme=light] .answer:hover:not(:disabled){background:#edf3fa;border-color:#869bb7}
+html[data-theme=light] .answer.selected{background:#eaf1df;border-color:#6c8c43}
+html[data-theme=light] .answer.correct{background:#e6f5ee;border-color:#438b6d}
+html[data-theme=light] .answer.wrong{background:#fff0f1;border-color:#be6671}
+html[data-theme=light] .answer-letter{color:#566778;border-color:#b6c4d5}
+html[data-theme=light] .selected .answer-letter{background:#d7ecae;color:#2e451c}
+html[data-theme=light] :is(.callout,.result,.daily-live,.theory-tip,.theory-check,.theory-diagram,.social-rules){background:#edf3f9!important;border-color:#c5d3e2}
+html[data-theme=light] :is(code,pre,.theory-code){background:#e7edf5!important;color:#354f70!important;border-color:#cbd6e2}
+html[data-theme=light] :is(th,td){border-color:#d4dce6!important}
+html[data-theme=light] th{background:#e7edf5!important;color:#35445b!important}
+html[data-theme=light] .notebook-layout>.notebook-pen{background:#e7edf5!important;border-color:#bdcada;box-shadow:0 4px 16px #26344a12}
+html[data-theme=light] :is(.progress-track,.xp-track,.checkpoint){background:#d8e1ec}
+html[data-theme=light] :is(.exam-cell.answered,.exam-cell.passed,.hardcore-stage.passed){background:#dff1e5;color:#225b40;border-color:#82ac91}
+html[data-theme=light] .exam-cell.failed{background:#fce7eb;color:#9c2c3d}
+html[data-theme=light] :is(.nav-item.active,.nav-item:hover){background:#dce6d2;color:#3c5926}
+html[data-theme=light] .sat{background:#e6eddf;color:#425b31;border-color:#b3c2a7}
+html[data-theme=light] .quest-header-brand>span{background:#f1f6e9;color:#5d792f;border-color:#b8c7a4}
+html[data-theme=light] :is(.fc-intro,.fc-card,.theory-recall,.theory-diagram li,.theory-note,.theory-warning,.theory-comparison,.theory-mini,.theory-hero){background:#edf3f9!important;color:#35445b!important;border-color:#c5d3e2}
+html[data-theme=light] :is(.fc-topics button,.theory-chapter,.theory-branches a){background:#f5f8fc!important;color:#526174!important;border-color:#cbd6e2}
+html[data-theme=light] :is(.theory-section dd,.theory-section p,.theory-article li,.fc-card p,.fc-card small,.theory-recall p){color:#526174!important}
+html[data-theme=light] :is(.fc-stack,.brand-mark){background:#d7ecae;color:#2e451c}
+html[data-theme=light] :is(a:focus-visible,button:focus-visible,input:focus-visible){outline-color:#477cb1}
+@media(max-width:360px){#quest-theme-toggle{width:30px;height:40px;font-size:21px;border-radius:10px}}
+</style><script defer src="public/quest-theme.js"></script></head>
 <body><script src="public/vendor/supabase-2.49.8.js"></script><script>window.QUEST_DEA_TESTS = [{"id":1,"title":"Đề kiểm tra 1","minutes":120,"count":65},{"id":2,"title":"Đề kiểm tra 2","minutes":120,"count":65},{"id":3,"title":"Đề kiểm tra 3","minutes":120,"count":65},{"id":4,"title":"Đề kiểm tra 4","minutes":120,"count":65},{"id":5,"title":"Đề 5 · Tutorials Dojo","minutes":130,"count":65,"priorWrongIds":[]},{"id":6,"title":"Time Mode 1 · Dojo bổ sung","minutes":92,"count":46,"supplementary":true},{"id":7,"title":"Time Mode 2 · Dojo bổ sung","minutes":102,"count":51,"supplementary":true},{"id":8,"title":"Time Mode 3 · Dojo bổ sung","minutes":70,"count":35,"supplementary":true},{"id":9,"title":"Dojo Bonus · 6 câu mới","minutes":12,"count":6,"supplementary":true},{"id":10,"title":"Ôn lần cuối · 20 câu trọng tâm","count":20,"minutes":40,"reviewOnly":true}];</script><script>'use strict';
 (() => {
  const params=new URLSearchParams(location.search),id=['saa','clf'].includes(params.get('cert'))?params.get('cert'):'dea';
